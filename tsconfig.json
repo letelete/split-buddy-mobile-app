@@ -6,13 +6,13 @@
     "paths": {
       "~/network:api/*": ["src/network/api/*"],
       "~/network:features/*": ["src/network/features/*"],
-      "~/store/*": ["src/store/*"],
       "~/ui:features/*": ["src/ui/features/*"],
       "~/ui:hooks/*": ["src/ui/hooks/*"],
       "~/ui:lib/*": ["src/ui/lib/*"],
       "~/ui:styles/*": ["src/ui/styles/*"],
       "~/utils/*": ["src/utils/*"],
+      "~/store/*": ["src/store/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }
