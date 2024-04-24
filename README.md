@@ -1,1 +1,1 @@
-# tranquility-mobile-app
+# Tranquility - Mobile App
