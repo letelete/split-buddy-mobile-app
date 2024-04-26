@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "tranquility-mobile-app",
-    "slug": "tranquility-mobile-app",
+    "name": "split-buddy",
+    "slug": "split-buddy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
