@@ -1,1 +1,1 @@
-# Tranquility - Mobile App
+# Split, Budy - Track, and manage your shared expenses
