@@ -15,13 +15,14 @@
     "^~/network:api/(.*)$",
     "^~/network:features/(.*)$",
     "^~/store/(.*)$",
-    "^~/ui:features/(.*)$",
+    "^~/ui:components:features/(.*)$",
+    "^~/ui:components:lib/(.*)$",
     "^~/ui:hooks/(.*)$",
-    "^~/ui:lib/(.*)$",
     "^~/ui:styles/(.*)$",
     "^~/utils/(.*)$",
     "^[./]"
   ],
   "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "importOrderGroupNamespaceSpecifiers": true
 }

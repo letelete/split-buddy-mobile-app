@@ -1,17 +1,18 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "jsx": "react-jsx",
     "strict": true,
     "baseUrl": ".",
     "paths": {
       "~/network:api/*": ["src/network/api/*"],
       "~/network:features/*": ["src/network/features/*"],
-      "~/ui:features/*": ["src/ui/features/*"],
+      "~/store/*": ["src/store/*"],
+      "~/ui:components:features/*": ["src/ui/components/features/*"],
+      "~/ui:components:lib/*": ["src/ui/components/lib/*"],
       "~/ui:hooks/*": ["src/ui/hooks/*"],
-      "~/ui:lib/*": ["src/ui/lib/*"],
       "~/ui:styles/*": ["src/ui/styles/*"],
-      "~/utils/*": ["src/utils/*"],
-      "~/store/*": ["src/store/*"]
+      "~/utils/*": ["src/utils/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"]
