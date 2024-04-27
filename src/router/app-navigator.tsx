@@ -4,9 +4,10 @@ import { useMemo } from 'react';
 import { useStyles } from 'react-native-unistyles';
 
 import { SignUpScreen } from '~/features/auth/sign-up/views/sign-up-screen';
-import { useAuth } from '~/features/auth/store/auth-store';
 import { HomeScreen } from '~/features/home/views/home-screen';
 import { SplashScreen } from '~/features/splash/views/splash-screen';
+
+import { useAppStore } from '~/store/app-store';
 
 /** ------------------------------------------------------------------------------------------------
  * Auth Routes
@@ -130,7 +131,7 @@ export interface AppStackParamList extends ParamListBase {
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 const AppNavigator = () => {
-  const { userToken, userSignedOut, isLoading } = useAuth();
+  const { userToken, userSignedOut, isLoggingIn } = useAppStore((state) => state.auth);
 
   const currentScreen = useMemo(() => {
     if (!userToken) {
@@ -147,7 +148,7 @@ const AppNavigator = () => {
     return <AppStack.Screen component={RootStackScreen} name={AppRoutes.ROOT} />;
   }, [userSignedOut, userToken]);
 
-  if (isLoading) {
+  if (isLoggingIn) {
     return <SplashScreen />;
   }
 

@@ -12,8 +12,8 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
-    'plugin:prettier/recommended',
     'universe/native',
+    'plugin:prettier/recommended',
   ],
   ignorePatterns: ['.eslintrc.js', '.prettierrc', 'babel.config.js'],
   parser: '@typescript-eslint/parser',
@@ -31,6 +31,17 @@ module.exports = {
         noSortAlphabetically: false,
         reservedFirst: true,
         ignoreCase: true,
+      },
+    ],
+    'import/order': [
+      'error',
+      {
+        pathGroups: [
+          {
+            pattern: '~/**',
+            group: 'external',
+          },
+        ],
       },
     ],
   },

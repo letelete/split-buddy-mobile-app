@@ -4,7 +4,7 @@
   "semi": true,
   "tabWidth": 2,
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
+  "bracketSameLine": false,
   "arrowParens": "always",
   "trailingComma": "es5",
   "printWidth": 100,
@@ -12,12 +12,12 @@
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
+    "^~/features/(.*)$",
     "^~/network:api/(.*)$",
     "^~/router/(.*)$",
     "^~/store/(.*)$",
-    "^~/features/(.*)$",
-    "^~/ui:lib/(.*)$",
     "^~/ui:hooks/(.*)$",
+    "^~/ui:lib/(.*)$",
     "^~/ui:styles/(.*)$",
     "^~/utils/(.*)$",
     "^[./]"

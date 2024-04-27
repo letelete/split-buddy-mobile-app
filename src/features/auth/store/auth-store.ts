@@ -1,25 +1,41 @@
-import { useEffect, useState } from 'react';
+import { Lens, lens } from '@dhmk/zustand-lens';
 
-// TODO:
-export const useAuth = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [userToken, setUserToken] = useState<string | null>(null);
-  const [userSignedOut, setUserSignedOut] = useState(false);
+export interface AuthState {
+  userToken: string | null;
+  userSignedOut: boolean;
+  isLoggingIn: boolean;
+}
 
-  useEffect(() => {
-    setIsLoading(false);
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 3000);
-    // const interval = setInterval(() => {
-    //   setUserToken((x) => {
-    //     const r = x ? null : 'lol';
-    //     setSignedOut(!r);
-    //     return r;
-    //   });
-    // }, 4000);
-    // return () => clearInterval(interval);
-  }, []);
+interface AuthActions {
+  initLogin: () => void;
+  login: (userToken: string) => void;
+  logout: () => void;
+}
 
-  return { isLoading, userToken, userSignedOut };
-};
+export interface AuthSlice extends AuthState {
+  actions: AuthActions;
+}
+
+const initialState = {
+  userToken: null,
+  userSignedOut: false,
+  isLoggingIn: false,
+} as const satisfies AuthState;
+
+const createAuthSlice: Lens<AuthSlice> = (set) => ({
+  ...initialState,
+
+  actions: {
+    initLogin: () => {
+      set({ isLoggingIn: true });
+    },
+    login: (userToken) => {
+      set({ userToken, userSignedOut: false, isLoggingIn: false });
+    },
+    logout: () => {
+      set(initialState);
+    },
+  },
+});
+
+export const authSlice = lens(createAuthSlice);
