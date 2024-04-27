@@ -13,16 +13,15 @@
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
     "^~/network:api/(.*)$",
-    "^~/network:features/(.*)$",
+    "^~/router/(.*)$",
     "^~/store/(.*)$",
-    "^~/ui:components:features/(.*)$",
-    "^~/ui:components:lib/(.*)$",
+    "^~/features/(.*)$",
+    "^~/ui:lib/(.*)$",
     "^~/ui:hooks/(.*)$",
     "^~/ui:styles/(.*)$",
     "^~/utils/(.*)$",
     "^[./]"
   ],
   "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
-  "importOrderGroupNamespaceSpecifiers": true
+  "importOrderSortSpecifiers": true
 }

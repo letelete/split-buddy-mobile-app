@@ -5,12 +5,12 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
+      "~/features/*": ["src/features/*"],
       "~/network:api/*": ["src/network/api/*"],
-      "~/network:features/*": ["src/network/features/*"],
+      "~/router/*": ["src/router/*"],
       "~/store/*": ["src/store/*"],
-      "~/ui:components:features/*": ["src/ui/components/features/*"],
-      "~/ui:components:lib/*": ["src/ui/components/lib/*"],
       "~/ui:hooks/*": ["src/ui/hooks/*"],
+      "~/ui:lib/*": ["src/ui/lib/*"],
       "~/ui:styles/*": ["src/ui/styles/*"],
       "~/utils/*": ["src/utils/*"]
     }

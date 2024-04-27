@@ -12,6 +12,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
+    'plugin:prettier/recommended',
     'universe/native',
   ],
   ignorePatterns: ['.eslintrc.js', '.prettierrc', 'babel.config.js'],

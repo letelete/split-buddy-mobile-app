@@ -6,12 +6,14 @@ const SignUpScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Hello, World!</Text>
+      <Text style={styles.title}>Sign up</Text>
     </View>
   );
 };
 
 SignUpScreen.displayName = 'SignUpScreen';
+
+export { SignUpScreen };
 
 const stylesheet = createStyleSheet((theme) => ({
   container: {
@@ -21,8 +23,7 @@ const stylesheet = createStyleSheet((theme) => ({
     justifyContent: 'center',
   },
   title: {
-    color: theme.colors.typography,
+    fontSize: theme.fontSizes.lg,
+    color: theme.colors.typography.primarySoft,
   },
 }));
-
-export { SignUpScreen };
