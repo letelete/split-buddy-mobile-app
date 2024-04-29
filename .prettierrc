@@ -12,8 +12,8 @@
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
+    "^~/api/(.*)$",
     "^~/features/(.*)$",
-    "^~/network:api/(.*)$",
     "^~/router/(.*)$",
     "^~/store/(.*)$",
     "^~/ui:hooks/(.*)$",

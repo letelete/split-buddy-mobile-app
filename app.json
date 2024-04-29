@@ -14,7 +14,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "me.kawka.splitbuddy."
+      "bundleIdentifier": "me.kawka.splitbuddy",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "me.kawka.splitbuddy",

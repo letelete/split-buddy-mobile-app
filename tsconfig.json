@@ -6,7 +6,7 @@
     "baseUrl": ".",
     "paths": {
       "~/features/*": ["src/features/*"],
-      "~/network:api/*": ["src/network/api/*"],
+      "~/api/*": ["src/api/*"],
       "~/router/*": ["src/router/*"],
       "~/store/*": ["src/store/*"],
       "~/ui:hooks/*": ["src/ui/hooks/*"],

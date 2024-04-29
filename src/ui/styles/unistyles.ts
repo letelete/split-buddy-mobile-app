@@ -2,7 +2,7 @@ import { UnistylesRegistry } from 'react-native-unistyles';
 
 import { darkTheme } from '~/ui:styles/themes';
 
-interface AppThemes {
+export interface AppThemes {
   dark: typeof darkTheme;
 }
 

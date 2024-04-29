@@ -1,9 +1,10 @@
 import { ParamListBase } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useStyles } from 'react-native-unistyles';
 
-import { SignUpScreen } from '~/features/auth/sign-up/views/sign-up-screen';
+import { AuthContext, AuthState } from '~/features/auth/providers/auth-provider';
+import { SignUpScreen } from '~/features/auth/views/sign-up-screen';
 import { HomeScreen } from '~/features/home/views/home-screen';
 import { SplashScreen } from '~/features/splash/views/splash-screen';
 
@@ -131,10 +132,10 @@ export interface AppStackParamList extends ParamListBase {
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 const AppNavigator = () => {
-  const { userToken, userSignedOut, isLoggingIn } = useAppStore((state) => state.auth);
+  const { authState, userSignedOut } = useContext(AuthContext);
 
   const currentScreen = useMemo(() => {
-    if (!userToken) {
+    if (authState === AuthState.NOT_AUTHORIZED) {
       return (
         <AppStack.Screen
           options={{
@@ -146,9 +147,9 @@ const AppNavigator = () => {
       );
     }
     return <AppStack.Screen component={RootStackScreen} name={AppRoutes.ROOT} />;
-  }, [userSignedOut, userToken]);
+  }, [userSignedOut, authState]);
 
-  if (isLoggingIn) {
+  if (authState === AuthState.CHECKING) {
     return <SplashScreen />;
   }
 

@@ -5,6 +5,7 @@ export const darkTheme = {
       primarySoft: 'rgba(255, 255, 255, 0.87)',
       secondary: 'rgba(255, 255, 255, 0.64)',
       disabled: 'rgba(255, 255, 255, 0.37)',
+      destructive: '#FF453A',
     },
     background: '#000',
   },
@@ -24,6 +25,11 @@ export const darkTheme = {
     xl: 48,
     xxl: 64,
     xxxl: 96,
+  },
+  container: {
+    padding: {
+      horizontal: 24,
+    },
   },
   traits: {
     appHeader: {
