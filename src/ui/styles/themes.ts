@@ -9,6 +9,11 @@ export const darkTheme = {
     },
     background: '#000',
   },
+  gradients: {
+    neutral: ['#222222', '#111111'],
+    positive: ['#ADD100', '#52610A'],
+    negative: ['#F857A6', '#FF5858'],
+  },
   fontSizes: {
     xs: 12,
     sm: 14,
@@ -25,6 +30,10 @@ export const darkTheme = {
     xl: 48,
     xxl: 64,
     xxxl: 96,
+  },
+  rounded: {
+    base: 13,
+    rounded: 9999,
   },
   container: {
     padding: {

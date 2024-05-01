@@ -33,6 +33,31 @@ const LargeTitle = ({
 
 LargeTitle.displayName = 'LargeTitle';
 
+export interface SectionTitleProps extends WithDynamicPadding, Stylable, TextProps {}
+
+const SectionTitle = ({
+  containerStyle,
+  disablePadding,
+  children,
+  ...rest
+}: PropsWithChildren<SectionTitleProps>) => {
+  const { theme } = useStyles();
+
+  return (
+    <Text
+      {...rest}
+      color='primary'
+      containerStyle={[!disablePadding && { paddingBottom: theme.margins.lg }]}
+      size='md'
+      weight='bold'
+    >
+      {children}
+    </Text>
+  );
+};
+
+SectionTitle.displayName = 'SectionTitle';
+
 export interface BodyProps extends WithDynamicPadding, Stylable, TextProps {}
 
 const Body = ({
@@ -82,6 +107,7 @@ ErrorBody.displayName = 'ErrorBody';
 
 export const Typography = Object.assign({
   LargeTitle,
+  SectionTitle,
   Body,
   ErrorBody,
 });

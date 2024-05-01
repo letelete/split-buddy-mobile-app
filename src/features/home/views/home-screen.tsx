@@ -1,29 +1,26 @@
-import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import { ExpensesGroupsList } from '~/features/home/views/expenses-groups-list';
+
+import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
+import { Typography } from '~/ui:lib/molecules/typography';
+import { BannerTotalBalance } from '~/ui:lib/organisms/banner-total-balance';
+
+import { Balance } from '~/utils/types';
 
 const HomeScreen = () => {
-  const { styles } = useStyles(stylesheet);
+  // TODO:mocked
+  const balances = [] as Balance[];
+  const groups = [] as unknown[];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Home Screen</Text>
-    </View>
+    <ScreenContainer>
+      <BannerTotalBalance balances={balances} />
+
+      <Typography.SectionTitle>Your buddies</Typography.SectionTitle>
+      <ExpensesGroupsList data={groups} />
+    </ScreenContainer>
   );
 };
 
 HomeScreen.displayName = 'HomeScreen';
 
 export { HomeScreen };
-
-const stylesheet = createStyleSheet((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: theme.fontSizes.lg,
-    color: theme.colors.typography.primarySoft,
-  },
-}));

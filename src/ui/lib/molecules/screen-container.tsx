@@ -42,7 +42,7 @@ const ScreenContainerPrimitive = React.forwardRef<
       variant = 'default',
       testID,
       disableBottomPadding = false,
-    },
+    }, 
     ref
   ) => {
     const { styles } = useStyles(stylesheet);
@@ -137,7 +137,6 @@ const fullWidthStylesheet = createStyleSheet((theme, runtime) => ({
   fullWidthBox: {
     width: runtime.screen.width,
     left: -theme.container.padding.horizontal,
-    position: 'relative',
   },
 }));
 
