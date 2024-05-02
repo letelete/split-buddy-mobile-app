@@ -1,55 +1,108 @@
-import { LinearGradient as ExpoLinearGradient } from 'expo-linear-gradient';
-import { PropsWithChildren } from 'react';
+import {
+  LinearGradient as ExpoLinearGradient,
+  type LinearGradientProps as ExpoLinearGradientProps,
+} from 'expo-linear-gradient';
+import { PropsWithChildren, useMemo } from 'react';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
+
+import { Stylable } from '~/ui:lib/shared/interfaces';
+
+const gradientHorizontalProps = {
+  start: { x: 0, y: 0.5 },
+  end: { x: 1, y: 0.5 },
+} as const;
+
+const gradientVerticalProps = {
+  start: { x: 0.5, y: 0 },
+  end: { x: 0.5, y: 1 },
+} as const;
 
 interface WithAbsolutePositioning {
   fill?: boolean;
 }
 
-export interface NeutralGradientProps extends WithAbsolutePositioning {}
+interface WithDirection {
+  direction?: 'vertical' | 'horizontal';
+}
 
-const NeutralGradient = ({ children, fill }: PropsWithChildren<NeutralGradientProps>) => {
-  const { styles, theme } = useStyles(stylesheet);
+const useGradientDirection = (direction: NonNullable<WithDirection['direction']>) => {
+  const props = useMemo(
+    () =>
+      (
+        ({
+          horizontal: gradientHorizontalProps,
+          vertical: gradientVerticalProps,
+        }) satisfies Record<
+          NonNullable<WithDirection['direction']>,
+          Partial<ExpoLinearGradientProps>
+        >
+      )[direction],
+    [direction]
+  );
+
+  return props;
+};
+
+interface BaseLinearGradientProps
+  extends ExpoLinearGradientProps,
+    WithAbsolutePositioning,
+    WithDirection,
+    Stylable {}
+
+const BaseLinearGradient = ({
+  children,
+  fill,
+  direction = 'horizontal',
+  containerStyle,
+  ...rest
+}: PropsWithChildren<BaseLinearGradientProps>) => {
+  const { styles } = useStyles(stylesheet);
+  const directionProps = useGradientDirection(direction);
 
   return (
-    <ExpoLinearGradient
-      colors={theme.gradients.neutral as unknown as string[]}
-      style={[fill && styles.fill]}
-    >
+    <ExpoLinearGradient {...rest} {...directionProps} style={[fill && styles.fill, containerStyle]}>
       {children}
     </ExpoLinearGradient>
+  );
+};
+
+BaseLinearGradient.displayName = 'BaseLinearGradient';
+
+export interface NeutralGradientProps extends BaseLinearGradientProps {}
+
+const NeutralGradient = ({ children, ...rest }: PropsWithChildren<NeutralGradientProps>) => {
+  const { theme } = useStyles(stylesheet);
+
+  return (
+    <BaseLinearGradient {...rest} colors={theme.gradients.neutral as unknown as string[]}>
+      {children}
+    </BaseLinearGradient>
   );
 };
 
 NeutralGradient.displayName = 'NeutralGradient';
 
-export interface PositiveGradientProps extends WithAbsolutePositioning {}
+export interface PositiveGradientProps extends BaseLinearGradientProps {}
 
-const PositiveGradient = ({ children, fill }: PropsWithChildren<PositiveGradientProps>) => {
-  const { styles, theme } = useStyles(stylesheet);
+const PositiveGradient = ({ children, ...rest }: PropsWithChildren<PositiveGradientProps>) => {
+  const { theme } = useStyles(stylesheet);
 
   return (
-    <ExpoLinearGradient
-      colors={theme.gradients.positive as unknown as string[]}
-      style={[fill && styles.fill]}
-    >
+    <BaseLinearGradient {...rest} colors={theme.gradients.positive as unknown as string[]}>
       {children}
-    </ExpoLinearGradient>
+    </BaseLinearGradient>
   );
 };
 
 PositiveGradient.displayName = 'PositiveGradient';
 
-export interface NegativeGradientProps extends WithAbsolutePositioning {}
+export interface NegativeGradientProps extends BaseLinearGradientProps {}
 
-const NegativeGradient = ({ children, fill }: PropsWithChildren<NegativeGradientProps>) => {
-  const { styles, theme } = useStyles(stylesheet);
+const NegativeGradient = ({ children, ...rest }: PropsWithChildren<NegativeGradientProps>) => {
+  const { theme } = useStyles(stylesheet);
 
   return (
-    <ExpoLinearGradient
-      colors={theme.gradients.negative as unknown as string[]}
-      style={[fill && styles.fill]}
-    >
+    <ExpoLinearGradient {...rest} colors={theme.gradients.negative as unknown as string[]}>
       {children}
     </ExpoLinearGradient>
   );
@@ -72,3 +125,5 @@ export const LinearGradient = Object.assign({
   Positive: PositiveGradient,
   Negative: NegativeGradient,
 });
+
+export type LinearGradientProps = BaseLinearGradientProps;
