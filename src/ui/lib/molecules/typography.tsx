@@ -1,8 +1,9 @@
 import { PropsWithChildren } from 'react';
-import { useStyles } from 'react-native-unistyles';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Text, TextProps } from '~/ui:lib/atoms/text';
 import { Stylable } from '~/ui:lib/shared/interfaces';
+import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
 export interface WithDynamicPadding {
   disablePadding?: boolean;
@@ -33,21 +34,26 @@ const LargeTitle = ({
 
 LargeTitle.displayName = 'LargeTitle';
 
-export interface SectionTitleProps extends WithDynamicPadding, Stylable, TextProps {}
+export type SectionTitleSpacingTop = 'none' | 'large' | 'base';
+
+export interface SectionTitleProps extends WithDynamicPadding, Stylable, TextProps {
+  spacingTop: SectionTitleSpacingTop;
+}
 
 const SectionTitle = ({
   containerStyle,
   disablePadding,
+  spacingTop = 'base',
   children,
   ...rest
 }: PropsWithChildren<SectionTitleProps>) => {
-  const { theme } = useStyles();
+  const { theme, styles } = useStyles(stylesheet, { spacingTop });
 
   return (
     <Text
       {...rest}
       color='primary'
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.lg }]}
+      containerStyle={[!disablePadding && { paddingBottom: theme.margins.lg }, styles.container]}
       size='md'
       weight='bold'
     >
@@ -55,6 +61,18 @@ const SectionTitle = ({
     </Text>
   );
 };
+
+const stylesheet = createStyleSheet((theme) => ({
+  container: {
+    variants: {
+      spacingTop: {
+        none: { marginTop: 0 },
+        base: { marginTop: theme.margins.lg },
+        large: { marginTop: theme.margins.xxl },
+      } satisfies StylesheetVariants<SectionTitleSpacingTop>,
+    },
+  },
+}));
 
 SectionTitle.displayName = 'SectionTitle';
 

@@ -34,7 +34,7 @@ const Banner = ({
     <View style={[styles.container, containerStyle]}>
       {Gradient}
 
-      {children}
+      <View style={[styles.contentContainer]}>{children}</View>
     </View>
   );
 };
@@ -42,11 +42,14 @@ const Banner = ({
 const stylesheet = createStyleSheet((theme) => ({
   container: {
     width: '100%',
-    padding: theme.margins.lg,
     borderRadius: theme.rounded.base,
   },
   gradient: {
     borderRadius: theme.rounded.base,
+  },
+  contentContainer: {
+    padding: theme.margins.lg,
+    alignItems: 'center',
   },
 }));
 

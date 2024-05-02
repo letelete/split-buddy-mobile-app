@@ -16,13 +16,13 @@ const ExpensesGroupsList = ({ data }: ExpensesGroupsListProps) => {
 
   if (data.length === 0) {
     return (
-      <ScreenContainer.FullWidthBox containerStyle={styles.expander}>
+      <ScreenContainer.FullWidthBox containerStyle={styles.placeholderContainer}>
         <Image
           source={require('./img/buddy-neutral-shadow.png')}
           style={styles.placeholderImageShadow}
         />
         <Image source={require('./img/buddy-neutral.png')} />
-        <Typography.Body style={styles.placeholderText}>
+        <Typography.Body color='secondary'>
           Add your first buddy to start tracking expenses!
         </Typography.Body>
       </ScreenContainer.FullWidthBox>
@@ -33,19 +33,18 @@ const ExpensesGroupsList = ({ data }: ExpensesGroupsListProps) => {
 };
 
 const stylesheet = createStyleSheet((theme) => ({
-  expander: {
+  placeholderContainer: {
     flex: 1,
     zIndex: -1,
+    alignItems: 'center',
+    rowGap: theme.margins.md,
   },
   placeholderImageShadow: {
     position: 'absolute',
     left: 0,
-    top: -96,
+    top: -200,
     width: '100%',
     zIndex: -1,
-  },
-  placeholderText: {
-    marginTop: theme.margins.lg,
   },
 }));
 

@@ -30,11 +30,11 @@ const BannerTotalBalance = ({ balances }: BannerTotalBalanceProps) => {
   return (
     <Banner variant={bannerVariant}>
       <Typography.Body containerStyle={styles.title}>
-        {isSettleUp ? "You're all set up!" : 'Your total balance'}
+        {isSettleUp ? "You're all set!" : 'Your total balance'}
       </Typography.Body>
 
       {isSettleUp ? (
-        <Typography.Body>🥳</Typography.Body>
+        <Typography.LargeTitle disablePadding>🥳</Typography.LargeTitle>
       ) : (
         <BalanceSummary balances={nonNeutralSortedBalances} centered />
       )}

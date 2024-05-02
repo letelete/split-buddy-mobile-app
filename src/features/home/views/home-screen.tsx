@@ -15,7 +15,7 @@ const HomeScreen = () => {
     <ScreenContainer>
       <BannerTotalBalance balances={balances} />
 
-      <Typography.SectionTitle>Your buddies</Typography.SectionTitle>
+      <Typography.SectionTitle spacingTop='large'>Your buddies</Typography.SectionTitle>
       <ExpensesGroupsList data={groups} />
     </ScreenContainer>
   );
