@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { ComponentType, useCallback } from 'react';
 import { ActivityIndicator, FlatList, Image, ListRenderItemInfo, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
@@ -6,15 +6,20 @@ import { ExpenseGroup } from '~/api/types';
 
 import { ExpenseGroupItem } from '~/features/home/views/expense-group-entry';
 
-import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
 import { Typography } from '~/ui:lib/molecules/typography';
-import { Suspensible } from '~/ui:lib/shared/interfaces';
+import { Stylable, Suspensible } from '~/ui:lib/shared/interfaces';
 
-export interface ExpensesGroupsListProps extends Suspensible {
+export interface ExpensesGroupsListProps extends Suspensible, Stylable {
   data: ExpenseGroup[];
+  StickyHeaderComponent: ComponentType;
 }
 
-const ExpensesGroupsList = ({ data, loading }: ExpensesGroupsListProps) => {
+const ExpensesGroupsList = ({
+  data,
+  loading,
+  containerStyle,
+  StickyHeaderComponent,
+}: ExpensesGroupsListProps) => {
   const { styles, theme } = useStyles(stylesheet);
 
   const renderItem = useCallback(
@@ -22,30 +27,32 @@ const ExpensesGroupsList = ({ data, loading }: ExpensesGroupsListProps) => {
     []
   );
 
-  if (loading) {
-    return <ActivityIndicator />;
-  }
-
-  if (data.length === 0) {
-    return (
-      <ScreenContainer.FullWidthBox containerStyle={styles.placeholderContainer}>
-        <Image
-          source={require('./img/buddy-neutral-shadow.png')}
-          style={styles.placeholderImageShadow}
-        />
-        <Image source={require('./img/buddy-neutral.png')} />
-        <Typography.Body color='secondary'>
-          Add your first buddy to start tracking expenses!
-        </Typography.Body>
-      </ScreenContainer.FullWidthBox>
-    );
-  }
-
   return (
     <FlatList
+      ListEmptyComponent={
+        <View style={styles.placeholderContainer}>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <>
+              <Image
+                source={require('./img/buddy-neutral-shadow.png')}
+                style={styles.placeholderImageShadow}
+              />
+              <Image source={require('./img/buddy-neutral.png')} />
+              <Typography.Body color='secondary'>
+                Add your first buddy to start tracking expenses!
+              </Typography.Body>
+            </>
+          )}
+        </View>
+      }
+      contentContainerStyle={containerStyle}
       data={data}
+      indicatorStyle={theme.traits.scrollable.indicator}
       ItemSeparatorComponent={() => <View style={{ height: theme.margins.md }} />}
       keyExtractor={(item) => item.id.toString()}
+      ListHeaderComponent={StickyHeaderComponent}
       renderItem={renderItem}
       style={styles.list}
     />
@@ -54,8 +61,6 @@ const ExpensesGroupsList = ({ data, loading }: ExpensesGroupsListProps) => {
 
 const stylesheet = createStyleSheet((theme) => ({
   placeholderContainer: {
-    flex: 1,
-    zIndex: -1,
     alignItems: 'center',
     rowGap: theme.margins.md,
   },

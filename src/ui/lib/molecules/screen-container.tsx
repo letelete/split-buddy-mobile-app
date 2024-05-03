@@ -17,6 +17,7 @@ export interface ScreenContainerPrimitiveProps extends Stylable {
   variant?: ContainerVariant;
   testID?: string;
   disableBottomPadding?: boolean;
+  disableTopPadding?: boolean;
 }
 
 /**
@@ -42,6 +43,7 @@ const ScreenContainerPrimitive = React.forwardRef<
       variant = 'default',
       testID,
       disableBottomPadding = false,
+      disableTopPadding = true,
     },
     ref
   ) => {
@@ -54,9 +56,10 @@ const ScreenContainerPrimitive = React.forwardRef<
         !['scrollable', 'scrollable-fullscreen'].includes(variant) &&
           styles.paddingHorizontal(paddingHorizontal),
         disableBottomPadding && styles.removePaddingBottom,
+        disableTopPadding && styles.removePaddingTop,
         containerStyle,
       ],
-      [styles, variant, paddingHorizontal, disableBottomPadding, containerStyle]
+      [styles, variant, paddingHorizontal, disableBottomPadding, disableTopPadding, containerStyle]
     );
 
     const scrollViewProps_ = useMemo(
@@ -115,6 +118,9 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     paddingLeft: apply ? theme.container.padding.horizontal : 0,
     paddingRight: apply ? theme.container.padding.horizontal : 0,
   }),
+  removePaddingTop: {
+    paddingTop: 0,
+  },
   removePaddingBottom: {
     paddingBottom: 0,
   },

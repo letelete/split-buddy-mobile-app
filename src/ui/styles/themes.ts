@@ -77,5 +77,8 @@ export const darkTheme = {
         onCard: '#1C1C1E',
       },
     },
+    scrollable: {
+      indicator: 'white',
+    },
   },
 } as const;

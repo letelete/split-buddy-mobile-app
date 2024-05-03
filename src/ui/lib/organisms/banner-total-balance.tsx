@@ -46,7 +46,7 @@ const BannerTotalBalance = ({ balances, containerStyle, loading }: BannerTotalBa
   );
 };
 
-const stylesheet = createStyleSheet((theme) => ({
+const stylesheet = createStyleSheet(() => ({
   title: {
     textAlign: 'center',
   },
