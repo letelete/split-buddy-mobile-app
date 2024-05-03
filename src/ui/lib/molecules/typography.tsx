@@ -2,14 +2,13 @@ import { PropsWithChildren } from 'react';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Text, TextProps } from '~/ui:lib/atoms/text';
-import { Stylable } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
 export interface WithDynamicPadding {
   disablePadding?: boolean;
 }
 
-export interface LargeTitleProps extends WithDynamicPadding, Stylable, TextProps {}
+export interface LargeTitleProps extends WithDynamicPadding, TextProps {}
 
 const LargeTitle = ({
   containerStyle,
@@ -23,7 +22,7 @@ const LargeTitle = ({
     <Text
       {...rest}
       color='primarySoft'
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.lg }]}
+      containerStyle={[!disablePadding && { paddingBottom: theme.margins.lg }, containerStyle]}
       size='lg'
       weight='bold'
     >
@@ -36,7 +35,7 @@ LargeTitle.displayName = 'LargeTitle';
 
 export type SectionTitleSpacingTop = 'none' | 'large' | 'base';
 
-export interface SectionTitleProps extends WithDynamicPadding, Stylable, TextProps {
+export interface SectionTitleProps extends WithDynamicPadding, TextProps {
   spacingTop: SectionTitleSpacingTop;
 }
 
@@ -52,8 +51,12 @@ const SectionTitle = ({
   return (
     <Text
       {...rest}
+      containerStyle={[
+        !disablePadding && { paddingBottom: theme.margins.lg },
+        styles.container,
+        containerStyle,
+      ]}
       color='primary'
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.lg }, styles.container]}
       size='md'
       weight='bold'
     >
@@ -76,7 +79,7 @@ const stylesheet = createStyleSheet((theme) => ({
 
 SectionTitle.displayName = 'SectionTitle';
 
-export interface BodyProps extends WithDynamicPadding, Stylable, TextProps {}
+export interface BodyProps extends WithDynamicPadding, TextProps {}
 
 const Body = ({
   containerStyle,
@@ -91,7 +94,7 @@ const Body = ({
     <Text
       {...rest}
       color={color}
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.md }]}
+      containerStyle={[!disablePadding && { paddingBottom: theme.margins.md }, containerStyle]}
     >
       {children}
     </Text>
@@ -100,7 +103,7 @@ const Body = ({
 
 Body.displayName = 'Body';
 
-export interface ErrorBodyProps extends WithDynamicPadding, Stylable, TextProps {}
+export interface ErrorBodyProps extends WithDynamicPadding, TextProps {}
 
 const ErrorBody = ({
   containerStyle,
@@ -114,7 +117,7 @@ const ErrorBody = ({
     <Text
       {...rest}
       color='destructive'
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.base }]}
+      containerStyle={[!disablePadding && { paddingBottom: theme.margins.base }, containerStyle]}
     >
       {children}
     </Text>
@@ -123,9 +126,35 @@ const ErrorBody = ({
 
 ErrorBody.displayName = 'ErrorBody';
 
-export const Typography = Object.assign({
+export interface CaptionProps extends WithDynamicPadding, TextProps {}
+
+const Caption = ({
+  containerStyle,
+  disablePadding,
+  color = 'secondary',
+  children,
+  ...rest
+}: PropsWithChildren<CaptionProps>) => {
+  const { theme } = useStyles();
+
+  return (
+    <Text
+      {...rest}
+      color={color}
+      containerStyle={[!disablePadding && { paddingBottom: theme.margins.sm }, containerStyle]}
+      size='xs'
+    >
+      {children}
+    </Text>
+  );
+};
+
+Caption.displayName = 'Caption';
+
+export const Typography = {
   LargeTitle,
   SectionTitle,
   Body,
   ErrorBody,
-});
+  Caption,
+};

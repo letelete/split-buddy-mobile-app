@@ -1,6 +1,12 @@
 export const formatCurrency = (value: number, currencyCode: string) => {
-  return new Intl.NumberFormat('en-US', {
+  const sign = value === 0 ? '' : value > 0 ? '+' : '-';
+  const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currencyCode,
-  }).format(value);
+    currencyDisplay: 'symbol',
+  })
+    .format(Math.abs(value))
+    .replace(/^([^0-9]+)\s*(.+)$/, '$2 $1');
+
+  return `${sign}${formatted}`;
 };

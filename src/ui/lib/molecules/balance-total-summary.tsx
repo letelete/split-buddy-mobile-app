@@ -7,22 +7,39 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 import { formatCurrency } from '~/utils/string';
 import { Balance } from '~/utils/types';
 
-export type Size = 'primary' | 'secondary';
+export type Size = 'primary' | 'secondary' | 'tertiary';
 
 export interface BalanceSummaryProps extends Stylable {
   balances: Balance[];
   centered?: boolean;
+  baseSize?: Size;
 }
 
-const textSize = (size: 'primary' | 'secondary') =>
+const textSize = (size: Size) =>
   (
     ({
       primary: 'lg',
       secondary: 'md',
+      tertiary: 'sm',
     }) satisfies Record<Size, TextProps['size']>
   )[size];
 
-const BalanceSummary = ({ centered = false, balances, containerStyle }: BalanceSummaryProps) => {
+const secondarySize = (baseSize: Size) => {
+  return (
+    {
+      primary: 'secondary',
+      secondary: 'tertiary',
+      tertiary: 'tertiary',
+    } satisfies Record<Size, Size>
+  )[baseSize];
+};
+
+const BalanceSummary = ({
+  centered = false,
+  baseSize = 'primary',
+  balances,
+  containerStyle,
+}: BalanceSummaryProps) => {
   const { styles } = useStyles(stylesheet);
 
   return (
@@ -34,8 +51,10 @@ const BalanceSummary = ({ centered = false, balances, containerStyle }: BalanceS
           <Text
             key={formattedBalance}
             color='primary'
-            size={textSize(index === 0 ? 'primary' : 'secondary')}
+            numberOfLines={1}
+            size={textSize(index === 0 ? baseSize : secondarySize(baseSize))}
             weight='bold'
+            adjustsFontSizeToFit
           >
             {formattedBalance}
           </Text>
@@ -47,7 +66,7 @@ const BalanceSummary = ({ centered = false, balances, containerStyle }: BalanceS
 
 const stylesheet = createStyleSheet((theme) => ({
   container: (centered: boolean) => ({
-    rowGap: theme.margins.md,
+    rowGap: theme.margins.sm,
     alignItems: centered ? 'center' : 'flex-start',
   }),
 }));

@@ -62,5 +62,20 @@ export const darkTheme = {
       background: '#fff',
       typography: '#000',
     },
+    skeleton: {
+      get background() {
+        return '#222';
+      },
+      get foreground() {
+        return '#666';
+      },
+    },
+    userAvatar: {
+      background: '#666',
+      title: '#fff',
+      borderColor: {
+        onCard: '#1C1C1E',
+      },
+    },
   },
 } as const;

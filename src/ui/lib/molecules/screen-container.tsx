@@ -42,7 +42,7 @@ const ScreenContainerPrimitive = React.forwardRef<
       variant = 'default',
       testID,
       disableBottomPadding = false,
-    }, 
+    },
     ref
   ) => {
     const { styles } = useStyles(stylesheet);

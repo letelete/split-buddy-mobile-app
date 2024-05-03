@@ -3,7 +3,7 @@ import { TextProps as NativeTextProps } from 'react-native';
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Stylable } from '~/ui:lib/shared/interfaces';
+import { AnimatedStylableText } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
 export type Color = 'primary' | 'primarySoft' | 'secondary' | 'disabled' | 'destructive';
@@ -12,7 +12,7 @@ export type Size = 'xs' | 'sm' | 'base' | 'md' | 'lg';
 
 export type Weight = 'normal' | 'semiBold' | 'bold';
 
-export interface TextProps extends AnimatedProps<NativeTextProps>, Stylable {
+export interface TextProps extends AnimatedProps<NativeTextProps>, AnimatedStylableText {
   testID?: string;
   size?: Size;
   color?: Color;

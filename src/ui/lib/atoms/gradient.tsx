@@ -68,7 +68,7 @@ const BaseLinearGradient = ({
 
 BaseLinearGradient.displayName = 'BaseLinearGradient';
 
-export interface NeutralGradientProps extends BaseLinearGradientProps {}
+export interface NeutralGradientProps extends Partial<BaseLinearGradientProps> {}
 
 const NeutralGradient = ({ children, ...rest }: PropsWithChildren<NeutralGradientProps>) => {
   const { theme } = useStyles(stylesheet);
@@ -82,7 +82,7 @@ const NeutralGradient = ({ children, ...rest }: PropsWithChildren<NeutralGradien
 
 NeutralGradient.displayName = 'NeutralGradient';
 
-export interface PositiveGradientProps extends BaseLinearGradientProps {}
+export interface PositiveGradientProps extends Partial<BaseLinearGradientProps> {}
 
 const PositiveGradient = ({ children, ...rest }: PropsWithChildren<PositiveGradientProps>) => {
   const { theme } = useStyles(stylesheet);
@@ -96,15 +96,15 @@ const PositiveGradient = ({ children, ...rest }: PropsWithChildren<PositiveGradi
 
 PositiveGradient.displayName = 'PositiveGradient';
 
-export interface NegativeGradientProps extends BaseLinearGradientProps {}
+export interface NegativeGradientProps extends Partial<BaseLinearGradientProps> {}
 
 const NegativeGradient = ({ children, ...rest }: PropsWithChildren<NegativeGradientProps>) => {
   const { theme } = useStyles(stylesheet);
 
   return (
-    <ExpoLinearGradient {...rest} colors={theme.gradients.negative as unknown as string[]}>
+    <BaseLinearGradient {...rest} colors={theme.gradients.negative as unknown as string[]}>
       {children}
-    </ExpoLinearGradient>
+    </BaseLinearGradient>
   );
 };
 
@@ -120,10 +120,10 @@ const stylesheet = createStyleSheet({
   },
 });
 
-export const LinearGradient = Object.assign({
+export const LinearGradient = {
   Neutral: NeutralGradient,
   Positive: PositiveGradient,
   Negative: NegativeGradient,
-});
+};
 
 export type LinearGradientProps = BaseLinearGradientProps;
