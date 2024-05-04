@@ -34,7 +34,7 @@ export const darkTheme = {
   rounded: {
     base: 13,
     baseInner: 11,
-    rounded: 9999,
+    full: 9999,
   },
   container: {
     padding: {
@@ -71,7 +71,7 @@ export const darkTheme = {
         return '#666';
       },
     },
-    userAvatar: {
+    avatar: {
       background: '#666',
       title: '#fff',
       borderColor: {

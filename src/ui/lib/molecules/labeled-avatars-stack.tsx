@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { UserAvatar } from '~/ui:lib/atoms/user-avatar';
+import { PersonAvatar } from '~/ui:lib/atoms/person-avatar';
 import { Typography } from '~/ui:lib/molecules/typography';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
@@ -26,7 +26,7 @@ const AvatarsStackPrimitive = ({
   return (
     <View style={[styles.container, containerStyle]}>
       {visibleAvatars.map((item, index) => (
-        <UserAvatar
+        <PersonAvatar
           key={item.id}
           containerStyle={styles.avatar(borderColor ?? theme.colors.background, index)}
           displayName={item.displayName}

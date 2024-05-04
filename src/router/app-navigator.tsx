@@ -6,9 +6,10 @@ import { useStyles } from 'react-native-unistyles';
 import { AuthContext, AuthState } from '~/features/auth/providers/auth-provider';
 import { SignUpScreen } from '~/features/auth/views/sign-up-screen';
 import { HomeScreen } from '~/features/home/views/home-screen';
+import { ProfileButton } from '~/features/home/views/profile-button';
 import { SplashScreen } from '~/features/splash/views/splash-screen';
 
-import { useAppStore } from '~/store/app-store';
+import { UserAvatar } from '~/ui:lib/organisms/user-avatar';
 
 /** ------------------------------------------------------------------------------------------------
  * Auth Routes
@@ -105,9 +106,12 @@ const RootStackScreen = () => {
       initialRouteName={RootRoutes.HOME}
     >
       <RootStack.Screen
+        options={{
+          title: 'Split Buddy',
+          headerLeft: () => <ProfileButton />,
+        }}
         component={HomeScreen}
         name={ProfileRoutes.HOME}
-        options={{ title: 'Split Buddy' }}
       />
     </RootStack.Navigator>
   );

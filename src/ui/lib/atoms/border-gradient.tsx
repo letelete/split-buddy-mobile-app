@@ -2,13 +2,15 @@ import { PropsWithChildren, ReactNode, useState } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
+import { Stylable } from '~/ui:lib/shared/interfaces';
+
 import { AtLeastOne } from '~/utils/types';
 
 type EdgeSizing =
   | number
   | AtLeastOne<{ left?: number; top?: number; right?: number; bottom?: number }>;
 
-export interface BorderGradientProps {
+export interface BorderGradientProps extends Stylable {
   renderGradient: (style: StyleProp<ViewStyle>) => ReactNode;
   borderWidth: EdgeSizing;
   borderRadius: number;
@@ -19,12 +21,13 @@ const BorderGradient = ({
   renderGradient,
   borderRadius,
   children,
+  containerStyle,
 }: PropsWithChildren<BorderGradientProps>) => {
   const { styles } = useStyles(stylesheet);
   const [[gradientWidth, gradientHeight], setGradientSize] = useState([0, 0]);
 
   return (
-    <View>
+    <View style={containerStyle}>
       {renderGradient(styles.gradient(gradientHeight, gradientWidth, borderRadius))}
 
       <View
@@ -50,12 +53,12 @@ const stylesheet = createStyleSheet(() => ({
     borderRadius,
     ...{
       ...(typeof borderWidth === 'number'
-        ? { margin: borderWidth }
+        ? { padding: borderWidth }
         : {
-            marginLeft: borderWidth.left,
-            marginTop: borderWidth.top,
-            marginRight: borderWidth.right,
-            marginBottom: borderWidth.bottom,
+            paddingLeft: borderWidth.left,
+            paddingTop: borderWidth.top,
+            paddingRight: borderWidth.right,
+            paddingBottom: borderWidth.bottom,
           }),
     },
   }),

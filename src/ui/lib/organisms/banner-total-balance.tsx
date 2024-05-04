@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { useBannerVariantForBalance } from '~/ui:hooks/use-banner-variant-for-balance';
+import { Balance } from '~/api/types';
+
+import { useBannerVariantForBalance } from '~/ui:hooks/use-color-for-balance';
 
 import { Banner } from '~/ui:lib/atoms/banner';
 import { SkeletonContent } from '~/ui:lib/atoms/skeleton';
@@ -10,7 +12,6 @@ import { Typography } from '~/ui:lib/molecules/typography';
 import { Stylable, Suspensible } from '~/ui:lib/shared/interfaces';
 
 import { createBalancesComparator } from '~/utils/sort';
-import { Balance } from '~/utils/types';
 
 export interface BannerTotalBalanceProps extends Stylable, Suspensible {
   balances: Balance[];

@@ -1,11 +1,12 @@
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
+import { Balance } from '~/api/types';
+
 import { Text, TextProps } from '~/ui:lib/atoms/text';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
 import { formatCurrency } from '~/utils/string';
-import { Balance } from '~/utils/types';
 
 export type Size = 'primary' | 'secondary' | 'tertiary';
 

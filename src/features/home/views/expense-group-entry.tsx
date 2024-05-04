@@ -25,7 +25,7 @@ const ExpenseGroupItem = ({ group }: ExpenseGroupItemProps) => {
     () =>
       group.members.map((member) => ({
         id: member.id,
-        imageUri: member.photoUrl,
+        imageUri: member.imageUrl,
         displayName: member.displayName,
       })),
     [group.members]

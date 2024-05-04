@@ -6,20 +6,25 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 
 export type Size = 'base' | 'sm';
 
-export interface UserAvatarProps extends Stylable {
+export interface PersonAvatarProps extends Stylable {
   imageUri?: string;
   displayName: string;
   size?: Size;
 }
 
-const UserAvatar = ({ imageUri, displayName, size = 'base', containerStyle }: UserAvatarProps) => {
+const PersonAvatar = ({
+  imageUri,
+  displayName,
+  size = 'base',
+  containerStyle,
+}: PersonAvatarProps) => {
   const { styles } = useStyles(stylesheet);
 
   const avatarSize = useMemo(
     () =>
       (
         ({
-          base: 36,
+          base: 28,
           sm: 24,
         }) satisfies Record<Size, number>
       )[size],
@@ -50,13 +55,13 @@ const UserAvatar = ({ imageUri, displayName, size = 'base', containerStyle }: Us
 
 const stylesheet = createStyleSheet((theme) => ({
   container: {
-    backgroundColor: theme.traits.userAvatar.background,
+    backgroundColor: theme.traits.avatar.background,
   },
   title: {
-    color: theme.traits.userAvatar.title,
+    color: theme.traits.avatar.title,
   },
 }));
 
-UserAvatar.displayName = 'UserAvatar';
+PersonAvatar.displayName = 'PersonAvatar';
 
-export { UserAvatar };
+export { PersonAvatar };
