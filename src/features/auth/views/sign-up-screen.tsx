@@ -11,7 +11,9 @@ const SignUpScreen = () => {
 
   return (
     <ScreenContainer>
-      <Typography.LargeTitle>Bring tranquility to your finances</Typography.LargeTitle>
+      <Typography.LargeTitle containerStyle={styles.title}>
+        Bring tranquility to your finances
+      </Typography.LargeTitle>
 
       <Typography.Body>
         Split, manage, and track your shared expenses among your friends, roommates, co-workers, and
@@ -31,13 +33,14 @@ SignUpScreen.displayName = 'SignUpScreen';
 
 export { SignUpScreen };
 
-const stylesheet = createStyleSheet(() => ({
+const stylesheet = createStyleSheet((theme) => ({
   backgroundImage: {
     position: 'absolute',
     left: 0,
     top: -96,
     width: '100%',
   },
+  title: { marginTop: theme.margins.md },
   expander: {
     flex: 1,
     zIndex: -1,

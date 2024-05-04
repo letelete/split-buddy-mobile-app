@@ -119,7 +119,7 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     paddingRight: apply ? theme.container.padding.horizontal : 0,
   }),
   removePaddingTop: {
-    paddingTop: 0,
+    paddingTop: theme.margins.base,
   },
   removePaddingBottom: {
     paddingBottom: 0,
