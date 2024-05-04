@@ -24,7 +24,7 @@ const ExpenseGroupItem = ({ group }: ExpenseGroupItemProps) => {
   const members = useMemo(
     () =>
       group.members.map((member) => ({
-        id: member.id.toString(),
+        id: member.id,
         imageUri: member.photoUrl,
         displayName: member.displayName,
       })),

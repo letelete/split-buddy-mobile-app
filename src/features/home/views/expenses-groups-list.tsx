@@ -51,7 +51,7 @@ const ExpensesGroupsList = ({
       data={data}
       indicatorStyle={theme.traits.scrollable.indicator}
       ItemSeparatorComponent={() => <View style={{ height: theme.margins.md }} />}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item) => item.id}
       ListHeaderComponent={StickyHeaderComponent}
       renderItem={renderItem}
       style={styles.list}

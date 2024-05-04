@@ -1,20 +1,11 @@
+import { faker } from '@faker-js/faker';
+
 import { ExpenseGroup, UserBalance } from '~/api/types';
 
 // TODO:for mocking purposes
-const wait = async (delay: number = Math.floor(Math.random() * 3)) => {
+const wait = async (delay: number = Math.floor(Math.random() * 3) + 1) => {
   return await new Promise((r) => setTimeout(r, delay));
 };
-
-function* createIdGenerator() {
-  let id = 0;
-  while (true) {
-    yield id++;
-  }
-  // eslint-disable-next-line no-unreachable
-  return id;
-}
-
-const idGen = createIdGenerator();
 
 export interface GetUserTotalBalanceParams {}
 
@@ -41,12 +32,12 @@ export async function getExpensesGroups(
   await wait();
   return [
     {
-      id: idGen.next().value,
-      name: 'Sesame Street',
+      id: faker.string.uuid(),
+      name: faker.company.name(),
       members: [
         {
-          id: idGen.next().value,
-          displayName: 'Emilia Lis',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
         },
       ],
       createdAt: new Date().getTime(),
@@ -58,24 +49,26 @@ export async function getExpensesGroups(
       ],
     },
     {
-      id: idGen.next().value,
-      name: 'Upsidelab',
+      id: faker.string.uuid(),
+      name: faker.company.name(),
       members: [
         {
-          id: idGen.next().value,
-          displayName: 'John Doe',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
+          photoUrl: faker.image.avatar(),
         },
         {
-          id: idGen.next().value,
-          displayName: 'Kate Upton',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
+          photoUrl: faker.image.avatar(),
         },
         {
-          id: idGen.next().value,
-          displayName: 'Sam Lee',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
         },
         {
-          id: idGen.next().value,
-          displayName: 'Ophelia Olly',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
         },
       ],
       createdAt: new Date().getTime(),
@@ -88,12 +81,12 @@ export async function getExpensesGroups(
       ],
     },
     {
-      id: idGen.next().value,
-      name: 'Kate & Bruno',
+      id: faker.string.uuid(),
+      name: faker.company.name(),
       members: [
         {
-          id: idGen.next().value,
-          displayName: 'Kate Upton',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
         },
       ],
       createdAt: new Date().getTime(),
@@ -101,12 +94,13 @@ export async function getExpensesGroups(
       balances: [{ value: 200, currency: { code: 'USD', name: 'US Dollar' } }],
     },
     {
-      id: idGen.next().value,
-      name: 'Italy trip 2024',
+      id: faker.string.uuid(),
+      name: faker.company.name(),
       members: [
         {
-          id: idGen.next().value,
-          displayName: 'John Doe',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
+          photoUrl: faker.image.avatar(),
         },
       ],
       createdAt: new Date().getTime(),
@@ -114,12 +108,13 @@ export async function getExpensesGroups(
       balances: [{ value: 12.76, currency: { code: 'USD', name: 'US Dollar' } }],
     },
     {
-      id: idGen.next().value,
-      name: 'Berlin conference',
+      id: faker.string.uuid(),
+      name: faker.company.name(),
       members: [
         {
-          id: idGen.next().value,
-          displayName: 'Karol S.',
+          id: faker.string.uuid(),
+          displayName: faker.person.fullName(),
+          photoUrl: faker.image.avatar(),
         },
       ],
       createdAt: new Date().getTime(),

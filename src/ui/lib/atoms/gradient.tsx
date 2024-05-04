@@ -120,10 +120,10 @@ const stylesheet = createStyleSheet({
   },
 });
 
-export const LinearGradient = {
+export const LinearGradient = Object.assign(BaseLinearGradient, {
   Neutral: NeutralGradient,
   Positive: PositiveGradient,
   Negative: NegativeGradient,
-};
+});
 
 export type LinearGradientProps = BaseLinearGradientProps;

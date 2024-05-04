@@ -4,7 +4,7 @@ export interface UserBalance {
   balances: Balance[];
 }
 export interface ExpenseGroup {
-  id: number;
+  id: string;
   balances: Balance[];
   members: ExpenseGroupMember[];
   name: string;
@@ -13,7 +13,7 @@ export interface ExpenseGroup {
 }
 
 export interface ExpenseGroupMember {
-  id: number;
+  id: string;
   displayName: string;
   photoUrl?: string;
 }

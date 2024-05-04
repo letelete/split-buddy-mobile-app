@@ -33,6 +33,7 @@ export const darkTheme = {
   },
   rounded: {
     base: 13,
+    baseInner: 11,
     rounded: 9999,
   },
   container: {
@@ -74,7 +75,7 @@ export const darkTheme = {
       background: '#666',
       title: '#fff',
       borderColor: {
-        onCard: '#1C1C1E',
+        onCard: '#202020',
       },
     },
     scrollable: {
