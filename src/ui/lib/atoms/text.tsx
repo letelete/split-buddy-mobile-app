@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, createContext, useContext } from 'react';
 import { TextProps as NativeTextProps } from 'react-native';
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
@@ -6,17 +6,31 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { AnimatedStylableText } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
-export type Color = 'primary' | 'primarySoft' | 'secondary' | 'disabled' | 'destructive';
+import { AppTheme } from '~/ui:styles/themes';
 
-export type Size = 'xs' | 'sm' | 'base' | 'md' | 'lg';
+export type Color = keyof AppTheme['colors']['typography'];
+
+export type Size = keyof AppTheme['fontSizes'];
 
 export type Weight = 'normal' | 'semiBold' | 'bold';
+
+export type Background = `gradient-${keyof AppTheme['gradients']}`;
+
+export interface TextContextProps {
+  /**
+   * A background on which the text is render on. Defaults to theme's background color.
+   */
+  background?: Background;
+}
+
+export const TextContext = createContext<TextContextProps>({});
 
 export interface TextProps extends AnimatedProps<NativeTextProps>, AnimatedStylableText {
   testID?: string;
   size?: Size;
   color?: Color;
   weight?: Weight;
+  onBackground?: Background;
 }
 
 const Text = ({
@@ -24,10 +38,12 @@ const Text = ({
   containerStyle,
   color,
   weight,
+  onBackground,
   size,
   testID,
   ...rest
 }: PropsWithChildren<TextProps>) => {
+  const textContext = useContext(TextContext);
   const { styles } = useStyles(stylesheet, {
     color,
     weight,
@@ -35,7 +51,15 @@ const Text = ({
   });
 
   return (
-    <Animated.Text {...rest} style={[styles.container, containerStyle]} testID={testID}>
+    <Animated.Text
+      {...rest}
+      style={[
+        styles.container,
+        textContext.background && styles.containerOnBackground(textContext.background),
+        containerStyle,
+      ]}
+      testID={testID}
+    >
       {children}
     </Animated.Text>
   );
@@ -72,5 +96,15 @@ const stylesheet = createStyleSheet((theme) => ({
         default: { fontSize: theme.fontSizes.base },
       } satisfies StylesheetVariants<Size>,
     },
+  },
+  containerOnBackground: (background: Background, color: Color = 'primary') => {
+    const backgroundToColorMap = {
+      'gradient-neutral': theme.gradients.neutral.foreground,
+      'gradient-negative': theme.gradients.negative.foreground,
+      'gradient-positive': theme.gradients.positive.foreground,
+    } satisfies Record<Background, Record<Color, string>>;
+    return {
+      color: backgroundToColorMap[background][color],
+    };
   },
 }));

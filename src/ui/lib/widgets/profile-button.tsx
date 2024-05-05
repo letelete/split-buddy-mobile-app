@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { TouchableOpacity } from 'react-native';
 
-import { useGetUserDetails } from '~/features/home/services/use-get-user-details';
-import { useGetUserTotalBalance } from '~/features/home/services/use-get-user-total-balance';
+import { useGetUserDetails } from '~/features/expense-group/services/use-get-user-details';
+import { useGetUserTotalBalance } from '~/features/expense-group/services/use-get-user-total-balance';
 
 import { SkeletonContent } from '~/ui:lib/atoms/skeleton';
 import { UserAvatar } from '~/ui:lib/organisms/user-avatar';
@@ -12,14 +12,14 @@ export interface ProfileButtonProps extends Stylable {}
 
 const ProfileButton = ({ containerStyle }: ProfileButtonProps) => {
   const userDetailsQuery = useGetUserDetails();
+  const totalBalanceQuery = useGetUserTotalBalance();
 
   const handleOpenProfile = useCallback(() => {
     console.warn('Not implemented');
   }, []);
-  const totalBalanceQuery = useGetUserTotalBalance();
 
   return (
-    <TouchableOpacity onPress={handleOpenProfile}>
+    <TouchableOpacity style={containerStyle} onPress={handleOpenProfile}>
       <SkeletonContent loading={userDetailsQuery.isLoading}>
         <UserAvatar
           balances={totalBalanceQuery.data?.balances ?? []}

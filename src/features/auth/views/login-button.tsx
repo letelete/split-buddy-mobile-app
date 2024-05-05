@@ -29,7 +29,7 @@ export const LoginWithAppleButton = () => {
         <AppleAuthentication.AppleAuthenticationButton
           buttonStyle={buttonStyle}
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
-          cornerRadius={999}
+          cornerRadius={theme.rounded.full}
           style={styles.button}
           onPress={login}
         />

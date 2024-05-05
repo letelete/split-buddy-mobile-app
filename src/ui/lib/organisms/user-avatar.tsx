@@ -1,13 +1,11 @@
-import { ReactNode } from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
 import { useStyles } from 'react-native-unistyles';
 
 import { Balance } from '~/api/types';
 
 import { useGradientForBalance } from '~/ui:hooks/use-color-for-balance';
 
+import { Avatar } from '~/ui:lib/atoms/avatar';
 import { BorderGradient } from '~/ui:lib/atoms/border-gradient';
-import { PersonAvatar } from '~/ui:lib/atoms/person-avatar';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
 export interface UserAvatarProps extends Stylable {
@@ -23,11 +21,11 @@ const UserAvatar = ({ balances, displayName, imageUri, containerStyle }: UserAva
   return (
     <BorderGradient
       borderRadius={theme.rounded.full}
-      borderWidth={1}
+      borderWidth={2}
       containerStyle={containerStyle}
       renderGradient={(style) => <GradientForBalance containerStyle={style} fill />}
     >
-      <PersonAvatar displayName={displayName} imageUri={imageUri} />
+      <Avatar displayName={displayName} imageUri={imageUri} />
     </BorderGradient>
   );
 };

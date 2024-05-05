@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
+import { Background, TextContext } from '~/ui:lib/atoms/text';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
 export type BannerVariant = 'neutral' | 'positive' | 'negative';
@@ -30,11 +31,25 @@ const Banner = ({
     [styles.gradient, variant]
   );
 
+  const background = useMemo(
+    () =>
+      (
+        ({
+          neutral: 'gradient-neutral',
+          positive: 'gradient-positive',
+          negative: 'gradient-negative',
+        }) satisfies Record<BannerVariant, Background>
+      )[variant],
+    [variant]
+  );
+
   return (
     <View style={[styles.container, containerStyle]}>
       {Gradient}
 
-      <View style={[styles.contentContainer]}>{children}</View>
+      <TextContext.Provider value={{ background }}>
+        <View style={[styles.contentContainer]}>{children}</View>
+      </TextContext.Provider>
     </View>
   );
 };

@@ -4,7 +4,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { ExpenseGroup } from '~/api/types';
 
-import { ExpenseGroupItem } from '~/features/home/views/expense-group-entry';
+import { ExpenseGroupItem } from '~/features/expense-group/views/expense-group-entry';
 
 import { Typography } from '~/ui:lib/molecules/typography';
 import { Stylable, Suspensible } from '~/ui:lib/shared/interfaces';

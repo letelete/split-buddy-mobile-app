@@ -1,15 +1,18 @@
 import { ParamListBase } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 import { useContext, useMemo } from 'react';
 import { useStyles } from 'react-native-unistyles';
 
 import { AuthContext, AuthState } from '~/features/auth/providers/auth-provider';
 import { SignUpScreen } from '~/features/auth/views/sign-up-screen';
 import { HomeScreen } from '~/features/home/views/home-screen';
-import { ProfileButton } from '~/features/home/views/profile-button';
-import { SplashScreen } from '~/features/splash/views/splash-screen';
+import { SplashScreen } from '~/features/welcome/views/splash-screen';
 
-import { UserAvatar } from '~/ui:lib/organisms/user-avatar';
+import { NotificationsButton } from '~/ui:lib/widgets/notifications-button';
+import { ProfileButton } from '~/ui:lib/widgets/profile-button';
 
 /** ------------------------------------------------------------------------------------------------
  * Auth Routes
@@ -109,6 +112,7 @@ const RootStackScreen = () => {
         options={{
           title: 'Split Buddy',
           headerLeft: () => <ProfileButton />,
+          headerRight: () => <NotificationsButton />,
         }}
         component={HomeScreen}
         name={ProfileRoutes.HOME}
@@ -182,6 +186,7 @@ function useCommonScreenOptions() {
   const options = useMemo(
     () =>
       ({
+        headerShadowVisible: false,
         headerStyle: {
           backgroundColor: theme.traits.appHeader.background.color,
         },
@@ -190,7 +195,7 @@ function useCommonScreenOptions() {
           fontWeight: 'bold',
           color: theme.traits.appHeader.title.color,
         },
-      }) as const,
+      }) as const satisfies NativeStackNavigationOptions,
     [
       theme.traits.appHeader.action.color,
       theme.traits.appHeader.background.color,

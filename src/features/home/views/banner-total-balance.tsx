@@ -22,12 +22,12 @@ const balancesComparator = createBalancesComparator();
 const BannerTotalBalance = ({ balances, containerStyle, loading }: BannerTotalBalanceProps) => {
   const { styles } = useStyles(stylesheet);
   const bannerVariant = useBannerVariantForBalance(balances);
-  const nonNeutralSortedBalances = useMemo(
+  const nonZeroBalances = useMemo(
     () => balances.sort(balancesComparator).filter((balance) => balance.value !== 0),
     [balances]
   );
 
-  const isSettleUp = nonNeutralSortedBalances.length === 0;
+  const isSettleUp = nonZeroBalances.length === 0;
   const titleContent = isSettleUp ? "You're all set!" : 'Your total balance';
 
   return (
@@ -40,7 +40,7 @@ const BannerTotalBalance = ({ balances, containerStyle, loading }: BannerTotalBa
         {isSettleUp ? (
           <Typography.LargeTitle disablePadding>🥳</Typography.LargeTitle>
         ) : (
-          <BalanceSummary balances={nonNeutralSortedBalances} centered />
+          <BalanceSummary balances={nonZeroBalances} centered />
         )}
       </SkeletonContent>
     </Banner>

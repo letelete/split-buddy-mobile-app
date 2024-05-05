@@ -9,6 +9,7 @@ import { useGradientForBalance } from '~/ui:hooks/use-color-for-balance';
 
 import { BorderGradient } from '~/ui:lib/atoms/border-gradient';
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
+import { TextContext } from '~/ui:lib/atoms/text';
 import { BalanceSummary } from '~/ui:lib/molecules/balance-total-summary';
 import { AvatarsStack } from '~/ui:lib/molecules/labeled-avatars-stack';
 import { Typography } from '~/ui:lib/molecules/typography';
@@ -59,42 +60,43 @@ const ExpenseGroupCard = ({
       >
         <View>
           <LinearGradient.Neutral containerStyle={styles.gradient} fill />
+          <TextContext.Provider value={{ background: 'gradient-neutral' }}>
+            <View style={styles.card}>
+              <View style={styles.cardContent}>
+                <AvatarsStack.Labeled
+                  borderColor={theme.traits.avatar.borderColor.onCard}
+                  images={members}
+                  label={name}
+                />
 
-          <View style={styles.card}>
-            <View style={styles.cardContent}>
-              <AvatarsStack.Labeled
-                borderColor={theme.traits.avatar.borderColor.onCard}
-                images={members}
-                label={name}
-              />
+                <View style={styles.balanceSummary}>
+                  {hasBorrowed && (
+                    <View>
+                      <Typography.Body color='secondary' disablePadding>
+                        You borrowed
+                      </Typography.Body>
+                      <BalanceSummary balances={borrowed} showSign='none' />
+                    </View>
+                  )}
 
-              <View style={styles.balanceSummary}>
-                {hasBorrowed && (
-                  <View>
-                    <Typography.Body color='secondary' disablePadding>
-                      You borrowed
-                    </Typography.Body>
-                    <BalanceSummary balances={borrowed} showSign='none' />
-                  </View>
-                )}
+                  {hasLent && (
+                    <View>
+                      <Typography.Body color='secondary' disablePadding>
+                        You lent
+                      </Typography.Body>
+                      <BalanceSummary balances={lent} showSign='none' />
+                    </View>
+                  )}
 
-                {hasLent && (
-                  <View>
-                    <Typography.Body color='secondary' disablePadding>
-                      You lent
-                    </Typography.Body>
-                    <BalanceSummary balances={lent} showSign='none' />
-                  </View>
-                )}
-
-                {isSettleUp && (
-                  <Typography.Body color='secondary'>You&apos;re all set! 🥳</Typography.Body>
-                )}
+                  {isSettleUp && (
+                    <Typography.Body color='secondary'>You&apos;re all set! 🥳</Typography.Body>
+                  )}
+                </View>
               </View>
-            </View>
 
-            <Ionicons color={theme.colors.typography.primary} name='chevron-forward' size={24} />
-          </View>
+              <Ionicons color={theme.colors.typography.primary} name='chevron-forward' size={24} />
+            </View>
+          </TextContext.Provider>
         </View>
       </BorderGradient>
     </TouchableOpacity>

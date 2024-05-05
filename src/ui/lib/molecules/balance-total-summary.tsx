@@ -10,7 +10,7 @@ import { formatCurrency } from '~/utils/string';
 
 export type Size = 'primary' | 'secondary' | 'tertiary';
 
-export type Sign = 'all' | 'negative' | 'positive' | 'none';
+export type Sign = 'all' | 'plus' | 'minus' | 'none';
 
 export interface BalanceSummaryProps extends Stylable {
   balances: Balance[];
@@ -52,8 +52,8 @@ const BalanceSummary = ({
       {balances.map((balance, index) => {
         const includeSign =
           showSign === 'all' ||
-          (showSign === 'negative' && balance.value < 0) ||
-          (showSign === 'positive' && balance.value > 0);
+          (showSign === 'plus' && balance.value < 0) ||
+          (showSign === 'minus' && balance.value > 0);
         const formattedBalance = formatCurrency(balance.value, balance.currency.code, {
           includeSign,
         });

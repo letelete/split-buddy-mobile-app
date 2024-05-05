@@ -2,13 +2,13 @@ import { useCallback } from 'react';
 import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { useGetExpensesGroups } from '~/features/home/services/use-get-expenses-groups';
-import { useGetUserTotalBalance } from '~/features/home/services/use-get-user-total-balance';
-import { ExpensesGroupsList } from '~/features/home/views/expenses-groups-list';
+import { useGetExpensesGroups } from '~/features/expense-group/services/use-get-expenses-groups';
+import { useGetUserTotalBalance } from '~/features/expense-group/services/use-get-user-total-balance';
+import { ExpensesGroupsList } from '~/features/expense-group/views/expenses-groups-list';
+import { BannerTotalBalance } from '~/features/home/views/banner-total-balance';
 
 import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
 import { Typography } from '~/ui:lib/molecules/typography';
-import { BannerTotalBalance } from '~/ui:lib/organisms/banner-total-balance';
 
 const HomeScreen = () => {
   const { styles } = useStyles(stylesheet);

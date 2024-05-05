@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { ExpenseGroup } from '~/api/types';
 
-import { ExpenseGroupCard } from '~/ui:lib/molecules/expense-group-card';
+import { ExpenseGroupCard } from '~/features/expense-group/views/expense-group-card';
 
 import { createBalancesComparator } from '~/utils/sort';
 

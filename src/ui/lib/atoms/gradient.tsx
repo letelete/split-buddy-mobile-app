@@ -74,7 +74,7 @@ const NeutralGradient = ({ children, ...rest }: PropsWithChildren<NeutralGradien
   const { theme } = useStyles(stylesheet);
 
   return (
-    <BaseLinearGradient {...rest} colors={theme.gradients.neutral as unknown as string[]}>
+    <BaseLinearGradient {...rest} colors={theme.gradients.neutral.values}>
       {children}
     </BaseLinearGradient>
   );
@@ -88,7 +88,7 @@ const PositiveGradient = ({ children, ...rest }: PropsWithChildren<PositiveGradi
   const { theme } = useStyles(stylesheet);
 
   return (
-    <BaseLinearGradient {...rest} colors={theme.gradients.positive as unknown as string[]}>
+    <BaseLinearGradient {...rest} colors={theme.gradients.positive.values}>
       {children}
     </BaseLinearGradient>
   );
@@ -102,7 +102,7 @@ const NegativeGradient = ({ children, ...rest }: PropsWithChildren<NegativeGradi
   const { theme } = useStyles(stylesheet);
 
   return (
-    <BaseLinearGradient {...rest} colors={theme.gradients.negative as unknown as string[]}>
+    <BaseLinearGradient {...rest} colors={theme.gradients.negative.values}>
       {children}
     </BaseLinearGradient>
   );
