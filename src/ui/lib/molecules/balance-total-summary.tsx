@@ -10,10 +10,13 @@ import { formatCurrency } from '~/utils/string';
 
 export type Size = 'primary' | 'secondary' | 'tertiary';
 
+export type Sign = 'all' | 'negative' | 'positive' | 'none';
+
 export interface BalanceSummaryProps extends Stylable {
   balances: Balance[];
   centered?: boolean;
   baseSize?: Size;
+  showSign?: Sign;
 }
 
 const textSize = (size: Size) =>
@@ -36,9 +39,10 @@ const secondarySize = (baseSize: Size) => {
 };
 
 const BalanceSummary = ({
+  balances,
   centered = false,
   baseSize = 'primary',
-  balances,
+  showSign = 'all',
   containerStyle,
 }: BalanceSummaryProps) => {
   const { styles } = useStyles(stylesheet);
@@ -46,7 +50,13 @@ const BalanceSummary = ({
   return (
     <View style={[styles.container(centered), containerStyle]}>
       {balances.map((balance, index) => {
-        const formattedBalance = formatCurrency(balance.value, balance.currency.code);
+        const includeSign =
+          showSign === 'all' ||
+          (showSign === 'negative' && balance.value < 0) ||
+          (showSign === 'positive' && balance.value > 0);
+        const formattedBalance = formatCurrency(balance.value, balance.currency.code, {
+          includeSign,
+        });
 
         return (
           <Text

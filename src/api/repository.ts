@@ -95,7 +95,12 @@ export async function getExpensesGroups(
     },
     {
       id: faker.string.uuid(),
-      name: faker.company.name(),
+      name:
+        faker.company.name() +
+        ': ' +
+        faker.company.catchPhrase() +
+        ' + ' +
+        faker.company.catchPhrase(),
       members: [
         {
           id: faker.string.uuid(),

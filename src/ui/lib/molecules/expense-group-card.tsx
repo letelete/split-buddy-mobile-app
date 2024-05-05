@@ -74,7 +74,7 @@ const ExpenseGroupCard = ({
                     <Typography.Body color='secondary' disablePadding>
                       You borrowed
                     </Typography.Body>
-                    <BalanceSummary balances={borrowed} />
+                    <BalanceSummary balances={borrowed} showSign='none' />
                   </View>
                 )}
 
@@ -83,7 +83,7 @@ const ExpenseGroupCard = ({
                     <Typography.Body color='secondary' disablePadding>
                       You lent
                     </Typography.Body>
-                    <BalanceSummary balances={lent} />
+                    <BalanceSummary balances={lent} showSign='none' />
                   </View>
                 )}
 
@@ -113,6 +113,7 @@ const stylesheet = createStyleSheet((theme) => ({
   },
   cardContent: {
     rowGap: theme.margins.lg,
+    flex: 1,
   },
   gradient: {
     borderTopStartRadius: theme.rounded.baseInner,
