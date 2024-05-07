@@ -134,7 +134,7 @@ function createFakeGroup(members: ExpenseGroupMember[]): ExpenseGroup {
   const lent = mergeBalances(members.flatMap((member) => member.userBalance.lent));
 
   const nameChunks = [faker.company.name(), faker.company.name(), faker.company.name()];
-  const name = nameChunks.slice(0, Math.floor(Math.random() * nameChunks.length - 1) + 1).join(' ');
+  const name = nameChunks.slice(0, Math.floor(Math.random() * nameChunks.length) + 1).join(' ');
 
   const group = {
     id: faker.string.uuid(),
