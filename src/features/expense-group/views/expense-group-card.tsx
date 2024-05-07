@@ -65,6 +65,7 @@ const ExpenseGroupCard = ({
               <View style={styles.cardContent}>
                 <AvatarsStack.Labeled
                   borderColor={theme.traits.avatar.borderColor.onCard}
+                  containerStyle={styles.avatarsStack}
                   images={members}
                   label={name}
                 />
@@ -125,6 +126,9 @@ const stylesheet = createStyleSheet((theme) => ({
   },
   balanceSummary: {
     rowGap: theme.margins.base,
+  },
+  avatarsStack: {
+    marginLeft: -theme.margins.sm,
   },
 }));
 
