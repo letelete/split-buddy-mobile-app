@@ -20,14 +20,14 @@ const HomeScreen = () => {
     return (
       <View>
         <BannerTotalBalance
-          balances={balanceQuery.data?.balances ?? []}
+          balances={balanceQuery.data?.total ?? []}
           loading={balanceQuery.isLoading}
         />
 
         <Typography.SectionTitle spacingTop='large'>Your buddies</Typography.SectionTitle>
       </View>
     );
-  }, [balanceQuery.data?.balances, balanceQuery.isLoading]);
+  }, [balanceQuery.data?.total, balanceQuery.isLoading]);
 
   return (
     <ScreenContainer paddingHorizontal={false}>

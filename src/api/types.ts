@@ -16,13 +16,14 @@ export interface UserDetails {
 }
 
 export interface UserBalance {
-  balances: Balance[];
+  total: Balance[];
   borrowed: Balance[];
   lent: Balance[];
 }
+
 export interface ExpenseGroup {
   id: string;
-  balances: Balance[];
+  userBalance: UserBalance;
   members: ExpenseGroupMember[];
   name: string;
   createdAt: number;
@@ -33,4 +34,5 @@ export interface ExpenseGroupMember {
   id: string;
   displayName: string;
   imageUrl?: string;
+  userBalance: UserBalance;
 }

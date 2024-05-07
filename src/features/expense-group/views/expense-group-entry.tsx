@@ -14,12 +14,12 @@ const balancesComparator = createBalancesComparator();
 
 const ExpenseGroupItem = ({ group }: ExpenseGroupItemProps) => {
   const borrowed = useMemo(
-    () => group.balances.filter((balance) => balance.value < 0).sort(balancesComparator),
-    [group.balances]
+    () => group.userBalance.borrowed.sort(balancesComparator),
+    [group.userBalance.borrowed]
   );
   const lent = useMemo(
-    () => group.balances.filter((balance) => balance.value > 0).sort(balancesComparator),
-    [group.balances]
+    () => group.userBalance.lent.sort(balancesComparator),
+    [group.userBalance.lent]
   );
   const members = useMemo(
     () =>

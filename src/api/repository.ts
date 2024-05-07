@@ -1,11 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { Balance, ExpenseGroup, UserBalance, UserDetails } from '~/api/types';
-
-// TODO:for mocking purposes
-const wait = async (delay: number = Math.floor(Math.random() * 3) + 1) => {
-  return await new Promise((r) => setTimeout(r, delay));
-};
+import { Balance, ExpenseGroup, ExpenseGroupMember, UserBalance, UserDetails } from '~/api/types';
 
 export interface GetUserTotalBalanceParams {}
 
@@ -16,40 +11,12 @@ export async function getUserTotalBalance(
   await wait();
 
   const expensesGroups = await getExpensesGroups({});
-  const balances = Object.values(
-    expensesGroups
-      .flatMap((g) => g.balances)
-      .reduce(
-        (obj, next) => ({
-          ...obj,
-          [next.currency.code]: {
-            borrowed: {
-              ...next,
-              value: (obj[next.currency.code]?.borrowed.value ?? 0) - Math.min(next.value, 0),
-            },
-            lent: {
-              ...next,
-              value: (obj[next.currency.code]?.lent.value ?? 0) + Math.max(next.value, 0),
-            },
-            total: { ...next, value: (obj[next.currency.code]?.total.value ?? 0) + next.value },
-          },
-        }),
-        {} as Record<string, { borrowed: Balance; lent: Balance; total: Balance }>
-      )
-  ).reduce(
-    (obj, next) => ({
-      borrowed: [...obj.borrowed, next.borrowed],
-      lent: [...obj.lent, next.lent],
-      balances: [...obj.balances, next.total],
-    }),
-    {
-      borrowed: [],
-      lent: [],
-      balances: [],
-    } as UserBalance
-  );
 
-  return balances;
+  const total = mergeBalances(expensesGroups.flatMap((group) => group.userBalance.total));
+  const borrowed = mergeBalances(expensesGroups.flatMap((group) => group.userBalance.borrowed));
+  const lent = mergeBalances(expensesGroups.flatMap((group) => group.userBalance.lent));
+
+  return { total, borrowed, lent };
 }
 
 export interface GetUserDetailsParams {}
@@ -79,114 +46,140 @@ export async function getExpensesGroups(
 ): Promise<ExpenseGroup[]> {
   await wait();
   return [
-    {
-      id: faker.string.uuid(),
-      name: faker.company.name(),
-      members: [
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
-          imageUrl: faker.image.avatar(),
+    createFakeGroup([
+      createFakeMember({
+        userBalance: {
+          borrowed: [],
+          lent: [],
         },
-      ],
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-      balances: [],
-    },
-    {
-      id: faker.string.uuid(),
-      name:
-        faker.company.name() +
-        ': ' +
-        faker.company.catchPhrase() +
-        ' + ' +
-        faker.company.catchPhrase(),
-      members: [
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
+      }),
+    ]),
+    createFakeGroup([
+      createFakeMember({
+        userBalance: {
+          borrowed: [{ value: 199.68, currency: { code: 'USD', name: 'US Dollar' } }],
+          lent: [
+            { value: 10.42, currency: { code: 'PLN', name: 'Polish Zloty' } },
+            { value: 12, currency: { code: 'EUR', name: 'Euro' } },
+          ],
         },
-      ],
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-      balances: [
-        { value: -199.68, currency: { code: 'USD', name: 'US Dollar' } },
-        { value: 10.42, currency: { code: 'PLN', name: 'Polish Zloty' } },
-        { value: 12, currency: { code: 'EUR', name: 'Euro' } },
-      ],
-    },
-    {
-      id: faker.string.uuid(),
-      name: faker.company.name(),
-      members: [
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
-          imageUrl: faker.image.avatar(),
+      }),
+    ]),
+    createFakeGroup([
+      createFakeMember({
+        userBalance: {
+          borrowed: [{ value: 200, currency: { code: 'PLN', name: 'Polish Zloty' } }],
+          lent: [],
         },
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
-          imageUrl: faker.image.avatar(),
+      }),
+      createFakeMember({
+        userBalance: {
+          borrowed: [{ value: 100, currency: { code: 'PLN', name: 'Polish Zloty' } }],
+          lent: [{ value: 20, currency: { code: 'EUR', name: 'Euro' } }],
         },
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
+      }),
+      createFakeMember({
+        userBalance: {
+          borrowed: [
+            { value: -233.12, currency: { code: 'PLN', name: 'Polish Zloty' } },
+            { value: -24, currency: { code: 'USD', name: 'US Dollar' } },
+            { value: -100.23, currency: { code: 'JPY', name: 'Japanese Yen' } },
+          ],
+          lent: [],
         },
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
+      }),
+      createFakeMember({
+        userBalance: {
+          borrowed: [],
+          lent: [],
         },
-      ],
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-      balances: [
-        { value: 433.12, currency: { code: 'PLN', name: 'Polish Zloty' } },
-        { value: 20, currency: { code: 'EUR', name: 'Euro' } },
-        { value: -24, currency: { code: 'USD', name: 'US Dollar' } },
-        { value: -100.23, currency: { code: 'JPY', name: 'Japanese Yen' } },
-      ],
-    },
-    {
-      id: faker.string.uuid(),
-      name: faker.company.name(),
-      members: [
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
+      }),
+    ]),
+    createFakeGroup([
+      createFakeMember({
+        userBalance: {
+          borrowed: [],
+          lent: [{ value: 200, currency: { code: 'USD', name: 'US Dollar' } }],
         },
-      ],
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-      balances: [{ value: 200, currency: { code: 'USD', name: 'US Dollar' } }],
-    },
-    {
-      id: faker.string.uuid(),
-      name: faker.company.name(),
-      members: [
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
-          imageUrl: faker.image.avatar(),
+      }),
+    ]),
+    createFakeGroup([
+      createFakeMember({
+        userBalance: {
+          borrowed: [],
+          lent: [{ value: 12.76, currency: { code: 'USD', name: 'US Dollar' } }],
         },
-      ],
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-      balances: [{ value: 12.76, currency: { code: 'USD', name: 'US Dollar' } }],
-    },
-    {
-      id: faker.string.uuid(),
-      name: faker.company.name(),
-      members: [
-        {
-          id: faker.string.uuid(),
-          displayName: faker.person.fullName(),
-          imageUrl: faker.image.avatar(),
+      }),
+    ]),
+    createFakeGroup([
+      createFakeMember({
+        userBalance: {
+          borrowed: [{ value: 12.76, currency: { code: 'USD', name: 'US Dollar' } }],
+          lent: [],
         },
-      ],
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-      balances: [{ value: -12.76, currency: { code: 'USD', name: 'US Dollar' } }],
-    },
+      }),
+    ]),
   ];
+}
+
+// TODO:for mocking purposes
+async function wait(delay: number = Math.floor(Math.random() * 3) + 1) {
+  return await new Promise((r) => setTimeout(r, delay));
+}
+
+// TODO:for mocking purposes
+function createFakeGroup(members: ExpenseGroupMember[]): ExpenseGroup {
+  const total = mergeBalances(members.flatMap((member) => member.userBalance.total));
+  const borrowed = mergeBalances(members.flatMap((member) => member.userBalance.borrowed));
+  const lent = mergeBalances(members.flatMap((member) => member.userBalance.lent));
+
+  const nameChunks = [faker.company.name(), faker.company.name(), faker.company.name()];
+  const name = nameChunks.slice(0, Math.floor(Math.random() * nameChunks.length - 1) + 1).join(' ');
+
+  const group = {
+    id: faker.string.uuid(),
+    name,
+    members,
+    createdAt: new Date().getTime(),
+    updatedAt: new Date().getTime(),
+    userBalance: { total, borrowed, lent },
+  };
+  return group;
+}
+
+// TODO:for mocking purposes
+function createFakeMember(
+  data: Partial<Omit<ExpenseGroupMember, 'userBalance'>> & {
+    userBalance: Omit<ExpenseGroupMember['userBalance'], 'total'>;
+  }
+): ExpenseGroupMember {
+  return {
+    id: faker.string.uuid(),
+    displayName: faker.person.fullName(),
+    imageUrl: faker.image.avatar(),
+    ...data,
+    userBalance: {
+      ...data.userBalance,
+      total: mergeBalances([
+        ...data.userBalance.borrowed.map((balance) => ({ ...balance, value: -balance.value })),
+        ...data.userBalance.lent,
+      ]),
+    },
+  };
+}
+
+// TODO:for mocking purposes
+function mergeBalances(balances: Balance[]): Balance[] {
+  return Object.values(
+    balances.reduce(
+      (obj, next) => ({
+        ...obj,
+        [next.currency.code]: {
+          ...next,
+          value: (obj[next.currency.code]?.value ?? 0) + next.value,
+        },
+      }),
+      {} as Record<string, Balance>
+    )
+  );
 }

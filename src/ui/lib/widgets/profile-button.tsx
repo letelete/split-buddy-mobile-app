@@ -22,7 +22,7 @@ const ProfileButton = ({ containerStyle }: ProfileButtonProps) => {
     <TouchableOpacity style={containerStyle} onPress={handleOpenProfile}>
       <SkeletonContent loading={userDetailsQuery.isLoading}>
         <UserAvatar
-          balances={totalBalanceQuery.data?.balances ?? []}
+          balances={totalBalanceQuery.data?.total ?? []}
           displayName={userDetailsQuery.data?.displayName ?? ''}
           imageUri={userDetailsQuery.data?.imageUrl}
         />
