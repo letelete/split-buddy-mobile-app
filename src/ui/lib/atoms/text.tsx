@@ -55,7 +55,7 @@ const Text = ({
       {...rest}
       style={[
         styles.container,
-        textContext.background && styles.containerOnBackground(textContext.background),
+        textContext.background && styles.containerOnBackground(textContext.background, color),
         containerStyle,
       ]}
       testID={testID}
