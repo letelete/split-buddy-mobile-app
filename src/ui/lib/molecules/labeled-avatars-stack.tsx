@@ -73,7 +73,13 @@ const LabeledAvatarsStack = ({
     <View style={[styles.container, containerStyle]}>
       <AvatarsStack containerStyle={avatarsStackStyle} {...rest} />
 
-      <Typography.Body ellipsizeMode='tail' numberOfLines={1} weight='bold' disablePadding>
+      <Typography.Body
+        containerStyle={styles.label}
+        ellipsizeMode='tail'
+        numberOfLines={1}
+        weight='bold'
+        disablePadding
+      >
         {label}
       </Typography.Body>
     </View>
@@ -82,10 +88,13 @@ const LabeledAvatarsStack = ({
 
 const labeledAvatarsStackStylesheet = createStyleSheet((theme) => ({
   container: {
-    flex: 1,
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     columnGap: theme.margins.base,
+  },
+  label: {
+    flex: 1,
   },
 }));
 
