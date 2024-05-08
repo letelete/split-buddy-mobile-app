@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { useStyles } from 'react-native-unistyles';
 
 import { Balance } from '~/api/types';
 

@@ -30,7 +30,6 @@ export interface TextProps extends AnimatedProps<NativeTextProps>, AnimatedStyla
   size?: Size;
   color?: Color;
   weight?: Weight;
-  onBackground?: Background;
 }
 
 const Text = ({
@@ -38,7 +37,6 @@ const Text = ({
   containerStyle,
   color,
   weight,
-  onBackground,
   size,
   testID,
   ...rest
@@ -55,7 +53,7 @@ const Text = ({
       {...rest}
       style={[
         styles.container,
-        textContext.background && styles.containerOnBackground(textContext.background, color),
+        textContext.background && styles.backgroundAwareText(textContext.background, color),
         containerStyle,
       ]}
       testID={testID}
@@ -97,7 +95,7 @@ const stylesheet = createStyleSheet((theme) => ({
       } satisfies StylesheetVariants<Size>,
     },
   },
-  containerOnBackground: (background: Background, color: Color = 'primary') => {
+  backgroundAwareText: (background: Background, color: Color = 'primary') => {
     const backgroundToColorMap = {
       'gradient-neutral': theme.gradients.neutral.foreground,
       'gradient-negative': theme.gradients.negative.foreground,
