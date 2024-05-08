@@ -75,15 +75,18 @@ export async function getExpensesGroups(
       createFakeMember({
         userBalance: {
           borrowed: [{ value: 100, currency: { code: 'PLN', name: 'Polish Zloty' } }],
-          lent: [{ value: 20, currency: { code: 'EUR', name: 'Euro' } }],
+          lent: [
+            { value: 20, currency: { code: 'EUR', name: 'Euro' } },
+            { value: 1999.99, currency: { code: 'USD', name: 'Euro' } },
+          ],
         },
       }),
       createFakeMember({
         userBalance: {
           borrowed: [
-            { value: -233.12, currency: { code: 'PLN', name: 'Polish Zloty' } },
-            { value: -24, currency: { code: 'USD', name: 'US Dollar' } },
-            { value: -100.23, currency: { code: 'JPY', name: 'Japanese Yen' } },
+            { value: 233.12, currency: { code: 'PLN', name: 'Polish Zloty' } },
+            { value: 24, currency: { code: 'USD', name: 'US Dollar' } },
+            { value: 100.23, currency: { code: 'JPY', name: 'Japanese Yen' } },
           ],
           lent: [],
         },
@@ -114,8 +117,16 @@ export async function getExpensesGroups(
     createFakeGroup([
       createFakeMember({
         userBalance: {
-          borrowed: [{ value: 12.76, currency: { code: 'USD', name: 'US Dollar' } }],
+          borrowed: [],
           lent: [],
+        },
+      }),
+    ]),
+    createFakeGroup([
+      createFakeMember({
+        userBalance: {
+          borrowed: [{ value: 4, currency: { code: 'USD', name: 'US Dollar' } }],
+          lent: [{ value: 23, currency: { code: 'PLN', name: 'PLN' } }],
         },
       }),
     ]),
@@ -176,10 +187,15 @@ function mergeBalances(balances: Balance[]): Balance[] {
         ...obj,
         [next.currency.code]: {
           ...next,
-          value: (obj[next.currency.code]?.value ?? 0) + next.value,
+          value: safeAdd(obj[next.currency.code]?.value ?? 0, next.value),
         },
       }),
       {} as Record<string, Balance>
     )
   );
+}
+
+// TODO:for mocking purposes
+function safeAdd(a: number, b: number) {
+  return +(a + b).toFixed(12);
 }

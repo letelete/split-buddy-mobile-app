@@ -13,13 +13,13 @@ export interface ExpenseGroupItemProps {
 const balancesComparator = createBalancesComparator();
 
 const ExpenseGroupItem = ({ group }: ExpenseGroupItemProps) => {
-  const borrowed = useMemo(
-    () => group.userBalance.borrowed.sort(balancesComparator),
-    [group.userBalance.borrowed]
-  );
-  const lent = useMemo(
-    () => group.userBalance.lent.sort(balancesComparator),
-    [group.userBalance.lent]
+  const userBalance = useMemo(
+    () => ({
+      total: group.userBalance.total.sort(balancesComparator),
+      borrowed: group.userBalance.borrowed.sort(balancesComparator),
+      lent: group.userBalance.lent.sort(balancesComparator),
+    }),
+    [group.userBalance.borrowed, group.userBalance.lent, group.userBalance.total]
   );
   const members = useMemo(
     () =>
@@ -37,10 +37,9 @@ const ExpenseGroupItem = ({ group }: ExpenseGroupItemProps) => {
 
   return (
     <ExpenseGroupCard
-      borrowed={borrowed}
-      lent={lent}
       members={members}
       name={group.name}
+      userBalance={userBalance}
       onPress={handleOpenGroupDetails}
     />
   );

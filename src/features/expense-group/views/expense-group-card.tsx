@@ -1,9 +1,9 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Balance } from '~/api/types';
+import { UserBalance } from '~/api/types';
 
 import { useGradientForBalance } from '~/ui:hooks/use-color-for-balance';
 
@@ -24,26 +24,23 @@ export interface ExpenseGroupMember {
 export interface ExpenseGroupCardProps extends Stylable {
   name: string;
   members: ExpenseGroupMember[];
-  borrowed?: Balance[];
-  lent?: Balance[];
+  userBalance: UserBalance;
   onPress?: () => void;
 }
 
 const ExpenseGroupCard = ({
   name,
   members,
-  borrowed,
-  lent,
+  userBalance,
   onPress,
   containerStyle,
 }: ExpenseGroupCardProps) => {
   const { styles, theme } = useStyles(stylesheet);
 
-  const balances = useMemo(() => [...(borrowed ?? []), ...(lent ?? [])], [borrowed, lent]);
-  const GradientForBalance = useGradientForBalance(balances);
+  const GradientForBalance = useGradientForBalance(userBalance.total);
 
-  const hasBorrowed = borrowed && borrowed.length > 0;
-  const hasLent = lent && lent.length > 0;
+  const hasBorrowed = userBalance.borrowed.length > 0;
+  const hasLent = userBalance.lent.length > 0;
   const isSettleUp = !hasBorrowed && !hasLent;
 
   const renderBorderGradient = useCallback(
@@ -76,7 +73,7 @@ const ExpenseGroupCard = ({
                       <Typography.Body color='secondary' disablePadding>
                         You borrowed
                       </Typography.Body>
-                      <BalanceSummary balances={borrowed} showSign='none' />
+                      <BalanceSummary balances={userBalance.borrowed} showSign='none' />
                     </View>
                   )}
 
@@ -85,7 +82,7 @@ const ExpenseGroupCard = ({
                       <Typography.Body color='secondary' disablePadding>
                         You lent
                       </Typography.Body>
-                      <BalanceSummary balances={lent} showSign='none' />
+                      <BalanceSummary balances={userBalance.lent} showSign='none' />
                     </View>
                   )}
 
@@ -118,6 +115,9 @@ const stylesheet = createStyleSheet((theme) => ({
     rowGap: theme.margins.lg,
     flex: 1,
   },
+  avatarsStack: {
+    marginLeft: -theme.margins.sm,
+  },
   gradient: {
     borderTopStartRadius: theme.rounded.baseInner,
     borderBottomStartRadius: theme.rounded.baseInner,
@@ -126,9 +126,6 @@ const stylesheet = createStyleSheet((theme) => ({
   },
   balanceSummary: {
     rowGap: theme.margins.base,
-  },
-  avatarsStack: {
-    marginLeft: -theme.margins.sm,
   },
 }));
 
