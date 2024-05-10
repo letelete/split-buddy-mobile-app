@@ -72,25 +72,31 @@ export async function getExpensesGroups(
           lent: [],
         },
       }),
-      createFakeMember({
-        userBalance: {
-          borrowed: [{ value: 100, currency: { code: 'PLN', name: 'Polish Zloty' } }],
-          lent: [
-            { value: 20, currency: { code: 'EUR', name: 'Euro' } },
-            { value: 1999.99, currency: { code: 'USD', name: 'Euro' } },
-          ],
+      createFakeMember(
+        {
+          userBalance: {
+            borrowed: [{ value: 100, currency: { code: 'PLN', name: 'Polish Zloty' } }],
+            lent: [
+              { value: 20, currency: { code: 'EUR', name: 'Euro' } },
+              { value: 1999.99, currency: { code: 'USD', name: 'Euro' } },
+            ],
+          },
         },
-      }),
-      createFakeMember({
-        userBalance: {
-          borrowed: [
-            { value: 233.12, currency: { code: 'PLN', name: 'Polish Zloty' } },
-            { value: 24, currency: { code: 'USD', name: 'US Dollar' } },
-            { value: 100.23, currency: { code: 'JPY', name: 'Japanese Yen' } },
-          ],
-          lent: [],
+        { avatar: false }
+      ),
+      createFakeMember(
+        {
+          userBalance: {
+            borrowed: [
+              { value: 233.12, currency: { code: 'PLN', name: 'Polish Zloty' } },
+              { value: 24, currency: { code: 'USD', name: 'US Dollar' } },
+              { value: 100.23, currency: { code: 'JPY', name: 'Japanese Yen' } },
+            ],
+            lent: [],
+          },
         },
-      }),
+        { avatar: false }
+      ),
       createFakeMember({
         userBalance: {
           borrowed: [],
@@ -107,12 +113,15 @@ export async function getExpensesGroups(
       }),
     ]),
     createFakeGroup([
-      createFakeMember({
-        userBalance: {
-          borrowed: [],
-          lent: [{ value: 12.76, currency: { code: 'USD', name: 'US Dollar' } }],
+      createFakeMember(
+        {
+          userBalance: {
+            borrowed: [],
+            lent: [{ value: 12.76, currency: { code: 'USD', name: 'US Dollar' } }],
+          },
         },
-      }),
+        { avatar: false }
+      ),
     ]),
     createFakeGroup([
       createFakeMember({
@@ -158,16 +167,20 @@ function createFakeGroup(members: ExpenseGroupMember[]): ExpenseGroup {
   return group;
 }
 
+interface FakeMemberOptions {
+  avatar?: boolean;
+}
 // TODO:for mocking purposes
 function createFakeMember(
   data: Partial<Omit<ExpenseGroupMember, 'userBalance'>> & {
     userBalance: Omit<ExpenseGroupMember['userBalance'], 'total'>;
-  }
+  },
+  { avatar = true }: FakeMemberOptions = {}
 ): ExpenseGroupMember {
   return {
     id: faker.string.uuid(),
     displayName: faker.person.fullName(),
-    imageUrl: faker.image.avatar(),
+    imageUrl: avatar ? faker.image.avatar() : undefined,
     ...data,
     userBalance: {
       ...data.userBalance,

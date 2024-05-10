@@ -110,6 +110,20 @@ const NegativeGradient = ({ children, ...rest }: PropsWithChildren<NegativeGradi
 
 NegativeGradient.displayName = 'NegativeGradient';
 
+export interface IOSGradientProps extends Partial<BaseLinearGradientProps> {}
+
+const IOSGradient = ({ children, ...rest }: PropsWithChildren<NegativeGradientProps>) => {
+  const { theme } = useStyles(stylesheet);
+
+  return (
+    <BaseLinearGradient {...rest} colors={theme.gradients.ios.values}>
+      {children}
+    </BaseLinearGradient>
+  );
+};
+
+IOSGradient.displayName = 'IOSGradient';
+
 const stylesheet = createStyleSheet({
   fill: {
     position: 'absolute',
@@ -124,6 +138,7 @@ export const LinearGradient = Object.assign(BaseLinearGradient, {
   Neutral: NeutralGradient,
   Positive: PositiveGradient,
   Negative: NegativeGradient,
+  IOS: IOSGradient,
 });
 
 export type LinearGradientProps = BaseLinearGradientProps;

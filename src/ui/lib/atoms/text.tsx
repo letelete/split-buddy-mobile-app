@@ -100,6 +100,7 @@ const stylesheet = createStyleSheet((theme) => ({
       'gradient-neutral': theme.gradients.neutral.foreground,
       'gradient-negative': theme.gradients.negative.foreground,
       'gradient-positive': theme.gradients.positive.foreground,
+      'gradient-ios': theme.gradients.ios.foreground,
     } satisfies Record<Background, Record<Color, string>>;
     return {
       color: backgroundToColorMap[background][color],

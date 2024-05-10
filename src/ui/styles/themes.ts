@@ -29,6 +29,10 @@ export const baseTheme = {
         values: ['#F857A6', '#FF5858'],
         foreground: colors.baseGradientTypography,
       },
+      ios: {
+        values: ['#A8AEBC', '#8C909B'],
+        foreground: colors.baseGradientTypography,
+      },
     };
   },
   get traits() {
@@ -142,6 +146,10 @@ export const lightTheme = {
       },
       negative: {
         values: ['#FF0084', '#33001B'],
+        foreground: baseGradientTypographyInverted,
+      },
+      ios: {
+        values: ['#A8AEBC', '#8C909B'],
         foreground: baseGradientTypographyInverted,
       },
     };
