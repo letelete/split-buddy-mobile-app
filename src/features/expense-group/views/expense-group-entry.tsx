@@ -4,15 +4,17 @@ import { ExpenseGroup } from '~/api/types';
 
 import { ExpenseGroupCard } from '~/features/expense-group/views/expense-group-card';
 
+import { Stylable } from '~/ui:lib/shared/interfaces';
+
 import { createBalancesComparator } from '~/utils/sort';
 
-export interface ExpenseGroupItemProps {
+export interface ExpenseGroupItemProps extends Stylable {
   group: ExpenseGroup;
 }
 
 const balancesComparator = createBalancesComparator();
 
-const ExpenseGroupItem = ({ group }: ExpenseGroupItemProps) => {
+const ExpenseGroupItem = ({ group, containerStyle }: ExpenseGroupItemProps) => {
   const userBalance = useMemo(
     () => ({
       total: group.userBalance.total.sort(balancesComparator),
@@ -37,6 +39,7 @@ const ExpenseGroupItem = ({ group }: ExpenseGroupItemProps) => {
 
   return (
     <ExpenseGroupCard
+      containerStyle={containerStyle}
       members={members}
       name={group.name}
       userBalance={userBalance}

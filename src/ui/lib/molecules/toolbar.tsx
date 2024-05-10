@@ -1,4 +1,4 @@
-import { Dimensions, TouchableOpacity, View, ViewProps } from 'react-native';
+import { TouchableOpacity, View, ViewProps } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Icon, IconProps } from '~/ui:lib/atoms/icon';
@@ -12,10 +12,9 @@ export interface ToolbarProps extends Stylable, ViewProps {
 
 const Toolbar = ({ items, containerStyle, ...rest }: ToolbarProps) => {
   const { styles } = useStyles(stylesheet);
-  const { width } = Dimensions.get('window');
 
   return (
-    <View style={[styles.container(width), containerStyle]} {...rest}>
+    <View style={[styles.container, containerStyle]} {...rest}>
       {items.map((item, idx) => (
         <ToolbarEntry key={`toolbar-item:${idx}`} item={item} />
       ))}
@@ -28,10 +27,10 @@ Toolbar.displayName = 'Toolbar';
 export { Toolbar };
 
 const stylesheet = createStyleSheet((theme, runtime) => ({
-  container: (containerWidth: number) => ({
+  container: {
     justifyContent: 'space-between',
     backgroundColor: theme.colors.background,
-    width: containerWidth,
+    width: runtime.screen.width,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: theme.margins.md,
@@ -41,7 +40,7 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     bottom: 0,
     right: 0,
     paddingBottom: runtime.insets.bottom,
-  }),
+  },
 }));
 
 interface ToolbarItem {

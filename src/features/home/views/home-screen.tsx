@@ -23,7 +23,7 @@ const HomeScreen = () => {
 
   const StickyHeaderComponent = useCallback(() => {
     return (
-      <View>
+      <View style={styles.listContent}>
         <BannerTotalBalance
           balances={balanceQuery.data?.total ?? []}
           loading={balanceQuery.isLoading}
@@ -32,15 +32,16 @@ const HomeScreen = () => {
         <Typography.SectionTitle spacingTop='large'>Your buddies</Typography.SectionTitle>
       </View>
     );
-  }, [balanceQuery.data?.total, balanceQuery.isLoading]);
+  }, [balanceQuery.data?.total, balanceQuery.isLoading, styles.listContent]);
 
   return (
     <ScreenContainer paddingHorizontal={false}>
       <ExpensesGroupsList
-        containerStyle={[styles.listContainer, { paddingBottom: toolbarHeight }]}
+        containerStyle={[{ paddingBottom: toolbarHeight }]}
         data={expensesGroupsQuery.data ?? []}
+        itemContainerStyle={styles.listContent}
+        ListHeaderComponent={StickyHeaderComponent}
         loading={expensesGroupsQuery.isLoading}
-        StickyHeaderComponent={StickyHeaderComponent}
       />
 
       <HomeToolbar
@@ -52,7 +53,10 @@ const HomeScreen = () => {
 };
 
 const stylesheet = createStyleSheet((theme) => ({
-  listContainer: {
+  listContent: {
+    paddingHorizontal: theme.container.padding.horizontal,
+  },
+  itemContainerStyle: {
     paddingHorizontal: theme.container.padding.horizontal,
   },
 }));
