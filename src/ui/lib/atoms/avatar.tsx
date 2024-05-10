@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Image, ImageStyle, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
-import { TextContext } from '~/ui:lib/atoms/text';
 import { Typography } from '~/ui:lib/molecules/typography';
+import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
 export type Size = 'base' | 'sm';
@@ -26,17 +26,17 @@ const isImageAvatar = (props: AvatarProps): props is ImageAvatarProps => {
 };
 
 const Avatar = (props: AvatarProps) => {
-  const { styles, theme } = useStyles(stylesheet);
+  const { styles } = useStyles(stylesheet);
 
   const avatarSize = useMemo(
     () =>
       (
         ({
-          base: theme.traits.appHeader.action.size,
           sm: 24,
+          base: 28,
         }) satisfies Record<Size, number>
       )[props.size ?? 'base'],
-    [props.size, theme.traits.appHeader.action.size]
+    [props.size]
   );
 
   const title = useMemo(
@@ -63,16 +63,16 @@ const Avatar = (props: AvatarProps) => {
     <View style={[styles.avatarStyle(avatarSize), props.containerStyle]}>
       <LinearGradient.IOS containerStyle={styles.background} direction='vertical' fill />
 
-      <TextContext.Provider value={{ background: 'gradient-ios' }}>
-        <Typography.Caption
+      <BackgroundAwareContextProvider value={{ background: 'gradient-ios' }}>
+        <Typography.Caption2
           color='primary'
           containerStyle={styles.letters(avatarSize)}
           weight='bold'
           disablePadding
         >
           {title}
-        </Typography.Caption>
-      </TextContext.Provider>
+        </Typography.Caption2>
+      </BackgroundAwareContextProvider>
     </View>
   );
 };

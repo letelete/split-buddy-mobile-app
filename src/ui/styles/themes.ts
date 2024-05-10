@@ -53,7 +53,6 @@ export const baseTheme = {
           get color() {
             return colors.typography.primary;
           },
-          size: 28,
         },
       },
       signUpButton: {

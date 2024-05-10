@@ -1,8 +1,10 @@
-import { PropsWithChildren, createContext, useContext } from 'react';
+import { PropsWithChildren, useContext } from 'react';
 import { TextProps as NativeTextProps } from 'react-native';
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
+import { BackgroundAwareContext } from '~/ui:lib/shared/background-aware/providers';
+import { backgroundAwareStylesheet } from '~/ui:lib/shared/background-aware/stylesheets';
 import { AnimatedStylableText } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
@@ -13,17 +15,6 @@ export type Color = keyof AppTheme['colors']['typography'];
 export type Size = keyof AppTheme['fontSizes'];
 
 export type Weight = 'normal' | 'semiBold' | 'bold';
-
-export type Background = `gradient-${keyof AppTheme['gradients']}`;
-
-export interface TextContextProps {
-  /**
-   * A background on which the text is render on. Defaults to theme's background color.
-   */
-  background?: Background;
-}
-
-export const TextContext = createContext<TextContextProps>({});
 
 export interface TextProps extends AnimatedProps<NativeTextProps>, AnimatedStylableText {
   testID?: string;
@@ -41,9 +32,9 @@ const Text = ({
   testID,
   ...rest
 }: PropsWithChildren<TextProps>) => {
-  const textContext = useContext(TextContext);
+  const backgroundAwareContext = useContext(BackgroundAwareContext);
+  const { styles: backgroundAwareStyles } = useStyles(backgroundAwareStylesheet);
   const { styles } = useStyles(stylesheet, {
-    color,
     weight,
     size,
   });
@@ -53,7 +44,8 @@ const Text = ({
       {...rest}
       style={[
         styles.container,
-        textContext.background && styles.backgroundAwareText(textContext.background, color),
+        backgroundAwareContext.background &&
+          backgroundAwareStyles.backgroundAwareForeground(backgroundAwareContext.background, color),
         containerStyle,
       ]}
       testID={testID}
@@ -70,16 +62,6 @@ export { Text };
 const stylesheet = createStyleSheet((theme) => ({
   container: {
     variants: {
-      color: {
-        primary: { color: theme.colors.typography.primary },
-        primarySoft: { color: theme.colors.typography.primarySoft },
-        secondary: { color: theme.colors.typography.secondary },
-        disabled: { color: theme.colors.typography.disabled },
-        destructive: { color: theme.colors.typography.destructive },
-        default: {
-          color: theme.colors.typography.primary,
-        },
-      } satisfies StylesheetVariants<Color>,
       weight: {
         normal: { fontWeight: '400' },
         semiBold: { fontWeight: '600' },
@@ -94,16 +76,5 @@ const stylesheet = createStyleSheet((theme) => ({
         default: { fontSize: theme.fontSizes.base },
       } satisfies StylesheetVariants<Size>,
     },
-  },
-  backgroundAwareText: (background: Background, color: Color = 'primary') => {
-    const backgroundToColorMap = {
-      'gradient-neutral': theme.gradients.neutral.foreground,
-      'gradient-negative': theme.gradients.negative.foreground,
-      'gradient-positive': theme.gradients.positive.foreground,
-      'gradient-ios': theme.gradients.ios.foreground,
-    } satisfies Record<Background, Record<Color, string>>;
-    return {
-      color: backgroundToColorMap[background][color],
-    };
   },
 }));

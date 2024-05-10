@@ -3,7 +3,8 @@ import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
-import { Background, TextContext } from '~/ui:lib/atoms/text';
+import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
+import { Background } from '~/ui:lib/shared/background-aware/stylesheets';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
 export type BannerVariant = 'neutral' | 'positive' | 'negative';
@@ -38,7 +39,7 @@ const Banner = ({
           neutral: 'gradient-neutral',
           positive: 'gradient-positive',
           negative: 'gradient-negative',
-        }) satisfies Record<BannerVariant, Background>
+        }) as Record<BannerVariant, Background>
       )[variant],
     [variant]
   );
@@ -47,9 +48,9 @@ const Banner = ({
     <View style={[styles.container, containerStyle]}>
       {Gradient}
 
-      <TextContext.Provider value={{ background }}>
+      <BackgroundAwareContextProvider value={{ background }}>
         <View style={[styles.contentContainer]}>{children}</View>
-      </TextContext.Provider>
+      </BackgroundAwareContextProvider>
     </View>
   );
 };

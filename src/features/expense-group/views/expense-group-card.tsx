@@ -1,4 +1,3 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
@@ -9,10 +8,11 @@ import { useGradientForBalance } from '~/ui:hooks/use-color-for-balance';
 
 import { BorderGradient } from '~/ui:lib/atoms/border-gradient';
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
-import { TextContext } from '~/ui:lib/atoms/text';
+import { Icon } from '~/ui:lib/atoms/icon';
 import { BalanceSummary } from '~/ui:lib/molecules/balance-total-summary';
 import { AvatarsStack } from '~/ui:lib/molecules/labeled-avatars-stack';
 import { Typography } from '~/ui:lib/molecules/typography';
+import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
 export interface ExpenseGroupMember {
@@ -57,7 +57,7 @@ const ExpenseGroupCard = ({
       >
         <View>
           <LinearGradient.Neutral containerStyle={styles.gradient} fill />
-          <TextContext.Provider value={{ background: 'gradient-neutral' }}>
+          <BackgroundAwareContextProvider value={{ background: 'gradient-neutral' }}>
             <View style={styles.card}>
               <View style={styles.cardContent}>
                 <AvatarsStack.Labeled
@@ -70,7 +70,7 @@ const ExpenseGroupCard = ({
                 <View style={styles.balanceSummary}>
                   {hasBorrowed && (
                     <View>
-                      <Typography.Body color='secondary' disablePadding>
+                      <Typography.Body color='secondary' paddingBottom={theme.margins.sm}>
                         You borrowed
                       </Typography.Body>
                       <BalanceSummary balances={userBalance.borrowed} showSign='none' />
@@ -79,7 +79,7 @@ const ExpenseGroupCard = ({
 
                   {hasLent && (
                     <View>
-                      <Typography.Body color='secondary' disablePadding>
+                      <Typography.Body color='secondary' paddingBottom={theme.margins.sm}>
                         You lent
                       </Typography.Body>
                       <BalanceSummary balances={userBalance.lent} showSign='none' />
@@ -92,9 +92,9 @@ const ExpenseGroupCard = ({
                 </View>
               </View>
 
-              <Ionicons color={theme.colors.typography.primary} name='chevron-forward' size={24} />
+              <Icon name='chevron-forward' size='sm' />
             </View>
-          </TextContext.Provider>
+          </BackgroundAwareContextProvider>
         </View>
       </BorderGradient>
     </TouchableOpacity>

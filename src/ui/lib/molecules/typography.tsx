@@ -6,6 +6,7 @@ import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
 export interface WithDynamicPadding {
   disablePadding?: boolean;
+  paddingBottom?: number;
 }
 
 export interface LargeTitleProps extends WithDynamicPadding, TextProps {}
@@ -13,6 +14,7 @@ export interface LargeTitleProps extends WithDynamicPadding, TextProps {}
 const LargeTitle = ({
   containerStyle,
   disablePadding,
+  paddingBottom,
   children,
   ...rest
 }: PropsWithChildren<LargeTitleProps>) => {
@@ -21,8 +23,11 @@ const LargeTitle = ({
   return (
     <Text
       {...rest}
+      containerStyle={[
+        !disablePadding && { paddingBottom: paddingBottom ?? theme.margins.lg },
+        containerStyle,
+      ]}
       color='primarySoft'
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.lg }, containerStyle]}
       size='lg'
       weight='bold'
     >
@@ -42,6 +47,7 @@ export interface SectionTitleProps extends WithDynamicPadding, TextProps {
 const SectionTitle = ({
   containerStyle,
   disablePadding,
+  paddingBottom,
   spacingTop = 'base',
   children,
   ...rest
@@ -52,7 +58,7 @@ const SectionTitle = ({
     <Text
       {...rest}
       containerStyle={[
-        !disablePadding && { paddingBottom: theme.margins.lg },
+        !disablePadding && { paddingBottom: paddingBottom ?? theme.margins.lg },
         styles.container,
         containerStyle,
       ]}
@@ -84,6 +90,7 @@ export interface BodyProps extends WithDynamicPadding, TextProps {}
 const Body = ({
   containerStyle,
   disablePadding,
+  paddingBottom,
   color = 'primarySoft',
   children,
   ...rest
@@ -93,8 +100,11 @@ const Body = ({
   return (
     <Text
       {...rest}
+      containerStyle={[
+        !disablePadding && { paddingBottom: paddingBottom ?? theme.margins.md },
+        containerStyle,
+      ]}
       color={color}
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.md }, containerStyle]}
     >
       {children}
     </Text>
@@ -108,6 +118,7 @@ export interface ErrorBodyProps extends WithDynamicPadding, TextProps {}
 const ErrorBody = ({
   containerStyle,
   disablePadding,
+  paddingBottom,
   children,
   ...rest
 }: PropsWithChildren<ErrorBodyProps>) => {
@@ -116,8 +127,11 @@ const ErrorBody = ({
   return (
     <Text
       {...rest}
+      containerStyle={[
+        !disablePadding && { paddingBottom: paddingBottom ?? theme.margins.base },
+        containerStyle,
+      ]}
       color='destructive'
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.base }, containerStyle]}
     >
       {children}
     </Text>
@@ -126,22 +140,55 @@ const ErrorBody = ({
 
 ErrorBody.displayName = 'ErrorBody';
 
-export interface CaptionProps extends WithDynamicPadding, TextProps {}
+export interface Caption1Props extends WithDynamicPadding, TextProps {}
 
-const Caption = ({
+const Caption1 = ({
   containerStyle,
   disablePadding,
+  paddingBottom,
   color = 'secondary',
   children,
   ...rest
-}: PropsWithChildren<CaptionProps>) => {
+}: PropsWithChildren<Caption1Props>) => {
   const { theme } = useStyles();
 
   return (
     <Text
       {...rest}
+      containerStyle={[
+        !disablePadding && { paddingBottom: paddingBottom ?? theme.margins.sm },
+        containerStyle,
+      ]}
       color={color}
-      containerStyle={[!disablePadding && { paddingBottom: theme.margins.sm }, containerStyle]}
+      size='sm'
+    >
+      {children}
+    </Text>
+  );
+};
+
+Caption1.displayName = 'Caption1';
+
+export interface Caption2Props extends WithDynamicPadding, TextProps {}
+
+const Caption2 = ({
+  containerStyle,
+  disablePadding,
+  paddingBottom,
+  color = 'secondary',
+  children,
+  ...rest
+}: PropsWithChildren<Caption2Props>) => {
+  const { theme } = useStyles();
+
+  return (
+    <Text
+      {...rest}
+      containerStyle={[
+        !disablePadding && { paddingBottom: paddingBottom ?? theme.margins.sm },
+        containerStyle,
+      ]}
+      color={color}
       size='xs'
     >
       {children}
@@ -149,12 +196,13 @@ const Caption = ({
   );
 };
 
-Caption.displayName = 'Caption';
+Caption2.displayName = 'Caption2';
 
 export const Typography = {
   LargeTitle,
   SectionTitle,
   Body,
   ErrorBody,
-  Caption,
+  Caption1,
+  Caption2,
 };

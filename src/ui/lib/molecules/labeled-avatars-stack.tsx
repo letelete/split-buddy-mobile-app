@@ -36,7 +36,7 @@ const AvatarsStackPrimitive = ({
       ))}
 
       {hiddenAvatarsAmount > 0 && (
-        <Typography.Caption disablePadding>+{hiddenAvatarsAmount}</Typography.Caption>
+        <Typography.Caption2 disablePadding>+{hiddenAvatarsAmount}</Typography.Caption2>
       )}
     </View>
   );
