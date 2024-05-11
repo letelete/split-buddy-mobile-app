@@ -6,7 +6,7 @@ import { LoginWithAppleButton } from '~/features/auth/views/login-button';
 import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
 import { Typography } from '~/ui:lib/molecules/typography';
 
-const SignUpScreen = () => {
+const SignUpController = () => {
   const { styles } = useStyles(stylesheet);
 
   return (
@@ -29,9 +29,9 @@ const SignUpScreen = () => {
   );
 };
 
-SignUpScreen.displayName = 'SignUpScreen';
+SignUpController.displayName = 'SignUpController';
 
-export { SignUpScreen };
+export { SignUpController };
 
 const stylesheet = createStyleSheet((theme) => ({
   backgroundImage: {

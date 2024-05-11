@@ -3,7 +3,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Typography } from '~/ui:lib/molecules/typography';
 
-const SplashScreen = () => {
+const SplashController = () => {
   const { styles } = useStyles(stylesheet);
 
   return (
@@ -17,9 +17,9 @@ const SplashScreen = () => {
   );
 };
 
-SplashScreen.displayName = 'SplashScreen';
+SplashController.displayName = 'SplashController';
 
-export { SplashScreen };
+export { SplashController };
 
 const stylesheet = createStyleSheet((theme) => ({
   container: {

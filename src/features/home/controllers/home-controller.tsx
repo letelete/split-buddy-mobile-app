@@ -11,7 +11,7 @@ import { HomeToolbar } from '~/features/home/views/home-toolbar';
 import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
 import { Typography } from '~/ui:lib/molecules/typography';
 
-const HomeScreen = () => {
+const HomeController = () => {
   const { styles } = useStyles(stylesheet);
 
   const [toolbarHeight, setToolbarHeight] = useState(0);
@@ -61,6 +61,6 @@ const stylesheet = createStyleSheet((theme) => ({
   },
 }));
 
-HomeScreen.displayName = 'HomeScreen';
+HomeController.displayName = 'HomeController';
 
-export { HomeScreen };
+export { HomeController };
