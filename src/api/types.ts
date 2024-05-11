@@ -30,6 +30,15 @@ export interface ExpenseGroup {
   updatedAt: number;
 }
 
+export interface ExpenseGroupDetails {
+  id: string;
+  userBalance: UserBalance;
+  members: ExpenseGroupMember[];
+  name: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface ExpenseGroupMember {
   id: string;
   displayName: string;

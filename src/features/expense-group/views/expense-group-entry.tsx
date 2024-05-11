@@ -1,11 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useMemo } from 'react';
 
 import { ExpenseGroup } from '~/api/types';
 
 import { ExpenseGroupCard } from '~/features/expense-group/views/expense-group-card';
 
-import { ExpenseGroupRoutes } from '~/router/app-navigator';
+import { MainRoutes, MainStackParamList } from '~/router/types';
 
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
@@ -18,7 +19,7 @@ export interface ExpenseGroupItemProps extends Stylable {
 const balancesComparator = createBalancesComparator();
 
 const ExpenseGroupItem = ({ group, containerStyle }: ExpenseGroupItemProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
   const userBalance = useMemo(
     () => ({
@@ -39,8 +40,8 @@ const ExpenseGroupItem = ({ group, containerStyle }: ExpenseGroupItemProps) => {
   );
 
   const handleOpenGroupDetails = useCallback(() => {
-    navigation.navigate(ExpenseGroupRoutes.HOME);
-  }, [navigation]);
+    navigation.navigate(MainRoutes.EXPENSE_GROUP, { groupId: group.id });
+  }, [group.id, navigation]);
 
   return (
     <ExpenseGroupCard

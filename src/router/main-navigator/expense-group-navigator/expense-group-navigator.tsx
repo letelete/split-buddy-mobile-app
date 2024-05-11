@@ -1,35 +1,25 @@
-import { ParamListBase } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { ExpenseGroupHomeController } from '~/features/expense-group/controllers/expense-group-home-controller';
+import { ExpenseGroupDetails } from '~/api/types';
 
-import { useCommonScreenOptions } from '~/router/shared/use-common-screen-options';
-
-export const ExpenseGroupRoutes = {
-  HOME: 'ExpenseGroupHome',
-} as const;
-
-export interface ExpenseGroupStackParamList extends ParamListBase {
-  [ExpenseGroupRoutes.HOME]: undefined;
-}
+import { ExpenseGroupHomeScreen } from '~/router/main-navigator/expense-group-navigator/expense-group-home-screen';
+import { ExpenseGroupRoutes, ExpenseGroupStackParamList } from '~/router/types';
 
 const ExpenseGroupStack = createNativeStackNavigator<ExpenseGroupStackParamList>();
 
-const ExpenseGroupNavigator = () => {
-  const commonScreenOptions = useCommonScreenOptions();
+export interface ExpenseGroupNavigatorProps {
+  data: ExpenseGroupDetails;
+}
 
+const ExpenseGroupNavigator = ({ data }: ExpenseGroupNavigatorProps) => {
   return (
     <ExpenseGroupStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
+      initialRouteName={ExpenseGroupRoutes.HOME}
+      screenOptions={{ headerShown: false }}
     >
       <ExpenseGroupStack.Screen
-        options={{
-          ...commonScreenOptions,
-          title: 'Group',
-        }}
-        component={ExpenseGroupHomeController}
+        component={ExpenseGroupHomeScreen}
+        initialParams={{ data }}
         name={ExpenseGroupRoutes.HOME}
       />
     </ExpenseGroupStack.Navigator>

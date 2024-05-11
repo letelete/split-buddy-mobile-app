@@ -21,7 +21,7 @@ const SignUpController = () => {
       </Typography.Body>
 
       <ScreenContainer.FullWidthBox containerStyle={styles.expander}>
-        <Image source={require('./img/buddies.png')} style={styles.backgroundImage} />
+        <Image source={require('../views/img/buddies.png')} style={styles.backgroundImage} />
       </ScreenContainer.FullWidthBox>
 
       <LoginWithAppleButton />

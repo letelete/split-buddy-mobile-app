@@ -1,19 +1,6 @@
-import {
-  ParamListBase,
-  RouteProp,
-  StackActions,
-  createNavigationContainerRef,
-} from '@react-navigation/native';
+import { StackActions, createNavigationContainerRef } from '@react-navigation/native';
 
-import { MainStackParamList } from '~/router/main-navigator/main-navigator';
-
-export interface StackNavigationProps<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = string,
-> {
-  navigation: StackNavigationProps<ParamList, RouteName>;
-  route: RouteProp<ParamList, RouteName>;
-}
+import { MainStackParamList } from '~/router/types';
 
 export const navigationRef = createNavigationContainerRef<MainStackParamList>();
 

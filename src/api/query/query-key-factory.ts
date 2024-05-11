@@ -6,6 +6,7 @@ const keys = {
   userDetails: () => [...keys.user(), 'user-details'] as const,
 
   expensesGroups: () => [...keys.all, 'expenses-groups'] as const,
+  expenseGroup: (groupId: string) => [...keys.expensesGroups(), groupId] as const,
 } as const;
 
 export const queryKeyFactory = { ...keys };
