@@ -16,7 +16,11 @@ const Toolbar = ({ items, containerStyle, ...rest }: ToolbarProps) => {
   return (
     <View style={[styles.container, containerStyle]} {...rest}>
       {items.map((item, idx) => (
-        <ToolbarEntry key={`toolbar-item:${idx}`} item={item} />
+        <ToolbarEntry
+          key={`toolbar-item:${idx}`}
+          containerStyle={items.length === 1 && styles.entryGrow}
+          item={item}
+        />
       ))}
     </View>
   );
@@ -41,6 +45,10 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     right: 0,
     paddingBottom: runtime.insets.bottom,
   },
+  entryGrow: {
+    justifyContent: 'center',
+    flex: 1,
+  },
 }));
 
 interface ToolbarItem {
@@ -58,22 +66,24 @@ const ToolbarEntry = ({ item, containerStyle }: ToolbarEntryProps) => {
   const { styles } = useStyles(toolbarItemStylesheet);
 
   return (
-    <TouchableOpacity disabled={item.disabled} onPress={item.onPress}>
-      <View style={[styles.container, containerStyle]}>
-        <BackgroundAwareContextProvider>
-          {item.icon && <Icon color={item.disabled ? 'disabled' : 'primary'} name={item.icon} />}
+    <TouchableOpacity
+      disabled={item.disabled}
+      style={[styles.container, containerStyle]}
+      onPress={item.onPress}
+    >
+      <BackgroundAwareContextProvider>
+        {item.icon && <Icon color={item.disabled ? 'disabled' : 'primary'} name={item.icon} />}
 
-          {item.title && (
-            <Typography.Body
-              color={item.disabled ? 'disabled' : 'primary'}
-              weight={item.icon ? 'semiBold' : 'normal'}
-              disablePadding
-            >
-              {item.title}
-            </Typography.Body>
-          )}
-        </BackgroundAwareContextProvider>
-      </View>
+        {item.title && (
+          <Typography.Body
+            color={item.disabled ? 'disabled' : 'primary'}
+            weight={item.icon ? 'semiBold' : 'normal'}
+            disablePadding
+          >
+            {item.title}
+          </Typography.Body>
+        )}
+      </BackgroundAwareContextProvider>
     </TouchableOpacity>
   );
 };
