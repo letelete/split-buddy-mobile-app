@@ -65,6 +65,7 @@ const ExpenseGroupCard = ({
                   containerStyle={styles.avatarsStack}
                   images={members}
                   label={name}
+                  labelContainerStyle={styles.avatarsStackLabelContainer}
                 />
 
                 <View style={styles.balanceSummary}>
@@ -117,6 +118,9 @@ const stylesheet = createStyleSheet((theme) => ({
   },
   avatarsStack: {
     marginLeft: -theme.margins.sm,
+  },
+  avatarsStackLabelContainer: {
+    flex: 1,
   },
   gradient: {
     borderTopStartRadius: theme.rounded.baseInner,

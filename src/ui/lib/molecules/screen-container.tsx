@@ -12,12 +12,12 @@ type ContainerVariant = 'default' | 'fullscreen' | 'scrollable' | 'scrollable-fu
 
 export interface ScreenContainerPrimitiveProps extends Stylable {
   keyboardAwareScroll?: boolean;
-  paddingHorizontal?: boolean;
   scrollViewProps?: KeyboardAwareScrollViewProps;
   variant?: ContainerVariant;
   testID?: string;
-  disableBottomPadding?: boolean;
-  disableTopPadding?: boolean;
+  disablePaddingTop?: boolean;
+  disablePaddingBottom?: boolean;
+  disablePaddingHorizontal?: boolean;
 }
 
 /**
@@ -38,12 +38,12 @@ const ScreenContainerPrimitive = React.forwardRef<
       children,
       containerStyle,
       keyboardAwareScroll = false,
-      paddingHorizontal = true,
       scrollViewProps,
       variant = 'default',
       testID,
-      disableBottomPadding = false,
-      disableTopPadding = true,
+      disablePaddingHorizontal = false,
+      disablePaddingTop = false,
+      disablePaddingBottom = false,
     },
     ref
   ) => {
@@ -53,13 +53,22 @@ const ScreenContainerPrimitive = React.forwardRef<
       () => [
         styles.container,
         !['fullscreen', 'scrollable-fullscreen'].includes(variant) && styles.safeAreaContainer,
+        !['fullscreen', 'scrollable-fullscreen'].includes(variant) &&
+          styles.paddingHorizontal(disablePaddingHorizontal),
         !['scrollable', 'scrollable-fullscreen'].includes(variant) &&
-          styles.paddingHorizontal(paddingHorizontal),
-        disableBottomPadding && styles.removePaddingBottom,
-        disableTopPadding && styles.removePaddingTop,
+          disablePaddingTop &&
+          styles.removePaddingBottom,
+        disablePaddingBottom && styles.removePaddingTop,
         containerStyle,
       ],
-      [styles, variant, paddingHorizontal, disableBottomPadding, disableTopPadding, containerStyle]
+      [
+        styles,
+        variant,
+        disablePaddingHorizontal,
+        disablePaddingTop,
+        disablePaddingBottom,
+        containerStyle,
+      ]
     );
 
     const scrollViewProps_ = useMemo(
@@ -67,12 +76,12 @@ const ScreenContainerPrimitive = React.forwardRef<
         ({
           showsVerticalScrollIndicator: false,
           contentContainerStyle: [
-            styles.paddingHorizontal(paddingHorizontal),
+            styles.paddingHorizontal(disablePaddingHorizontal),
             styles.scrollContent,
           ],
           ...scrollViewProps,
         }) satisfies KeyboardAwareScrollViewProps,
-      [paddingHorizontal, scrollViewProps, styles]
+      [disablePaddingHorizontal, scrollViewProps, styles]
     );
 
     const getContent = () => {
@@ -114,12 +123,12 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     paddingLeft: runtime.insets.left,
     paddingRight: runtime.insets.right,
   },
-  paddingHorizontal: (apply: boolean) => ({
-    paddingLeft: apply ? theme.container.padding.horizontal : 0,
-    paddingRight: apply ? theme.container.padding.horizontal : 0,
+  paddingHorizontal: (disable: boolean) => ({
+    paddingLeft: disable ? 0 : runtime.insets.left + theme.container.padding.horizontal,
+    paddingRight: disable ? 0 : runtime.insets.right + theme.container.padding.horizontal,
   }),
   removePaddingTop: {
-    paddingTop: theme.margins.base,
+    paddingTop: 0,
   },
   removePaddingBottom: {
     paddingBottom: 0,
@@ -136,11 +145,11 @@ export interface FullWidthBoxProps extends Stylable {}
 const FullWidthBox = ({ containerStyle, children }: PropsWithChildren<FullWidthBoxProps>) => {
   const { styles } = useStyles(fullWidthStylesheet);
 
-  return <View style={[styles.fullWidthBox, containerStyle]}>{children}</View>;
+  return <View style={[styles.container, containerStyle]}>{children}</View>;
 };
 
 const fullWidthStylesheet = createStyleSheet((theme, runtime) => ({
-  fullWidthBox: {
+  container: {
     width: runtime.screen.width,
     left: -theme.container.padding.horizontal,
   },
@@ -148,4 +157,38 @@ const fullWidthStylesheet = createStyleSheet((theme, runtime) => ({
 
 FullWidthBox.displayName = 'FullWidthBox';
 
-export const ScreenContainer = Object.assign(ScreenContainerPrimitive, { FullWidthBox });
+export interface HorizontalPaddingBoxProps extends Stylable {
+  disablePaddingLeft?: boolean;
+  disablePaddingRight?: boolean;
+}
+
+const HorizontalPaddingBox = ({
+  disablePaddingLeft = false,
+  disablePaddingRight = false,
+  containerStyle,
+  children,
+}: PropsWithChildren<HorizontalPaddingBoxProps>) => {
+  const { styles } = useStyles(horizontalPaddingBoxStylesheet);
+
+  return (
+    <View style={[styles.container(disablePaddingLeft, disablePaddingRight), containerStyle]}>
+      {children}
+    </View>
+  );
+};
+
+const horizontalPaddingBoxStylesheet = createStyleSheet((theme, runtime) => ({
+  container: (disablePaddingLeft: boolean, disablePaddingRight: boolean) => ({
+    paddingLeft: disablePaddingLeft ? 0 : theme.container.padding.horizontal + runtime.insets.left,
+    paddingRight: disablePaddingRight
+      ? 0
+      : theme.container.padding.horizontal + runtime.insets.right,
+  }),
+}));
+
+HorizontalPaddingBox.displayName = 'HorizontalPaddingBox';
+
+export const ScreenContainer = Object.assign(ScreenContainerPrimitive, {
+  FullWidthBox,
+  HorizontalPaddingBox,
+});

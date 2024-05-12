@@ -1,11 +1,11 @@
 import { PropsWithChildren, useContext } from 'react';
-import { TextProps as NativeTextProps } from 'react-native';
+import { TextProps as NativeTextProps, TextStyle } from 'react-native';
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { BackgroundAwareContext } from '~/ui:lib/shared/background-aware/providers';
 import { backgroundAwareStylesheet } from '~/ui:lib/shared/background-aware/stylesheets';
-import { AnimatedStylableText } from '~/ui:lib/shared/interfaces';
+import { Stylable } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
 import { AppTheme } from '~/ui:styles/themes';
@@ -16,20 +16,20 @@ export type Size = keyof AppTheme['fontSizes'];
 
 export type Weight = 'normal' | 'semiBold' | 'bold';
 
-export interface TextProps extends AnimatedProps<NativeTextProps>, AnimatedStylableText {
-  testID?: string;
-  size?: Size;
+export interface TextProps extends AnimatedProps<NativeTextProps>, Stylable<TextStyle> {
   color?: Color;
+  size?: Size;
   weight?: Weight;
+  testID?: string;
 }
 
 const Text = ({
+  color,
+  size,
+  weight,
+  testID,
   children,
   containerStyle,
-  color,
-  weight,
-  size,
-  testID,
   ...rest
 }: PropsWithChildren<TextProps>) => {
   const backgroundAwareContext = useContext(BackgroundAwareContext);

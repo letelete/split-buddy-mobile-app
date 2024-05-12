@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Image, ImageStyle, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 

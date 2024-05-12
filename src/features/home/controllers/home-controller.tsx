@@ -6,6 +6,7 @@ import { useGetExpensesGroups } from '~/features/expense-group/services/use-get-
 import { useGetUserTotalBalance } from '~/features/expense-group/services/use-get-user-total-balance';
 import { ExpensesGroupsList } from '~/features/expense-group/views/expenses-groups-list';
 import { BannerTotalBalance } from '~/features/home/views/banner-total-balance';
+import { HomeHeader } from '~/features/home/views/home-header';
 import { HomeToolbar } from '~/features/home/views/home-toolbar';
 
 import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
@@ -35,9 +36,10 @@ const HomeController = () => {
   }, [balanceQuery.data?.total, balanceQuery.isLoading, styles.listContent]);
 
   return (
-    <ScreenContainer paddingHorizontal={false}>
+    <ScreenContainer containerStyle={[{ paddingBottom: toolbarHeight }]} variant='fullscreen'>
+      <HomeHeader />
+
       <ExpensesGroupsList
-        containerStyle={[{ paddingBottom: toolbarHeight }]}
         data={expensesGroupsQuery.data ?? []}
         itemContainerStyle={styles.listContent}
         ListHeaderComponent={StickyHeaderComponent}

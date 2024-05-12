@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Avatar } from '~/ui:lib/atoms/avatar';
@@ -58,13 +58,15 @@ AvatarsStackPrimitive.displayName = 'AvatarsStackPrimitive';
 
 export interface LabeledAvatarsStackProps extends AvatarsStackProps {
   label: string;
+  labelContainerStyle?: StyleProp<TextStyle>;
   avatarsStackStyle?: StyleProp<ViewStyle>;
 }
 
 const LabeledAvatarsStack = ({
   label,
-  containerStyle,
+  labelContainerStyle,
   avatarsStackStyle,
+  containerStyle,
   ...rest
 }: LabeledAvatarsStackProps) => {
   const { styles } = useStyles(labeledAvatarsStackStylesheet);
@@ -74,7 +76,7 @@ const LabeledAvatarsStack = ({
       <AvatarsStack containerStyle={avatarsStackStyle} {...rest} />
 
       <Typography.Body
-        containerStyle={styles.label}
+        containerStyle={labelContainerStyle}
         ellipsizeMode='tail'
         numberOfLines={1}
         weight='bold'
@@ -92,9 +94,6 @@ const labeledAvatarsStackStylesheet = createStyleSheet((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     columnGap: theme.margins.base,
-  },
-  label: {
-    flex: 1,
   },
 }));
 
