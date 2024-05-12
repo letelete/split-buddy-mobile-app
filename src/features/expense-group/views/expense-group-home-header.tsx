@@ -3,8 +3,8 @@ import { useCallback, useMemo } from 'react';
 import { ExpenseGroupDetails } from '~/api/types';
 
 import { HeaderButton } from '~/ui:lib/atoms/header';
-import { AvatarsStack, AvatarsStackProps } from '~/ui:lib/molecules/labeled-avatars-stack';
-import { AppHeader } from '~/ui:lib/widgets/app-header';
+import { AvatarsStackProps } from '~/ui:lib/molecules/labeled-avatars-stack';
+import { AppHeader, AppHeaderAvatarsStackTitle } from '~/ui:lib/widgets/app-header';
 
 export interface ExpenseGroupHomeHeaderProps {
   group: ExpenseGroupDetails;
@@ -27,18 +27,8 @@ const ExpenseGroupHomeHeader = ({ group }: ExpenseGroupHomeHeaderProps) => {
 
   return (
     <AppHeader
-      title={
-        <AvatarsStack.Labeled
-          containerStyle={{
-            flex: 1,
-            justifyContent: 'center',
-          }}
-          images={groupMembersImages}
-          label={group.name}
-          labelContainerStyle={{ flex: -1 }}
-        />
-      }
       right={<HeaderButton icon='ellipsis-horizontal-circle' onPress={handleOpenGroupSettings} />}
+      title={<AppHeaderAvatarsStackTitle images={groupMembersImages} label={group.name} />}
       hasBack
     />
   );
