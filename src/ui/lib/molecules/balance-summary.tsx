@@ -3,6 +3,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Balance } from '~/api/types';
 
+import { Emoji } from '~/ui:lib/atoms/emoji';
 import { Text, TextProps } from '~/ui:lib/atoms/text';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
@@ -75,6 +76,10 @@ const BalanceSummary = ({
   );
 };
 
+BalanceSummary.displayName = 'BalanceSummary';
+
+export { BalanceSummary };
+
 const stylesheet = createStyleSheet((theme) => ({
   container: (centered: boolean) => ({
     rowGap: theme.margins.sm,
@@ -82,6 +87,19 @@ const stylesheet = createStyleSheet((theme) => ({
   }),
 }));
 
-BalanceSummary.displayName = 'BalanceSummary';
+export interface BalanceSummarySettledUpProps extends Stylable {
+  size?: Size;
+  inline?: boolean;
+}
 
-export { BalanceSummary };
+const BalanceSummarySettledUp = ({ size = 'primary', inline }: BalanceSummarySettledUpProps) => {
+  return (
+    <Text size={inline ? undefined : textSize(size)}>
+      <Emoji name='partying-face' />
+    </Text>
+  );
+};
+
+BalanceSummarySettledUp.displayName = 'BalanceSummarySettledUp';
+
+export { BalanceSummarySettledUp };

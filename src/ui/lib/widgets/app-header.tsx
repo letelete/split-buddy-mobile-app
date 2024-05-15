@@ -7,9 +7,16 @@ import { AvatarsStack, LabeledAvatarsStackProps } from '~/ui:lib/molecules/label
 
 export interface AppHeaderProps extends Omit<HeaderProps, 'renderBack'> {
   renderBack?: (props: { defaultBackBehavior: () => void }) => ReactNode;
+  disableSpacingBottom?: boolean;
 }
 
-const AppHeader = ({ renderBack, ...rest }: AppHeaderProps) => {
+const AppHeader = ({
+  disableSpacingBottom,
+  containerStyle,
+  renderBack,
+  ...rest
+}: AppHeaderProps) => {
+  const { styles } = useStyles(stylesheet);
   const navigation = useNavigation();
 
   const handleBack = useCallback(() => {
@@ -26,12 +33,31 @@ const AppHeader = ({ renderBack, ...rest }: AppHeaderProps) => {
     [handleBack, renderBack]
   );
 
-  return <Header {...rest} renderBack={renderBack ? renderUserBackWithProps : renderDefaultBack} />;
+  return (
+    <Header
+      containerStyle={[
+        styles.container,
+        disableSpacingBottom && styles.removeMarginBottom,
+        containerStyle,
+      ]}
+      {...rest}
+      renderBack={renderBack ? renderUserBackWithProps : renderDefaultBack}
+    />
+  );
 };
 
 AppHeader.displayName = 'AppHeader';
 
 export { AppHeader };
+
+const stylesheet = createStyleSheet((theme) => ({
+  container: {
+    marginBottom: theme.margins.sm,
+  },
+  removeMarginBottom: {
+    marginBottom: 0,
+  },
+}));
 
 export interface AppHeaderAvatarsStackTitleProps extends LabeledAvatarsStackProps {}
 
@@ -54,10 +80,14 @@ AppHeaderAvatarsStackTitle.displayName = 'AppHeaderAvatarsStackTitle';
 
 export { AppHeaderAvatarsStackTitle };
 
-const appHeaderAvatarsStackTitleStylesheet = createStyleSheet(() => ({
+const appHeaderAvatarsStackTitleStylesheet = createStyleSheet((theme) => ({
   container: {
     flex: 1,
     justifyContent: 'center',
+    marginBottom: theme.margins.sm,
+  },
+  removeMarginBottom: {
+    marginBottom: 0,
   },
   labelContainer: {
     flex: -1,

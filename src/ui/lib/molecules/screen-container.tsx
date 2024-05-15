@@ -18,6 +18,8 @@ export interface ScreenContainerPrimitiveProps extends Stylable {
   disablePaddingTop?: boolean;
   disablePaddingBottom?: boolean;
   disablePaddingHorizontal?: boolean;
+  disableHeader?: boolean;
+  contentCentered?: boolean;
 }
 
 /**
@@ -44,6 +46,7 @@ const ScreenContainerPrimitive = React.forwardRef<
       disablePaddingHorizontal = false,
       disablePaddingTop = false,
       disablePaddingBottom = false,
+      contentCentered = false,
     },
     ref
   ) => {
@@ -59,6 +62,7 @@ const ScreenContainerPrimitive = React.forwardRef<
           disablePaddingTop &&
           styles.removePaddingBottom,
         disablePaddingBottom && styles.removePaddingTop,
+        contentCentered && styles.contentCentered,
         containerStyle,
       ],
       [
@@ -67,6 +71,7 @@ const ScreenContainerPrimitive = React.forwardRef<
         disablePaddingHorizontal,
         disablePaddingTop,
         disablePaddingBottom,
+        contentCentered,
         containerStyle,
       ]
     );
@@ -135,6 +140,10 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
   },
   scrollContent: {
     minHeight: '100%',
+  },
+  contentCentered: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 

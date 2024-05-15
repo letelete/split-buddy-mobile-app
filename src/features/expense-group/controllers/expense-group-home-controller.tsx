@@ -3,6 +3,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { ExpenseGroupDetails } from '~/api/types';
 
+import { ExpenseGroupBalanceCarousel } from '~/features/expense-group/views/expense-group-balance-carousel';
 import { ExpenseGroupHomeHeader } from '~/features/expense-group/views/expense-group-home-header';
 import { ExpenseGroupToolbar } from '~/features/expense-group/views/expense-group-toolbar';
 
@@ -14,24 +15,23 @@ export interface ExpenseGroupHomeControllerProps {
 }
 
 const ExpenseGroupHomeController = ({ data }: ExpenseGroupHomeControllerProps) => {
-  const { styles } = useStyles(stylesheet);
-
   const [toolbarHeight, setToolbarHeight] = useState(0);
 
   return (
     <ScreenContainer containerStyle={[{ paddingBottom: toolbarHeight }]} variant='fullscreen'>
       <ExpenseGroupHomeHeader group={data} />
 
+      {/* TODO: propagate authenticated user data */}
+      <ExpenseGroupBalanceCarousel group={data} userDisplayName='John' />
+
       <ScreenContainer.HorizontalPaddingBox>
-        <Typography.Body>{data.name}</Typography.Body>
+        <Typography.SectionTitle spacingTop='large'>Expenses</Typography.SectionTitle>
       </ScreenContainer.HorizontalPaddingBox>
 
       <ExpenseGroupToolbar onLayout={(e) => setToolbarHeight(e.nativeEvent.layout.height)} />
     </ScreenContainer>
   );
 };
-
-const stylesheet = createStyleSheet((theme) => ({}));
 
 ExpenseGroupHomeController.displayName = 'ExpenseGroupHomeController';
 

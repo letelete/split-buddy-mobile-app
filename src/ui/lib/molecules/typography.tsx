@@ -41,7 +41,7 @@ LargeTitle.displayName = 'LargeTitle';
 export type SectionTitleSpacingTop = 'none' | 'large' | 'base';
 
 export interface SectionTitleProps extends WithDynamicPadding, TextProps {
-  spacingTop: SectionTitleSpacingTop;
+  spacingTop?: SectionTitleSpacingTop;
 }
 
 const SectionTitle = ({
@@ -73,6 +73,7 @@ const SectionTitle = ({
 
 const stylesheet = createStyleSheet((theme) => ({
   container: {
+    marginLeft: theme.margins.base,
     variants: {
       spacingTop: {
         none: { marginTop: 0 },

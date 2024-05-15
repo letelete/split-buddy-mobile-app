@@ -9,7 +9,7 @@ import { useGradientForBalance } from '~/ui:hooks/use-color-for-balance';
 import { BorderGradient } from '~/ui:lib/atoms/border-gradient';
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
 import { Icon } from '~/ui:lib/atoms/icon';
-import { BalanceSummary } from '~/ui:lib/molecules/balance-total-summary';
+import { BalanceSummary, BalanceSummarySettledUp } from '~/ui:lib/molecules/balance-summary';
 import { AvatarsStack } from '~/ui:lib/molecules/labeled-avatars-stack';
 import { Typography } from '~/ui:lib/molecules/typography';
 import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
@@ -88,7 +88,9 @@ const ExpenseGroupCard = ({
                   )}
 
                   {isSettleUp && (
-                    <Typography.Body color='secondary'>You&apos;re all set! 🥳</Typography.Body>
+                    <Typography.Body color='secondary'>
+                      You&apos;re all set! <BalanceSummarySettledUp inline />
+                    </Typography.Body>
                   )}
                 </View>
               </View>

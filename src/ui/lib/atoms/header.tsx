@@ -75,7 +75,7 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
   container: {
     flexDirection: 'row',
     paddingTop: runtime.insets.top,
-    paddingHorizontal: theme.margins.md,
+    paddingHorizontal: theme.container.padding.horizontal,
     paddingBottom: theme.margins.md,
     alignItems: 'center',
   },

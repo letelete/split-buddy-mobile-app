@@ -5,7 +5,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { useGetExpensesGroups } from '~/features/expense-group/services/use-get-expenses-groups';
 import { useGetUserTotalBalance } from '~/features/expense-group/services/use-get-user-total-balance';
 import { ExpensesGroupsList } from '~/features/expense-group/views/expenses-groups-list';
-import { BannerTotalBalance } from '~/features/home/views/banner-total-balance';
+import { HomeBannerTotalBalance } from '~/features/home/views/home-banner-total-balance';
 import { HomeHeader } from '~/features/home/views/home-header';
 import { HomeToolbar } from '~/features/home/views/home-toolbar';
 
@@ -25,7 +25,7 @@ const HomeController = () => {
   const StickyHeaderComponent = useCallback(() => {
     return (
       <View style={styles.listContent}>
-        <BannerTotalBalance
+        <HomeBannerTotalBalance
           balances={balanceQuery.data?.total ?? []}
           loading={balanceQuery.isLoading}
         />

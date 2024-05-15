@@ -13,6 +13,12 @@ export const baseTheme = {
       return this.typography;
     },
     background: '#000',
+    get chipTranslucent() {
+      return {
+        background: 'rgba(255, 255, 255, 0.34)',
+        foreground: this.typography,
+      };
+    },
   },
   get gradients() {
     const colors = this.colors;
@@ -99,7 +105,7 @@ export const baseTheme = {
   },
   container: {
     padding: {
-      horizontal: 24,
+      horizontal: 16,
     },
   },
 };
@@ -108,81 +114,4 @@ export const darkTheme = { ...baseTheme } satisfies AppTheme;
 
 export const lightTheme = {
   ...baseTheme,
-  colors: {
-    typography: {
-      primary: 'rgba(0, 0, 0, 1.0)',
-      primarySoft: 'rgba(0, 0, 0, 0.87)',
-      secondary: 'rgba(0, 0, 0, 0.64)',
-      disabled: 'rgba(0, 0, 0, 0.37)',
-      destructive: '#EF291F',
-    },
-    baseGradientTypography: {
-      primary: 'rgba(0, 0, 0, 1.0)',
-      primarySoft: 'rgba(0, 0, 0, 0.87)',
-      secondary: 'rgba(0, 0, 0, 0.64)',
-      disabled: 'rgba(0, 0, 0, 0.37)',
-      destructive: '#FFFFFF',
-    },
-    background: '#FFF',
-  },
-  get gradients() {
-    const colors = this.colors;
-    const baseGradientTypographyInverted = {
-      primary: 'rgba(255, 255, 255, 1.0)',
-      primarySoft: 'rgba(255, 255, 255, 0.87)',
-      secondary: 'rgba(255, 255, 255, 0.64)',
-      disabled: 'rgba(255, 255, 255, 0.37)',
-      destructive: '#FFFFFF',
-    };
-    return {
-      neutral: {
-        values: ['#f5f5f5', '#fff'],
-        foreground: colors.baseGradientTypography,
-      },
-      positive: {
-        values: ['#6A9113', '#141517'],
-        foreground: baseGradientTypographyInverted,
-      },
-      negative: {
-        values: ['#FF0084', '#33001B'],
-        foreground: baseGradientTypographyInverted,
-      },
-      ios: {
-        values: ['#A8AEBC', '#8C909B'],
-        foreground: baseGradientTypographyInverted,
-      },
-    };
-  },
-  traits: {
-    appHeader: {
-      background: {
-        color: '#fff',
-      },
-      title: {
-        color: '#000',
-      },
-      action: {
-        color: '#000',
-        size: 28,
-      },
-    },
-    signUpButton: {
-      background: '#000',
-      typography: '#fff',
-    },
-    skeleton: {
-      background: '#f6f6f6',
-      foreground: '#666',
-    },
-    avatar: {
-      background: '#b6b6b6',
-      title: '#111',
-      borderColor: {
-        onCard: '#f5f5f5',
-      },
-    },
-    scrollable: {
-      indicator: 'black',
-    },
-  },
 } satisfies AppTheme;

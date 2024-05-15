@@ -37,7 +37,7 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     width: runtime.screen.width,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: theme.margins.md,
+    paddingHorizontal: theme.container.padding.horizontal,
     paddingTop: theme.margins.base,
     position: 'absolute',
     left: 0,

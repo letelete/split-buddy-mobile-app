@@ -7,19 +7,23 @@ import { useBannerVariantForBalance } from '~/ui:hooks/use-color-for-balance';
 
 import { Banner } from '~/ui:lib/atoms/banner';
 import { SkeletonContent } from '~/ui:lib/atoms/skeleton';
-import { BalanceSummary } from '~/ui:lib/molecules/balance-total-summary';
+import { BalanceSummary, BalanceSummarySettledUp } from '~/ui:lib/molecules/balance-summary';
 import { Typography } from '~/ui:lib/molecules/typography';
 import { Stylable, Suspensible } from '~/ui:lib/shared/interfaces';
 
 import { createBalancesComparator } from '~/utils/sort';
 
-export interface BannerTotalBalanceProps extends Stylable, Suspensible {
+export interface HomeBannerTotalBalanceProps extends Stylable, Suspensible {
   balances: Balance[];
 }
 
 const balancesComparator = createBalancesComparator();
 
-const BannerTotalBalance = ({ balances, containerStyle, loading }: BannerTotalBalanceProps) => {
+const HomeBannerTotalBalance = ({
+  balances,
+  containerStyle,
+  loading,
+}: HomeBannerTotalBalanceProps) => {
   const { styles } = useStyles(stylesheet);
   const bannerVariant = useBannerVariantForBalance(balances);
   const nonZeroBalances = useMemo(
@@ -38,7 +42,7 @@ const BannerTotalBalance = ({ balances, containerStyle, loading }: BannerTotalBa
 
       <SkeletonContent loading={loading}>
         {isSettleUp ? (
-          <Typography.LargeTitle disablePadding>🥳</Typography.LargeTitle>
+          <BalanceSummarySettledUp />
         ) : (
           <BalanceSummary balances={nonZeroBalances} centered />
         )}
@@ -53,6 +57,6 @@ const stylesheet = createStyleSheet(() => ({
   },
 }));
 
-BannerTotalBalance.displayName = 'BannerTotalBalance';
+HomeBannerTotalBalance.displayName = 'HomeBannerTotalBalance';
 
-export { BannerTotalBalance };
+export { HomeBannerTotalBalance };
