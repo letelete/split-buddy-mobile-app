@@ -4,12 +4,14 @@ import { TouchableOpacity } from 'react-native';
 import { Icon } from '~/ui:lib/atoms/icon';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
+import { NOT_IMPLEMENTED } from '~/utils/mock';
+
 export interface NotificationsButtonProps extends Stylable {}
 
 // TODO: query notifications
 const NotificationsButton = ({ containerStyle }: NotificationsButtonProps) => {
   const handleOpenNotifications = useCallback(() => {
-    console.warn('Not implemented');
+    NOT_IMPLEMENTED();
   }, []);
 
   return (

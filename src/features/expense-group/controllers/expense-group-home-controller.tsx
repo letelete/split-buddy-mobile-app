@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { ExpenseGroupDetails } from '~/api/types';
 

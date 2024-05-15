@@ -2,17 +2,19 @@ import { useCallback } from 'react';
 
 import { Toolbar, ToolbarProps } from '~/ui:lib/molecules/toolbar';
 
+import { NOT_IMPLEMENTED } from '~/utils/mock';
+
 export interface HomeToolbarProps extends ToolbarProps {
   disableNewExpense: boolean;
 }
 
 const HomeToolbar = ({ disableNewExpense, ...rest }: Partial<HomeToolbarProps>) => {
   const handleAddExpense = useCallback(() => {
-    console.warn('Not implemented');
+    NOT_IMPLEMENTED();
   }, []);
 
   const handleAddBuddy = useCallback(() => {
-    console.warn('Not implemented');
+    NOT_IMPLEMENTED();
   }, []);
 
   return (

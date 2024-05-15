@@ -52,7 +52,7 @@ export { AppHeader };
 
 const stylesheet = createStyleSheet((theme) => ({
   container: {
-    marginBottom: theme.margins.sm,
+    marginBottom: theme.margins.xs,
   },
   removeMarginBottom: {
     marginBottom: 0,

@@ -4,11 +4,13 @@ import { TouchableOpacity } from 'react-native';
 import { Icon } from '~/ui:lib/atoms/icon';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
+import { NOT_IMPLEMENTED } from '~/utils/mock';
+
 export interface ExpenseGroupSettingsButtonProps extends Stylable {}
 
 const ExpenseGroupSettingsButton = ({ containerStyle }: ExpenseGroupSettingsButtonProps) => {
   const handleOpenExpenseGroupSettings = useCallback(() => {
-    console.warn('Not implemented');
+    NOT_IMPLEMENTED();
   }, []);
 
   return (

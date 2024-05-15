@@ -5,7 +5,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { useGetExpensesGroups } from '~/features/expense-group/services/use-get-expenses-groups';
 import { useGetUserTotalBalance } from '~/features/expense-group/services/use-get-user-total-balance';
 import { ExpensesGroupsList } from '~/features/expense-group/views/expenses-groups-list';
-import { HomeBannerTotalBalance } from '~/features/home/views/home-banner-total-balance';
+import { HomeBalanceCarousel } from '~/features/home/views/home-balance-carousel';
 import { HomeHeader } from '~/features/home/views/home-header';
 import { HomeToolbar } from '~/features/home/views/home-toolbar';
 
@@ -24,16 +24,20 @@ const HomeController = () => {
 
   const StickyHeaderComponent = useCallback(() => {
     return (
-      <View style={styles.listContent}>
-        <HomeBannerTotalBalance
-          balances={balanceQuery.data?.total ?? []}
+      <View>
+        {/* TODO: propagate authenticated user */}
+        <HomeBalanceCarousel
           loading={balanceQuery.isLoading}
+          userBalance={balanceQuery.data}
+          userDisplayName='John'
         />
 
-        <Typography.SectionTitle spacingTop='large'>Your buddies</Typography.SectionTitle>
+        <ScreenContainer.HorizontalPaddingBox>
+          <Typography.SectionTitle spacingTop='large'>Your buddies</Typography.SectionTitle>
+        </ScreenContainer.HorizontalPaddingBox>
       </View>
     );
-  }, [balanceQuery.data?.total, balanceQuery.isLoading, styles.listContent]);
+  }, [balanceQuery.data, balanceQuery.isLoading]);
 
   return (
     <ScreenContainer containerStyle={[{ paddingBottom: toolbarHeight }]} variant='fullscreen'>

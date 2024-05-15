@@ -8,6 +8,8 @@ import { SkeletonContent } from '~/ui:lib/atoms/skeleton';
 import { UserAvatar } from '~/ui:lib/organisms/user-avatar';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
+import { NOT_IMPLEMENTED } from '~/utils/mock';
+
 export interface ProfileButtonProps extends Stylable {}
 
 const ProfileButton = ({ containerStyle }: ProfileButtonProps) => {
@@ -15,7 +17,7 @@ const ProfileButton = ({ containerStyle }: ProfileButtonProps) => {
   const totalBalanceQuery = useGetUserTotalBalance();
 
   const handleOpenProfile = useCallback(() => {
-    console.warn('Not implemented');
+    NOT_IMPLEMENTED();
   }, []);
 
   return (

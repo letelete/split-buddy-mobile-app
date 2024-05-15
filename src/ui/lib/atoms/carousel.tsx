@@ -1,5 +1,5 @@
-import { JSXElementConstructor, ReactElement, useCallback, useState } from 'react';
-import { ListRenderItem, ListRenderItemInfo, StyleProp, View, ViewStyle } from 'react-native';
+import { useState } from 'react';
+import { ListRenderItem, ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   Extrapolation,
   SharedValue,
@@ -8,7 +8,6 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withSpring,
 } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 

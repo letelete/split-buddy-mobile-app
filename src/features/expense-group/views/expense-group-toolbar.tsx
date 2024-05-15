@@ -2,11 +2,13 @@ import { useCallback } from 'react';
 
 import { Toolbar, ToolbarProps } from '~/ui:lib/molecules/toolbar';
 
+import { NOT_IMPLEMENTED } from '~/utils/mock';
+
 export interface HomeToolbarProps extends ToolbarProps {}
 
 const ExpenseGroupToolbar = ({ ...rest }: Partial<HomeToolbarProps>) => {
   const handleAddExpense = useCallback(() => {
-    console.warn('Not implemented');
+    NOT_IMPLEMENTED();
   }, []);
 
   return (

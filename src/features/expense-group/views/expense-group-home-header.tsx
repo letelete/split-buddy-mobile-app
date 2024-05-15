@@ -6,6 +6,8 @@ import { HeaderButton } from '~/ui:lib/atoms/header';
 import { AvatarsStackProps } from '~/ui:lib/molecules/labeled-avatars-stack';
 import { AppHeader, AppHeaderAvatarsStackTitle } from '~/ui:lib/widgets/app-header';
 
+import { NOT_IMPLEMENTED } from '~/utils/mock';
+
 export interface ExpenseGroupHomeHeaderProps {
   group: ExpenseGroupDetails;
 }
@@ -22,7 +24,7 @@ const ExpenseGroupHomeHeader = ({ group }: ExpenseGroupHomeHeaderProps) => {
   );
 
   const handleOpenGroupSettings = useCallback(() => {
-    console.warn('Not implemented');
+    NOT_IMPLEMENTED();
   }, []);
 
   return (
