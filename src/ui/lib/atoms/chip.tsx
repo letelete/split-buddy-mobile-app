@@ -1,7 +1,8 @@
-import { PropsWithChildren, useCallback } from 'react';
+import { PropsWithChildren } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
+import { Avatar, AvatarProps } from '~/ui:lib/atoms/avatar';
 import { Caption1Props, Caption2Props, Typography } from '~/ui:lib/molecules/typography';
 import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
 import { Background } from '~/ui:lib/shared/background-aware/stylesheets';
@@ -15,6 +16,8 @@ export interface ChipProps extends Stylable {
   interactive?: boolean;
   disabled?: boolean;
   background?: Background;
+  balanceLeft?: boolean;
+  balanceRight?: boolean;
   onPress?: () => void;
 }
 
@@ -25,27 +28,32 @@ const Chip = ({
   disabled,
   children,
   containerStyle,
+  balanceLeft,
+  balanceRight,
   onPress,
 }: PropsWithChildren<ChipProps>) => {
   const { styles } = useStyles(stylesheet, {
     size,
   });
+  const { styles: balanceStyles } = useStyles(balanceStylesheet, {
+    size,
+  });
 
-  const containerStyles = [styles.container, containerStyle];
-
-  const renderChip = useCallback(
-    (style?: StyleProp<ViewStyle>) => <View style={style}>{children}</View>,
-    [children]
-  );
+  const containerStyles = [
+    styles.container,
+    balanceLeft && balanceStyles.left,
+    balanceRight && balanceStyles.right,
+    containerStyle,
+  ] as StyleProp<ViewStyle>;
 
   if (!interactive) {
-    return renderChip(containerStyles);
+    return <View style={containerStyles}>{children}</View>;
   }
 
   return (
     <TouchableOpacity disabled={disabled} style={containerStyles} onPress={onPress}>
       <BackgroundAwareContextProvider value={{ background }}>
-        {renderChip()}
+        {children}
       </BackgroundAwareContextProvider>
     </TouchableOpacity>
   );
@@ -66,12 +74,36 @@ const stylesheet = createStyleSheet((theme) => ({
           paddingHorizontal: theme.margins.sm,
         },
         base: {
-          paddingVertical: theme.margins.base,
-          paddingHorizontal: theme.margins.md,
-        },
-        default: {
           paddingVertical: theme.margins.sm,
           paddingHorizontal: theme.margins.base,
+        },
+        get default() {
+          return this.base;
+        },
+      } satisfies StylesheetVariants<Size>,
+    },
+  },
+}));
+
+const balanceStylesheet = createStyleSheet((theme) => ({
+  left: {
+    variants: {
+      size: {
+        sm: { paddingLeft: theme.margins.xs },
+        base: { paddingLeft: theme.margins.sm },
+        get default() {
+          return this.base;
+        },
+      } satisfies StylesheetVariants<Size>,
+    },
+  },
+  right: {
+    variants: {
+      size: {
+        sm: { paddingRight: theme.margins.xs },
+        base: { paddingRight: theme.margins.sm },
+        get default() {
+          return this.base;
         },
       } satisfies StylesheetVariants<Size>,
     },
@@ -105,3 +137,13 @@ const ChipTextSm = ({ children, ...rest }: PropsWithChildren<ChipTextSmProps>) =
 ChipTextSm.displayName = 'ChipTextSm';
 
 export { ChipTextSm };
+
+export type ChipAvatarProps = AvatarProps;
+
+const ChipAvatar = ({ ...rest }: ChipAvatarProps) => {
+  return <Avatar size='xs' {...rest} />;
+};
+
+ChipAvatar.displayName = 'ChipAvatar';
+
+export { ChipAvatar };

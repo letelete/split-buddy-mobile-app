@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { ExpenseGroupDetails } from '~/api/types';
 
-import { ExpenseGroupBalanceCarousel } from '~/features/expense-group/views/expense-group-balance-carousel';
+import { ExpenseGroupBalanceSummary } from '~/features/expense-group/views/expense-group-balance-summary';
 import { ExpenseGroupHomeHeader } from '~/features/expense-group/views/expense-group-home-header';
 import { ExpenseGroupToolbar } from '~/features/expense-group/views/expense-group-toolbar';
 
@@ -21,7 +21,7 @@ const ExpenseGroupHomeController = ({ data }: ExpenseGroupHomeControllerProps) =
       <ExpenseGroupHomeHeader group={data} />
 
       {/* TODO: propagate authenticated user data */}
-      <ExpenseGroupBalanceCarousel group={data} userDisplayName='John' />
+      <ExpenseGroupBalanceSummary group={data} userDisplayName='Bruno' />
 
       <ScreenContainer.HorizontalPaddingBox>
         <Typography.SectionTitle spacingTop='large'>Expenses</Typography.SectionTitle>

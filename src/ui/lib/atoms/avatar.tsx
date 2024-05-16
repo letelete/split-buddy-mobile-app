@@ -7,7 +7,7 @@ import { Typography } from '~/ui:lib/molecules/typography';
 import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export type Size = 'base' | 'sm';
+export type Size = 'base' | 'sm' | 'xs';
 
 interface BaseAvatarProps {
   displayName: string;
@@ -32,6 +32,7 @@ const Avatar = (props: AvatarProps) => {
     () =>
       (
         ({
+          xs: 18,
           sm: 24,
           base: 28,
         }) satisfies Record<Size, number>

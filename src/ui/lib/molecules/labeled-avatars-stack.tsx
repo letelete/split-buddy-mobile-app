@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
-import { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
+import { ReactNode, useMemo } from 'react';
+import { StyleProp, TextProps, TextStyle, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Avatar } from '~/ui:lib/atoms/avatar';
-import { Typography } from '~/ui:lib/molecules/typography';
+import { BodyProps, Typography } from '~/ui:lib/molecules/typography';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
 export interface AvatarsStackProps extends Stylable {
@@ -60,6 +60,7 @@ export interface LabeledAvatarsStackProps extends AvatarsStackProps {
   label: string;
   labelContainerStyle?: StyleProp<TextStyle>;
   avatarsStackStyle?: StyleProp<ViewStyle>;
+  renderLabel?: (label: string, props: Partial<BodyProps>) => ReactNode;
 }
 
 const LabeledAvatarsStack = ({
@@ -67,23 +68,26 @@ const LabeledAvatarsStack = ({
   labelContainerStyle,
   avatarsStackStyle,
   containerStyle,
+  renderLabel,
   ...rest
 }: LabeledAvatarsStackProps) => {
   const { styles } = useStyles(labeledAvatarsStackStylesheet);
+
+  const labelProps = {
+    containerStyle: labelContainerStyle,
+    ellipsizeMode: 'tail',
+    numberOfLines: 1,
+    weight: 'bold',
+    disablePadding: true,
+  } satisfies BodyProps;
 
   return (
     <View style={[styles.container, containerStyle]}>
       <AvatarsStack containerStyle={avatarsStackStyle} {...rest} />
 
-      <Typography.Body
-        containerStyle={labelContainerStyle}
-        ellipsizeMode='tail'
-        numberOfLines={1}
-        weight='bold'
-        disablePadding
-      >
-        {label}
-      </Typography.Body>
+      {renderLabel?.(label, labelProps) ?? (
+        <Typography.Body {...labelProps}>{label}</Typography.Body>
+      )}
     </View>
   );
 };

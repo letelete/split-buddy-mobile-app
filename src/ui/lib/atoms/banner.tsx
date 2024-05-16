@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactNode, useMemo } from 'react';
-import { View } from 'react-native';
+import { StyleProp, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
@@ -11,11 +11,13 @@ export type BannerVariant = 'neutral' | 'positive' | 'negative';
 
 export interface BannerProps extends Stylable {
   variant?: BannerVariant;
+  contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
 const Banner = ({
   variant = 'neutral',
   containerStyle,
+  contentContainerStyle,
   children,
 }: PropsWithChildren<BannerProps>) => {
   const { styles } = useStyles(stylesheet);
@@ -49,7 +51,7 @@ const Banner = ({
       {Gradient}
 
       <BackgroundAwareContextProvider value={{ background }}>
-        <View style={[styles.contentContainer]}>{children}</View>
+        <View style={[styles.contentContainer, contentContainerStyle]}>{children}</View>
       </BackgroundAwareContextProvider>
     </View>
   );
