@@ -61,7 +61,7 @@ const ExpenseGroupCard = ({
             <View style={styles.card}>
               <View style={styles.cardContent}>
                 <AvatarsStack.Labeled
-                  borderColor={theme.traits.avatar.borderColor.onCard}
+                  borderColor={theme.gradients.neutral.solid}
                   containerStyle={styles.avatarsStack}
                   images={members}
                   label={name}

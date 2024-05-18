@@ -67,15 +67,20 @@ const stylesheet = createStyleSheet((theme) => ({
   container: {
     borderRadius: theme.rounded.full,
     backgroundColor: theme.colors.chipTranslucent.background,
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    alignItems: 'center',
     variants: {
       size: {
         sm: {
           paddingVertical: theme.margins.sm,
           paddingHorizontal: theme.margins.sm,
+          columnGap: theme.margins.sm,
         },
         base: {
           paddingVertical: theme.margins.sm,
           paddingHorizontal: theme.margins.base,
+          columnGap: theme.margins.base,
         },
         get default() {
           return this.base;

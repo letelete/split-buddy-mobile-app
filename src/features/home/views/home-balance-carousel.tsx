@@ -2,12 +2,11 @@ import { useCallback } from 'react';
 
 import { UserBalance } from '~/api/types';
 
-import { BalanceCarousel } from '~/features/balance/views/balance-carousel';
-
 import { Banner } from '~/ui:lib/atoms/banner';
 import { SkeletonContent } from '~/ui:lib/atoms/skeleton';
 import { Typography } from '~/ui:lib/molecules/typography';
 import { Stylable, Suspensible } from '~/ui:lib/shared/interfaces';
+import { BalanceCarousel } from '~/ui:lib/widgets/balance/views/balance-carousel';
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 

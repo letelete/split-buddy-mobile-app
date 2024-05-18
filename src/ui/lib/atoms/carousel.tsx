@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
 import { ListRenderItem, ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   Extrapolation,
@@ -19,6 +20,7 @@ export interface CarouselProps<TItem> extends Stylable {
   keyExtractor: (item: TItem, index: number) => string;
   contentContainerStyle?: StyleProp<ViewStyle>;
   CarouselEmptyComponent?: React.ComponentType<unknown> | React.ReactElement | null | undefined;
+  onChange?: (index: number) => void;
 }
 
 const Carousel = <TItem,>({
@@ -28,6 +30,7 @@ const Carousel = <TItem,>({
   renderItem,
   keyExtractor,
   CarouselEmptyComponent,
+  onChange,
 }: CarouselProps<TItem>) => {
   const { styles, theme } = useStyles(stylesheet);
   const [scrollViewWidth, setScrollViewWidth] = useState(0);
@@ -42,6 +45,12 @@ const Carousel = <TItem,>({
       panX.value = event.contentOffset.x;
     },
   });
+
+  const handleInitialChange = useCallback(() => {
+    onChange?.(0);
+  }, [onChange]);
+
+  useFocusEffect(handleInitialChange);
 
   return (
     <Animated.FlatList
@@ -75,6 +84,14 @@ const Carousel = <TItem,>({
       horizontal
       onLayout={(e) => {
         setScrollViewWidth(e.nativeEvent.layout.width);
+      }}
+      onMomentumScrollEnd={(e) => {
+        const panX = e.nativeEvent.contentOffset.x;
+        const currentIndex = boxWidth
+          ? Math.min(Math.max(0, Math.floor((panX + boxDistance) / boxWidth)), data.length - 1)
+          : 0;
+
+        onChange?.(currentIndex);
       }}
       onScroll={handler}
     />

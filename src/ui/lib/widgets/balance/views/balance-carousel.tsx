@@ -1,21 +1,26 @@
-import { useCallback, useMemo } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 import { ListRenderItemInfo } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Balance, UserBalance } from '~/api/types';
 
+import { Carousel } from '~/ui:lib/atoms/carousel';
+import { Stylable } from '~/ui:lib/shared/interfaces';
 import {
   BalanceBannerNegative,
   BalanceBannerPositive,
   BalanceBannerSettleUp,
-} from '~/features/balance/views/balance-banner';
-
-import { Carousel } from '~/ui:lib/atoms/carousel';
-import { Stylable } from '~/ui:lib/shared/interfaces';
+} from '~/ui:lib/widgets/balance/views/balance-banner';
 
 import { createBalancesComparator } from '~/utils/sort';
 
-interface CarouselItem {
+export interface BalanceCarouselContextProps {
+  onChange?: (item: BalanceCarouselItem, index: number) => void;
+}
+
+export const BalanceCarouselContext = createContext<BalanceCarouselContextProps>({});
+
+export interface BalanceCarouselItem {
   key: string;
   type: 'negative' | 'positive';
   balances: Balance[];
@@ -37,6 +42,8 @@ const BalanceCarousel = ({
   onShowAllPositive,
   onShowAllNegative,
 }: BalanceCarouselProps) => {
+  const context = useContext(BalanceCarouselContext);
+
   const { styles } = useStyles(stylesheet);
 
   const negative = useMemo(
@@ -49,7 +56,7 @@ const BalanceCarousel = ({
   );
 
   const carouselData = useMemo(() => {
-    const data = [] as CarouselItem[];
+    const data = [] as BalanceCarouselItem[];
     if (negative.length) {
       data.push({
         key: 'expense-group-balance:negative',
@@ -68,7 +75,7 @@ const BalanceCarousel = ({
   }, [negative, positive]);
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<CarouselItem>) => {
+    ({ item }: ListRenderItemInfo<BalanceCarouselItem>) => {
       if (item.type === 'positive') {
         return (
           <BalanceBannerPositive
@@ -104,6 +111,13 @@ const BalanceCarousel = ({
     [styles.bannerSettleUpContainer, userDisplayName]
   );
 
+  const handleCarouselChange = useCallback(
+    (index: number) => {
+      context.onChange?.(carouselData[index], index);
+    },
+    [carouselData, context]
+  );
+
   return (
     <Carousel
       CarouselEmptyComponent={renderEmptyComponent}
@@ -111,6 +125,7 @@ const BalanceCarousel = ({
       data={carouselData}
       keyExtractor={(item) => item.key}
       renderItem={renderItem}
+      onChange={handleCarouselChange}
     />
   );
 };

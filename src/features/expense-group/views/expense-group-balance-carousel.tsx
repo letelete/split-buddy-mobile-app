@@ -2,9 +2,8 @@ import { useCallback } from 'react';
 
 import { ExpenseGroup } from '~/api/types';
 
-import { BalanceCarousel } from '~/features/balance/views/balance-carousel';
-
 import { Stylable } from '~/ui:lib/shared/interfaces';
+import { BalanceCarousel } from '~/ui:lib/widgets/balance/views/balance-carousel';
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 

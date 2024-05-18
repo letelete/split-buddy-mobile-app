@@ -24,6 +24,7 @@ export const baseTheme = {
     const colors = this.colors;
     return {
       neutral: {
+        solid: '#1C1C1E',
         values: ['#222222', '#111111'],
         foreground: colors.baseGradientTypography,
       },

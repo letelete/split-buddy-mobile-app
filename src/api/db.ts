@@ -80,12 +80,13 @@ export class DB {
         ),
         createFakeMember(
           {
+            displayName: 'John Doe Abrahamlincoln',
             userBalance: {
               borrowed: [
                 { value: 233.12, currency: { code: 'PLN', name: 'Polish Zloty' } },
                 { value: 24, currency: { code: 'USD', name: 'US Dollar' } },
                 { value: 100.23, currency: { code: 'JPY', name: 'Japanese Yen' } },
-                { value: 899.99, currency: { code: 'CFH', name: 'Swiss franc' } },
+                { value: 9899.99, currency: { code: 'CFH', name: 'Swiss franc' } },
               ],
               lent: [],
             },

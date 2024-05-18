@@ -1,19 +1,41 @@
-import { PropsWithChildren, useCallback, useMemo } from 'react';
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import Animated, {
+  FadeInDown,
+  FadeInLeft,
+  FadeInRight,
+  FadeInUp,
+  FadeOutDown,
+  FadeOutLeft,
+  FadeOutRight,
+  FadeOutUp,
+  IEntryExitAnimationBuilder,
+  runOnJS,
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Balance, ExpenseGroup, UserBalance } from '~/api/types';
+import { Balance, ExpenseGroup, ExpenseGroupMember, UserBalance } from '~/api/types';
 
 import { ExpenseGroupBalanceCarousel } from '~/features/expense-group/views/expense-group-balance-carousel';
 
 import { Banner } from '~/ui:lib/atoms/banner';
 import { Chip, ChipAvatar, ChipProps, ChipText, ChipTextSm } from '~/ui:lib/atoms/chip';
+import { LinearGradient } from '~/ui:lib/atoms/gradient';
 import { AvatarsStack } from '~/ui:lib/molecules/labeled-avatars-stack';
 import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
 import { Typography } from '~/ui:lib/molecules/typography';
 import { Background } from '~/ui:lib/shared/background-aware/stylesheets';
 import { Stylable } from '~/ui:lib/shared/interfaces';
+import {
+  BalanceCarouselContext,
+  BalanceCarouselContextProps,
+  BalanceCarouselItem,
+} from '~/ui:lib/widgets/balance/views/balance-carousel';
 
+import { createBalancesComparator } from '~/utils/sort';
 import { formatCurrency } from '~/utils/string';
 
 export interface ExpenseGroupBalanceSummaryProps extends Stylable {
@@ -28,44 +50,64 @@ const ExpenseGroupBalanceSummary = ({
 }: ExpenseGroupBalanceSummaryProps) => {
   const { styles } = useStyles(stylesheet);
 
-  const getBalancesForCarouselItem = useCallback((userBalance: UserBalance) => {
-    return userBalance.borrowed;
-  }, []);
+  const carouselIndex = useSharedValue(0);
+  const [currentCarouselItem, setCurrentCarouselItem] = useState<BalanceCarouselItem>({
+    key: 'expense-group-balance-summary:initial-item',
+    type: 'negative',
+    balances: [],
+  });
 
-  const variantForCarouselItem = useMemo<BannerBalanceMembersProps['variant']>(() => {
-    return 'negative';
-  }, []);
+  const [lastCarouselNavigationDirection, setLastCarouselNavigationDirection] = useState<-1 | 1>(1);
 
-  const actionTitleForCarouselItem = useMemo(() => {
-    return 'Settle up';
-  }, []);
+  useAnimatedReaction(
+    () => carouselIndex.value,
+    (currentIndex, previousIndex) => {
+      const direction = previousIndex && currentIndex <= previousIndex ? -1 : 1;
+      runOnJS(setLastCarouselNavigationDirection)(direction);
+    }
+  );
 
-  const balanceMembers = useMemo(() => {
-    return group.members.map(
-      (member) =>
-        ({
-          id: member.id,
-          displayName: member.displayName,
-          imageUri: member.imageUrl,
-          balances: getBalancesForCarouselItem(member.userBalance),
-        }) satisfies BalanceMember
-    );
-  }, [getBalancesForCarouselItem, group.members]);
+  const { balanceMembers, actionTitleForCarouselItem, variantForCarouselItem } =
+    useBalanceMembersForCarouselItem(group, currentCarouselItem);
+
+  const balanceCarouselContextValue = useMemo<BalanceCarouselContextProps>(
+    () => ({
+      onChange: (item, index) => {
+        carouselIndex.value = index;
+        setCurrentCarouselItem({ ...item });
+      },
+    }),
+    [carouselIndex]
+  );
 
   return (
     <View style={containerStyle}>
-      <ExpenseGroupBalanceCarousel group={group} userDisplayName={userDisplayName} />
+      <BalanceCarouselContext.Provider value={balanceCarouselContextValue}>
+        <ExpenseGroupBalanceCarousel group={group} userDisplayName={userDisplayName} />
+      </BalanceCarouselContext.Provider>
 
-      <ScreenContainer.HorizontalPaddingBox>
-        {balanceMembers && (
-          <BannerBalanceMembers
-            actionTitle={actionTitleForCarouselItem}
-            containerStyle={styles.membersContainer}
-            members={balanceMembers}
-            variant={variantForCarouselItem}
-          />
-        )}
-      </ScreenContainer.HorizontalPaddingBox>
+      {balanceMembers.length > 0 && (
+        <Animated.View
+          key={currentCarouselItem.key}
+          entering={
+            lastCarouselNavigationDirection === 1 ? FadeInLeft.springify() : FadeInRight.springify()
+          }
+          exiting={
+            lastCarouselNavigationDirection === 1
+              ? FadeOutLeft.springify()
+              : FadeOutRight.springify()
+          }
+        >
+          <ScreenContainer.HorizontalPaddingBox>
+            <BannerBalanceMembers
+              actionTitle={actionTitleForCarouselItem}
+              containerStyle={styles.membersContainer}
+              members={balanceMembers}
+              variant={variantForCarouselItem}
+            />
+          </ScreenContainer.HorizontalPaddingBox>
+        </Animated.View>
+      )}
     </View>
   );
 };
@@ -79,6 +121,95 @@ const stylesheet = createStyleSheet((theme) => ({
     marginTop: theme.margins.md,
   },
 }));
+
+const descendingBalanceComparator = createBalancesComparator({ strategy: 'descending' });
+
+const useBalanceMembersForCarouselItem = (group: ExpenseGroup, item: BalanceCarouselItem) => {
+  const variantForCarouselItem = useMemo<BannerBalanceMembersProps['variant']>(
+    () => item.type,
+    [item.type]
+  );
+
+  const actionTitleForCarouselItem = useMemo(
+    () =>
+      (
+        ({
+          negative: 'Settle up',
+          positive: 'Remind',
+        }) satisfies Record<BalanceCarouselItem['type'], string>
+      )[item.type],
+    [item.type]
+  );
+
+  const userBalanceForCarouselItem = useMemo(
+    () =>
+      (
+        ({
+          negative: 'borrowed',
+          positive: 'lent',
+        }) satisfies Record<BalanceCarouselItem['type'], keyof UserBalance>
+      )[item.type],
+    [item.type]
+  );
+
+  const balanceMembers = useMemo(() => {
+    const memberHasSomeBalanceActive = (member: ExpenseGroupMember) => {
+      return (
+        member.userBalance[userBalanceForCarouselItem] &&
+        member.userBalance[userBalanceForCarouselItem].length > 0
+      );
+    };
+
+    const mapToBalanceMember = (member: ExpenseGroupMember) => {
+      const balances = getSortedBalancesForCarouselItem(
+        member.userBalance[userBalanceForCarouselItem]
+      );
+      return {
+        id: member.id,
+        displayName: member.displayName,
+        imageUri: member.imageUrl,
+        balances,
+      } satisfies BalanceMember;
+    };
+
+    /** Sorts balances by the order of the `item`'s balances */
+    const getSortedBalancesForCarouselItem = (balances: Balance[]) => {
+      return [...balances]
+        .map((balance) => {
+          const balanceRank = item.balances.findIndex(
+            (itemBalance) => itemBalance.currency.code === balance.currency.code
+          );
+
+          return [balanceRank === -1 ? item.balances.length : balanceRank, balance] as const;
+        })
+        .sort(([aRank, aBalance], [bRank, bBalance]) => {
+          if (aRank === bRank) {
+            return descendingBalanceComparator(aBalance, bBalance);
+          }
+          return aRank <= bRank ? -1 : 1;
+        })
+        .map(([_, balance]) => balance);
+    };
+
+    const balanceMembersComparator = (a: BalanceMember, b: BalanceMember) => {
+      for (let i = 0; i < Math.min(a.balances.length, b.balances.length); ++i) {
+        if (a.balances[i].value === b.balances[i].value) {
+          continue;
+        }
+        return a.balances[i].value > b.balances[i].value ? -1 : 1;
+      }
+
+      return a.balances.length >= b.balances.length ? -1 : 1;
+    };
+
+    return [...group.members]
+      .filter(memberHasSomeBalanceActive)
+      .map(mapToBalanceMember)
+      .sort(balanceMembersComparator);
+  }, [group.members, item.balances, userBalanceForCarouselItem]);
+
+  return { variantForCarouselItem, actionTitleForCarouselItem, balanceMembers } as const;
+};
 
 interface BalanceMember {
   id: string;
@@ -134,7 +265,7 @@ const BannerBalanceMembers = ({
             />
 
             <TouchableOpacity onPress={() => onActionPress?.(member)}>
-              <Typography.Caption1 color='primary' weight='semiBold'>
+              <Typography.Caption1 color='primary' weight='semiBold' disablePadding>
                 {actionTitle}
               </Typography.Caption1>
             </TouchableOpacity>
@@ -146,9 +277,11 @@ const BannerBalanceMembers = ({
         <TouchableOpacity style={styles.hiddenMembersContainer} onPress={onShowAllPress}>
           <AvatarsStack.Labeled
             renderLabel={(label, props) => (
-              <Typography.Caption1 {...props}>{label}</Typography.Caption1>
+              <Typography.Caption1 color='primary' disablePadding {...props} weight='semiBold'>
+                {label}
+              </Typography.Caption1>
             )}
-            borderColor={theme.colors.chipTranslucent.foreground.primary}
+            borderColor={theme.gradients.neutral.solid}
             images={hiddenMembers}
             label={`Show ${hiddenMembers.length} more`}
           />
@@ -162,7 +295,7 @@ BannerBalanceMembers.displayName = 'BannerBalanceMembers';
 
 const bannerBalanceMembersStylesheet = createStyleSheet((theme) => ({
   contentContainer: {
-    paddingHorizontal: theme.margins.md,
+    paddingHorizontal: theme.margins.base,
     paddingVertical: theme.margins.base,
   },
   balanceMembersRowsContainer: {
@@ -194,6 +327,7 @@ const balanceMemberRowStylesheet = createStyleSheet((theme) => ({
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
+    columnGap: theme.margins.md,
   },
 }));
 
@@ -224,38 +358,37 @@ const BalanceMemberChip = ({
   const handlePress = useCallback(() => onPress?.(member), [member, onPress]);
 
   return (
-    <Chip
-      containerStyle={[styles.container, containerStyle]}
-      balanceLeft
-      balanceRight
-      interactive
-      onPress={handlePress}
-    >
-      <View style={styles.contentContainer}>
+    <View style={[styles.container, containerStyle]}>
+      <Chip containerStyle={styles.chip} balanceRight interactive onPress={handlePress}>
         <ChipAvatar displayName={member.displayName} imageUri={member.imageUri} />
 
-        <ChipText>{member.displayName}</ChipText>
+        <ChipText containerStyle={styles.nameText} ellipsizeMode='middle' numberOfLines={1}>
+          {member.displayName}
+        </ChipText>
 
-        {visibleBalances.map((balance) => (
-          <BalanceChip
-            key={`balance-chip:${balance.currency.code}:${balance.value}`}
-            background={
-              (
-                {
-                  negative: 'gradient-negative',
-                  positive: 'gradient-positive',
-                } satisfies Record<BalanceMemberChipProps['variant'], Background>
-              )[variant]
-            }
-            balance={balance}
-          />
-        ))}
+        <View style={styles.balanceBadgesContainer}>
+          {visibleBalances.map((balance) => (
+            <BalanceChip
+              key={`balance-chip:${balance.currency.code}:${balance.value}`}
+              background={
+                (
+                  {
+                    negative: 'gradient-negative',
+                    positive: 'gradient-positive',
+                  } satisfies Record<BalanceMemberChipProps['variant'], Background>
+                )[variant]
+              }
+              balance={balance}
+              containerStyle={styles.balanceChipContainer}
+            />
+          ))}
 
-        {hiddenBalancesCount > 0 && (
-          <ChipTextSm color='secondary'>{`+${hiddenBalancesCount}`}</ChipTextSm>
-        )}
-      </View>
-    </Chip>
+          {hiddenBalancesCount > 0 && (
+            <ChipTextSm color='secondary'>{`+${hiddenBalancesCount}`}</ChipTextSm>
+          )}
+        </View>
+      </Chip>
+    </View>
   );
 };
 
@@ -263,13 +396,24 @@ BalanceMemberChip.displayName = 'BalanceMemberChip';
 
 const balanceMemberChipStylesheet = createStyleSheet((theme) => ({
   container: {
-    backgroundColor: theme.colors.background,
+    flex: 1,
+    flexGrow: 1,
   },
-  contentContainer: {
+  chip: {
+    backgroundColor: theme.colors.background,
+    flexGrow: 0,
+    alignSelf: 'flex-start',
+  },
+  balanceBadgesContainer: {
     flexDirection: 'row',
-    flexWrap: 'nowrap',
+    columnGap: theme.margins.sm,
     alignItems: 'center',
-    columnGap: theme.margins.base,
+  },
+  balanceChipContainer: {
+    flexShrink: 0,
+  },
+  nameText: {
+    flexShrink: 1,
   },
 }));
 
@@ -277,11 +421,21 @@ export interface BalanceChipProps extends ChipProps {
   balance: Balance;
 }
 
-const BalanceChip = ({ balance, ...rest }: BalanceChipProps) => {
-  const formattedBalance = formatCurrency(balance.value, balance.currency.code);
+const BalanceChip = ({ balance, background, ...rest }: BalanceChipProps) => {
+  const { styles } = useStyles(balanceChipStylesheet);
+  const formattedBalance = formatCurrency(balance.value, balance.currency.code, {
+    includeSign: false,
+  });
 
   return (
-    <Chip size='sm' {...rest}>
+    <Chip background={background} size='sm' {...rest}>
+      {background === 'gradient-negative' && (
+        <LinearGradient.Negative containerStyle={styles.gradient} fill />
+      )}
+      {background === 'gradient-positive' && (
+        <LinearGradient.Positive containerStyle={styles.gradient} fill />
+      )}
+
       <ChipTextSm>{formattedBalance}</ChipTextSm>
     </Chip>
   );
@@ -290,3 +444,9 @@ const BalanceChip = ({ balance, ...rest }: BalanceChipProps) => {
 BalanceChip.displayName = 'BalanceChip';
 
 export { BalanceChip };
+
+const balanceChipStylesheet = createStyleSheet((theme) => ({
+  gradient: {
+    borderRadius: theme.rounded.full,
+  },
+}));
