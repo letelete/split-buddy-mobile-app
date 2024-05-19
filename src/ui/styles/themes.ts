@@ -106,6 +106,7 @@ const appTheme = {
   rounded: {
     base: 13,
     baseInner: 11,
+    xl: 40,
     full: 9999,
   },
   container: {
@@ -119,7 +120,9 @@ const appTheme = {
  * Dark Theme
  * -----------------------------------------------------------------------------------------------*/
 
-const darkTheme = { ...appTheme } satisfies AppTheme;
+const darkTheme = {
+  ...appTheme,
+} satisfies AppTheme;
 
 /* -------------------------------------------------------------------------------------------------
  * Light Theme
