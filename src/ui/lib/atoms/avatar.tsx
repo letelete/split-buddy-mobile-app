@@ -4,10 +4,14 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
 import { Typography } from '~/ui:lib/molecules/typography';
-import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
+import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export type Size = 'base' | 'sm' | 'xs';
+/* -------------------------------------------------------------------------------------------------
+ * Avatar
+ * -----------------------------------------------------------------------------------------------*/
+
+type Size = 'base' | 'sm' | 'xs';
 
 interface BaseAvatarProps {
   displayName: string;
@@ -19,7 +23,7 @@ interface InitialsAvatarProps extends BaseAvatarProps, Stylable {
 interface ImageAvatarProps extends BaseAvatarProps, Stylable<ImageStyle> {
   imageUri: string;
 }
-export type AvatarProps = InitialsAvatarProps | ImageAvatarProps;
+type AvatarProps = InitialsAvatarProps | ImageAvatarProps;
 
 const isImageAvatar = (props: AvatarProps): props is ImageAvatarProps => {
   return props.imageUri !== undefined;
@@ -97,4 +101,7 @@ const stylesheet = createStyleSheet((theme) => ({
 
 Avatar.displayName = 'Avatar';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { Avatar };
+export type { AvatarProps, Size };

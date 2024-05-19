@@ -8,7 +8,11 @@ import { Avatar } from '~/ui:lib/atoms/avatar';
 import { BorderGradient } from '~/ui:lib/atoms/border-gradient';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export interface UserAvatarProps extends Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * UserAvatar
+ * -----------------------------------------------------------------------------------------------*/
+
+interface UserAvatarProps extends Stylable {
   balances: Balance[];
   displayName: string;
   imageUri?: string;
@@ -32,4 +36,7 @@ const UserAvatar = ({ balances, displayName, imageUri, containerStyle }: UserAva
 
 UserAvatar.displayName = 'UserAvatar';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { UserAvatar };
+export type { UserAvatarProps };

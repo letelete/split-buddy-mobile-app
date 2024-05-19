@@ -6,7 +6,11 @@ import { Avatar } from '~/ui:lib/atoms/avatar';
 import { BodyProps, Typography } from '~/ui:lib/molecules/typography';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export interface AvatarsStackProps extends Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * AvatarsStackPrimitive
+ * -----------------------------------------------------------------------------------------------*/
+
+interface AvatarsStackProps extends Stylable {
   images: { id: string; displayName: string; imageUri?: string }[];
   avatarsLimit?: number;
   borderColor?: string;
@@ -56,7 +60,11 @@ const avatarsStackStylesheet = createStyleSheet((theme) => ({
 
 AvatarsStackPrimitive.displayName = 'AvatarsStackPrimitive';
 
-export interface LabeledAvatarsStackProps extends AvatarsStackProps {
+/* -------------------------------------------------------------------------------------------------
+ * LabeledAvatarsStack
+ * -----------------------------------------------------------------------------------------------*/
+
+interface LabeledAvatarsStackProps extends AvatarsStackProps {
   label: string;
   labelContainerStyle?: StyleProp<TextStyle>;
   avatarsStackStyle?: StyleProp<ViewStyle>;
@@ -103,4 +111,9 @@ const labeledAvatarsStackStylesheet = createStyleSheet((theme) => ({
 
 LabeledAvatarsStack.displayName = 'LabeledAvatarsStack';
 
-export const AvatarsStack = Object.assign(AvatarsStackPrimitive, { Labeled: LabeledAvatarsStack });
+/* -----------------------------------------------------------------------------------------------*/
+
+const AvatarsStack = Object.assign(AvatarsStackPrimitive, { Labeled: LabeledAvatarsStack });
+
+export { AvatarsStack };
+export type { AvatarsStackProps, LabeledAvatarsStackProps };

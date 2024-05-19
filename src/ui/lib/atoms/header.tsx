@@ -5,10 +5,14 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Icon, IconProps } from '~/ui:lib/atoms/icon';
 import { BodyProps, Typography } from '~/ui:lib/molecules/typography';
-import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
+import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export interface HeaderProps extends AnimatedProps<ViewProps>, Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * Header
+ * -----------------------------------------------------------------------------------------------*/
+
+interface HeaderProps extends AnimatedProps<ViewProps>, Stylable {
   title: string | ReactNode;
   titleContainerStyle?: StyleProp<ViewStyle>;
   leftContainerStyle?: StyleProp<ViewStyle>;
@@ -69,8 +73,6 @@ const Header = ({
 
 Header.displayName = 'Header';
 
-export { Header };
-
 const stylesheet = createStyleSheet((theme, runtime) => ({
   container: {
     flexDirection: 'row',
@@ -95,7 +97,11 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
   },
 }));
 
-export interface HeaderBackButtonProps extends Partial<HeaderButtonProps> {}
+/* -------------------------------------------------------------------------------------------------
+ * HeaderBackButton
+ * -----------------------------------------------------------------------------------------------*/
+
+interface HeaderBackButtonProps extends Partial<HeaderButtonProps> {}
 
 const HeaderBackButton = ({ ...rest }: HeaderBackButtonProps) => {
   return <HeaderButton icon='chevron-back' {...rest} />;
@@ -103,9 +109,11 @@ const HeaderBackButton = ({ ...rest }: HeaderBackButtonProps) => {
 
 HeaderBackButton.displayName = 'HeaderBackButton';
 
-export { HeaderBackButton };
+/* -------------------------------------------------------------------------------------------------
+ * HeaderButton
+ * -----------------------------------------------------------------------------------------------*/
 
-export interface HeaderButtonProps extends Stylable {
+interface HeaderButtonProps extends Stylable {
   label?: ReactNode;
   labelProps?: BodyProps;
   icon?: IconProps['name'];
@@ -143,8 +151,6 @@ const HeaderButton = ({
 
 HeaderButton.displayName = 'HeaderButton';
 
-export { HeaderButton };
-
 const headerButtonStylesheet = createStyleSheet((theme) => ({
   container: {
     flexDirection: 'row',
@@ -152,3 +158,8 @@ const headerButtonStylesheet = createStyleSheet((theme) => ({
     columnGap: theme.margins.sm,
   },
 }));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Header, HeaderBackButton, HeaderButton };
+export type { HeaderBackButtonProps, HeaderButtonProps, HeaderProps };

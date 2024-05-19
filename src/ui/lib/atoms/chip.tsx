@@ -4,14 +4,17 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Avatar, AvatarProps } from '~/ui:lib/atoms/avatar';
 import { Caption1Props, Caption2Props, Typography } from '~/ui:lib/molecules/typography';
-import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
-import { Background } from '~/ui:lib/shared/background-aware/stylesheets';
+import { Background, BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
-export type Size = 'base' | 'sm';
+/* -------------------------------------------------------------------------------------------------
+ * Chip
+ * -----------------------------------------------------------------------------------------------*/
 
-export interface ChipProps extends Stylable {
+type Size = 'base' | 'sm';
+
+interface ChipProps extends Stylable {
   size?: Size;
   interactive?: boolean;
   disabled?: boolean;
@@ -60,8 +63,6 @@ const Chip = ({
 };
 
 Chip.displayName = 'Chip';
-
-export { Chip };
 
 const stylesheet = createStyleSheet((theme) => ({
   container: {
@@ -115,7 +116,11 @@ const balanceStylesheet = createStyleSheet((theme) => ({
   },
 }));
 
-export interface ChipTextProps extends Caption1Props {}
+/* -------------------------------------------------------------------------------------------------
+ * ChipText
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ChipTextProps extends Caption1Props {}
 
 const ChipText = ({ children, ...rest }: PropsWithChildren<ChipTextProps>) => {
   return (
@@ -127,9 +132,11 @@ const ChipText = ({ children, ...rest }: PropsWithChildren<ChipTextProps>) => {
 
 ChipText.displayName = 'ChipText';
 
-export { ChipText };
+/* -------------------------------------------------------------------------------------------------
+ * ChipTextSm
+ * -----------------------------------------------------------------------------------------------*/
 
-export interface ChipTextSmProps extends Caption2Props {}
+interface ChipTextSmProps extends Caption2Props {}
 
 const ChipTextSm = ({ children, ...rest }: PropsWithChildren<ChipTextSmProps>) => {
   return (
@@ -141,9 +148,11 @@ const ChipTextSm = ({ children, ...rest }: PropsWithChildren<ChipTextSmProps>) =
 
 ChipTextSm.displayName = 'ChipTextSm';
 
-export { ChipTextSm };
+/* -------------------------------------------------------------------------------------------------
+ * ChipAvatar
+ * -----------------------------------------------------------------------------------------------*/
 
-export type ChipAvatarProps = AvatarProps;
+type ChipAvatarProps = AvatarProps;
 
 const ChipAvatar = ({ ...rest }: ChipAvatarProps) => {
   return <Avatar size='xs' {...rest} />;
@@ -151,4 +160,7 @@ const ChipAvatar = ({ ...rest }: ChipAvatarProps) => {
 
 ChipAvatar.displayName = 'ChipAvatar';
 
-export { ChipAvatar };
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Chip, ChipText, ChipTextSm, ChipAvatar };
+export type { Size, ChipProps, ChipTextProps, ChipTextSmProps, ChipAvatarProps };

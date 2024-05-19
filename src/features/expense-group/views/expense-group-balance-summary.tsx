@@ -20,7 +20,7 @@ import { LinearGradient } from '~/ui:lib/atoms/gradient';
 import { AvatarsStack } from '~/ui:lib/molecules/labeled-avatars-stack';
 import { ScreenContainer } from '~/ui:lib/molecules/screen-container';
 import { Typography } from '~/ui:lib/molecules/typography';
-import { Background } from '~/ui:lib/shared/background-aware/stylesheets';
+import { Background } from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 import {
   BalanceCarouselContext,
@@ -201,6 +201,8 @@ const useBalanceMembersForCarouselItem = (group: ExpenseGroup, item: BalanceCaro
  * BannerBalanceMembers
  * -----------------------------------------------------------------------------------------------*/
 
+const descendingBalanceComparator = createBalancesComparator({ strategy: 'descending' });
+
 interface BalanceMember {
   id: string;
   displayName: string;
@@ -217,12 +219,6 @@ interface BannerBalanceMembersProps extends Stylable {
   onActionPress?: (member: BalanceMember) => void;
   onShowAllPress?: () => void;
 }
-
-/* -----------------------------------------------------------------------------------------------*/
-
-const descendingBalanceComparator = createBalancesComparator({ strategy: 'descending' });
-
-/* -----------------------------------------------------------------------------------------------*/
 
 const BannerBalanceMembers = ({
   members,
@@ -457,4 +453,5 @@ const balanceChipStylesheet = createStyleSheet((theme) => ({
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { ExpenseGroupBalanceSummaryProps, ExpenseGroupBalanceSummary };
+export { ExpenseGroupBalanceSummary };
+export type { ExpenseGroupBalanceSummaryProps };

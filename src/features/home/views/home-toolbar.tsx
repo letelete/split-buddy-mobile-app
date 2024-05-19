@@ -4,7 +4,11 @@ import { Toolbar, ToolbarProps } from '~/ui:lib/molecules/toolbar';
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface HomeToolbarProps extends ToolbarProps {
+/* -------------------------------------------------------------------------------------------------
+ * HomeToolbar
+ * -----------------------------------------------------------------------------------------------*/
+
+interface HomeToolbarProps extends ToolbarProps {
   disableNewExpense: boolean;
 }
 
@@ -39,4 +43,7 @@ const HomeToolbar = ({ disableNewExpense, ...rest }: Partial<HomeToolbarProps>) 
 
 HomeToolbar.displayName = 'HomeToolbar';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { HomeToolbar };
+export type { HomeToolbarProps };

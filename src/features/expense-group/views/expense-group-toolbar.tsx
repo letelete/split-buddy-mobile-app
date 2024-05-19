@@ -4,7 +4,11 @@ import { Toolbar, ToolbarProps } from '~/ui:lib/molecules/toolbar';
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface HomeToolbarProps extends ToolbarProps {}
+/* -------------------------------------------------------------------------------------------------
+ * ExpenseGroupToolbar
+ * -----------------------------------------------------------------------------------------------*/
+
+interface HomeToolbarProps extends ToolbarProps {}
 
 const ExpenseGroupToolbar = ({ ...rest }: Partial<HomeToolbarProps>) => {
   const handleAddExpense = useCallback(() => {
@@ -27,4 +31,7 @@ const ExpenseGroupToolbar = ({ ...rest }: Partial<HomeToolbarProps>) => {
 
 ExpenseGroupToolbar.displayName = 'ExpenseGroupToolbar';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { ExpenseGroupToolbar };
+export type { HomeToolbarProps };

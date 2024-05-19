@@ -7,7 +7,11 @@ import { BalanceCarousel } from '~/ui:lib/widgets/balance/views/balance-carousel
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface ExpenseGroupBalanceCarouselProps extends Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * ExpenseGroupBalanceCarousel
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ExpenseGroupBalanceCarouselProps extends Stylable {
   userDisplayName: string;
   group: ExpenseGroup;
 }
@@ -34,4 +38,7 @@ const ExpenseGroupBalanceCarousel = ({
 
 ExpenseGroupBalanceCarousel.displayName = 'ExpenseGroupBalanceCarousel';
 
+/* -----------------------------------------------------------------------------------------------*/
+
+export type { ExpenseGroupBalanceCarouselProps };
 export { ExpenseGroupBalanceCarousel };

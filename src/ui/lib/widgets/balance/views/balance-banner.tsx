@@ -3,23 +3,23 @@ import { Balance } from '~/api/types';
 import { BannerBalance } from '~/ui:lib/organisms/banner-balance';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export interface WithBalances {
+interface WithBalances {
   balances: Balance[];
 }
 
-export interface WithUserName {
+interface WithUserName {
   userDisplayName: string;
 }
 
-export interface WithShowAll {
+interface WithShowAll {
   onShowAll?: () => void;
 }
 
-export interface BalanceBannerNegativeProps
-  extends Stylable,
-    WithBalances,
-    WithUserName,
-    WithShowAll {}
+/* -------------------------------------------------------------------------------------------------
+ * BalanceBannerNegative
+ * -----------------------------------------------------------------------------------------------*/
+
+interface BalanceBannerNegativeProps extends Stylable, WithBalances, WithUserName, WithShowAll {}
 
 const BalanceBannerNegative = ({
   balances,
@@ -40,13 +40,11 @@ const BalanceBannerNegative = ({
 
 BalanceBannerNegative.displayName = 'BalanceBannerNegative';
 
-export { BalanceBannerNegative };
+/* -------------------------------------------------------------------------------------------------
+ * BalanceBannerPositive
+ * -----------------------------------------------------------------------------------------------*/
 
-export interface BalanceBannerPositiveProps
-  extends Stylable,
-    WithBalances,
-    WithUserName,
-    WithShowAll {}
+interface BalanceBannerPositiveProps extends Stylable, WithBalances, WithUserName, WithShowAll {}
 
 const BalanceBannerPositive = ({
   balances,
@@ -67,9 +65,11 @@ const BalanceBannerPositive = ({
 
 BalanceBannerPositive.displayName = 'BalanceBannerPositive';
 
-export { BalanceBannerPositive };
+/* -------------------------------------------------------------------------------------------------
+ * BalanceBannerSettleUp
+ * -----------------------------------------------------------------------------------------------*/
 
-export interface BalanceBannerSettleUpProps extends Stylable, WithUserName {}
+interface BalanceBannerSettleUpProps extends Stylable, WithUserName {}
 
 const BalanceBannerSettleUp = ({ userDisplayName, containerStyle }: BalanceBannerSettleUpProps) => (
   <BannerBalance
@@ -82,4 +82,7 @@ const BalanceBannerSettleUp = ({ userDisplayName, containerStyle }: BalanceBanne
 
 BalanceBannerSettleUp.displayName = 'BalanceBannerSettleUp';
 
-export { BalanceBannerSettleUp };
+/* -----------------------------------------------------------------------------------------------*/
+
+export { BalanceBannerNegative, BalanceBannerPositive, BalanceBannerSettleUp };
+export type { BalanceBannerNegativeProps, BalanceBannerPositiveProps, BalanceBannerSettleUpProps };

@@ -1,8 +1,12 @@
-export interface CurrencyFormatterOptions {
+/* -------------------------------------------------------------------------------------------------
+ * Currency
+ * -----------------------------------------------------------------------------------------------*/
+
+interface CurrencyFormatterOptions {
   includeSign?: boolean;
 }
 
-export const formatCurrency = (
+const formatCurrency = (
   value: number,
   currencyCode: string,
   options: CurrencyFormatterOptions = {
@@ -24,3 +28,8 @@ export const formatCurrency = (
 
   return `${sign}${formatted}`;
 };
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { formatCurrency };
+export type { CurrencyFormatterOptions };

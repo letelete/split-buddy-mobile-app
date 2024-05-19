@@ -9,7 +9,11 @@ import { Typography } from '~/ui:lib/molecules/typography';
 
 import { AppThemes } from '~/ui:styles/unistyles';
 
-export const LoginWithAppleButton = () => {
+/* -------------------------------------------------------------------------------------------------
+ * LoginWithAppleButton
+ * -----------------------------------------------------------------------------------------------*/
+
+const LoginWithAppleButton = () => {
   const { login, isLoading, error } = useLoginWithProvider('apple');
   const { theme, styles } = useStyles(stylesheet);
 
@@ -40,6 +44,8 @@ export const LoginWithAppleButton = () => {
   return null;
 };
 
+LoginWithAppleButton.displayName = 'LoginWithAppleButton';
+
 const stylesheet = createStyleSheet(() => ({
   container: {
     width: '100%',
@@ -49,3 +55,7 @@ const stylesheet = createStyleSheet(() => ({
     height: 56,
   },
 }));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { LoginWithAppleButton };

@@ -3,7 +3,11 @@ import { ActivityIndicator } from 'react-native';
 
 import { Suspensible } from '~/ui:lib/shared/interfaces';
 
-export interface SkeletonContentProps extends Suspensible {}
+/* -------------------------------------------------------------------------------------------------
+ * SkeletonContent
+ * -----------------------------------------------------------------------------------------------*/
+
+interface SkeletonContentProps extends Suspensible {}
 
 const SkeletonContent = ({
   loading,
@@ -18,4 +22,7 @@ const SkeletonContent = ({
 
 SkeletonContent.displayName = 'SkeletonContent';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { SkeletonContent };
+export type { SkeletonContentProps };

@@ -18,7 +18,11 @@ const useCommonBalanceInfo = (balances: Balance[]) => {
   return { someNegativeBalance, somePositiveBalance };
 };
 
-export const useBannerVariantForBalance = (balances: Balance[]): BannerVariant => {
+/* -------------------------------------------------------------------------------------------------
+ * Banner variant
+ * -----------------------------------------------------------------------------------------------*/
+
+const useBannerVariantForBalance = (balances: Balance[]): BannerVariant => {
   const { someNegativeBalance, somePositiveBalance } = useCommonBalanceInfo(balances);
 
   if (someNegativeBalance) {
@@ -32,7 +36,11 @@ export const useBannerVariantForBalance = (balances: Balance[]): BannerVariant =
   return 'neutral';
 };
 
-export const useGradientForBalance = (balances: Balance[]) => {
+/* -------------------------------------------------------------------------------------------------
+ * Gradient
+ * -----------------------------------------------------------------------------------------------*/
+
+const useGradientForBalance = (balances: Balance[]) => {
   const { someNegativeBalance, somePositiveBalance } = useCommonBalanceInfo(balances);
 
   if (someNegativeBalance) {
@@ -45,3 +53,7 @@ export const useGradientForBalance = (balances: Balance[]) => {
 
   return LinearGradient.Neutral;
 };
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { useBannerVariantForBalance, useGradientForBalance };

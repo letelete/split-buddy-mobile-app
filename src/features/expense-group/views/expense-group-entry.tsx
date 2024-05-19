@@ -12,11 +12,15 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 
 import { createBalancesComparator } from '~/utils/sort';
 
-export interface ExpenseGroupItemProps extends Stylable {
-  group: ExpenseGroup;
-}
+/* -------------------------------------------------------------------------------------------------
+ * ExpenseGroupItem
+ * -----------------------------------------------------------------------------------------------*/
 
 const balancesComparator = createBalancesComparator();
+
+interface ExpenseGroupItemProps extends Stylable {
+  group: ExpenseGroup;
+}
 
 const ExpenseGroupItem = ({ group, containerStyle }: ExpenseGroupItemProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
@@ -56,4 +60,7 @@ const ExpenseGroupItem = ({ group, containerStyle }: ExpenseGroupItemProps) => {
 
 ExpenseGroupItem.displayName = 'ExpenseGroupItem';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { ExpenseGroupItem };
+export type { ExpenseGroupItemProps };

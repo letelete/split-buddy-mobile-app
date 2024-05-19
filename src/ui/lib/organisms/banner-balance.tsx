@@ -8,7 +8,11 @@ import { Chip, ChipText } from '~/ui:lib/atoms/chip';
 import { BalanceSummary, BalanceSummarySettledUp } from '~/ui:lib/molecules/balance-summary';
 import { Typography } from '~/ui:lib/molecules/typography';
 
-export interface BannerBalanceProps extends BannerProps {
+/* -------------------------------------------------------------------------------------------------
+ * BannerBalance
+ * -----------------------------------------------------------------------------------------------*/
+
+interface BannerBalanceProps extends BannerProps {
   balances: Balance[];
   title: string;
   limit?: number;
@@ -72,4 +76,7 @@ const stylesheet = createStyleSheet((theme) => ({
   },
 }));
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { BannerBalance };
+export type { BannerBalanceProps };

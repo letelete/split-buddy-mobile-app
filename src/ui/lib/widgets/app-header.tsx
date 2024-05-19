@@ -5,7 +5,11 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { Header, HeaderBackButton, HeaderProps } from '~/ui:lib/atoms/header';
 import { AvatarsStack, LabeledAvatarsStackProps } from '~/ui:lib/molecules/labeled-avatars-stack';
 
-export interface AppHeaderProps extends Omit<HeaderProps, 'renderBack'> {
+/* -------------------------------------------------------------------------------------------------
+ * AppHeader
+ * -----------------------------------------------------------------------------------------------*/
+
+interface AppHeaderProps extends Omit<HeaderProps, 'renderBack'> {
   renderBack?: (props: { defaultBackBehavior: () => void }) => ReactNode;
   disableSpacingBottom?: boolean;
 }
@@ -16,7 +20,7 @@ const AppHeader = ({
   renderBack,
   ...rest
 }: AppHeaderProps) => {
-  const { styles } = useStyles(stylesheet);
+  const { styles } = useStyles(appHeaderStylesheet);
   const navigation = useNavigation();
 
   const handleBack = useCallback(() => {
@@ -48,9 +52,7 @@ const AppHeader = ({
 
 AppHeader.displayName = 'AppHeader';
 
-export { AppHeader };
-
-const stylesheet = createStyleSheet((theme) => ({
+const appHeaderStylesheet = createStyleSheet((theme) => ({
   container: {
     marginBottom: theme.margins.xs,
   },
@@ -59,7 +61,11 @@ const stylesheet = createStyleSheet((theme) => ({
   },
 }));
 
-export interface AppHeaderAvatarsStackTitleProps extends LabeledAvatarsStackProps {}
+/* -------------------------------------------------------------------------------------------------
+ * AppHeaderAvatarsStackTitle
+ * -----------------------------------------------------------------------------------------------*/
+
+interface AppHeaderAvatarsStackTitleProps extends LabeledAvatarsStackProps {}
 
 const AppHeaderAvatarsStackTitle = ({
   containerStyle,
@@ -78,8 +84,6 @@ const AppHeaderAvatarsStackTitle = ({
 
 AppHeaderAvatarsStackTitle.displayName = 'AppHeaderAvatarsStackTitle';
 
-export { AppHeaderAvatarsStackTitle };
-
 const appHeaderAvatarsStackTitleStylesheet = createStyleSheet((theme) => ({
   container: {
     flex: 1,
@@ -93,3 +97,8 @@ const appHeaderAvatarsStackTitleStylesheet = createStyleSheet((theme) => ({
     flex: -1,
   },
 }));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { AppHeader, AppHeaderAvatarsStackTitle };
+export type { AppHeaderProps, AppHeaderAvatarsStackTitleProps };

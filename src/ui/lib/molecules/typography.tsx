@@ -4,12 +4,16 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { Text, TextProps } from '~/ui:lib/atoms/text';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
-export interface WithDynamicPadding {
+interface WithDynamicPadding {
   disablePadding?: boolean;
   paddingBottom?: number;
 }
 
-export interface LargeTitleProps extends WithDynamicPadding, TextProps {}
+/* -------------------------------------------------------------------------------------------------
+ * LargeTitle
+ * -----------------------------------------------------------------------------------------------*/
+
+interface LargeTitleProps extends WithDynamicPadding, TextProps {}
 
 const LargeTitle = ({
   containerStyle,
@@ -38,9 +42,13 @@ const LargeTitle = ({
 
 LargeTitle.displayName = 'LargeTitle';
 
+/* -------------------------------------------------------------------------------------------------
+ * SectionTitle
+ * -----------------------------------------------------------------------------------------------*/
+
 export type SectionTitleSpacingTop = 'none' | 'large' | 'base';
 
-export interface SectionTitleProps extends WithDynamicPadding, TextProps {
+interface SectionTitleProps extends WithDynamicPadding, TextProps {
   spacingTop?: SectionTitleSpacingTop;
 }
 
@@ -86,7 +94,11 @@ const stylesheet = createStyleSheet((theme) => ({
 
 SectionTitle.displayName = 'SectionTitle';
 
-export interface BodyProps extends WithDynamicPadding, TextProps {}
+/* -------------------------------------------------------------------------------------------------
+ * Body
+ * -----------------------------------------------------------------------------------------------*/
+
+interface BodyProps extends WithDynamicPadding, TextProps {}
 
 const Body = ({
   containerStyle,
@@ -114,7 +126,11 @@ const Body = ({
 
 Body.displayName = 'Body';
 
-export interface ErrorBodyProps extends WithDynamicPadding, TextProps {}
+/* -------------------------------------------------------------------------------------------------
+ * ErrorBody
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ErrorBodyProps extends WithDynamicPadding, TextProps {}
 
 const ErrorBody = ({
   containerStyle,
@@ -141,7 +157,11 @@ const ErrorBody = ({
 
 ErrorBody.displayName = 'ErrorBody';
 
-export interface Caption1Props extends WithDynamicPadding, TextProps {}
+/* -------------------------------------------------------------------------------------------------
+ * Caption1
+ * -----------------------------------------------------------------------------------------------*/
+
+interface Caption1Props extends WithDynamicPadding, TextProps {}
 
 const Caption1 = ({
   containerStyle,
@@ -170,7 +190,11 @@ const Caption1 = ({
 
 Caption1.displayName = 'Caption1';
 
-export interface Caption2Props extends WithDynamicPadding, TextProps {}
+/* -------------------------------------------------------------------------------------------------
+ * Caption2
+ * -----------------------------------------------------------------------------------------------*/
+
+interface Caption2Props extends WithDynamicPadding, TextProps {}
 
 const Caption2 = ({
   containerStyle,
@@ -199,11 +223,23 @@ const Caption2 = ({
 
 Caption2.displayName = 'Caption2';
 
-export const Typography = {
+/* -----------------------------------------------------------------------------------------------*/
+
+const Typography = {
   LargeTitle,
   SectionTitle,
   Body,
   ErrorBody,
   Caption1,
   Caption2,
+};
+
+export { Typography };
+export type {
+  LargeTitleProps,
+  SectionTitleProps,
+  BodyProps,
+  ErrorBodyProps,
+  Caption1Props,
+  Caption2Props,
 };

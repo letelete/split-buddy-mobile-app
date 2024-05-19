@@ -14,21 +14,27 @@ import {
 
 import { createBalancesComparator } from '~/utils/sort';
 
-export interface BalanceCarouselContextProps {
+/* -------------------------------------------------------------------------------------------------
+ * BalanceCarousel
+ * -----------------------------------------------------------------------------------------------*/
+
+interface BalanceCarouselContextProps {
   onChange?: (item: BalanceCarouselItem, index: number) => void;
 }
 
-export const BalanceCarouselContext = createContext<BalanceCarouselContextProps>({});
+const BalanceCarouselContext = createContext<BalanceCarouselContextProps>({});
 
-export interface BalanceCarouselItem {
+/* -----------------------------------------------------------------------------------------------*/
+
+const balancesComparator = createBalancesComparator();
+
+interface BalanceCarouselItem {
   key: string;
   type: 'negative' | 'positive';
   balances: Balance[];
 }
 
-const balancesComparator = createBalancesComparator();
-
-export interface BalanceCarouselProps extends Stylable {
+interface BalanceCarouselProps extends Stylable {
   userBalance: UserBalance;
   userDisplayName: string;
   onShowAllPositive?: () => void;
@@ -132,8 +138,6 @@ const BalanceCarousel = ({
 
 BalanceCarousel.displayName = 'BalanceCarousel';
 
-export { BalanceCarousel };
-
 const stylesheet = createStyleSheet((theme, runtime) => ({
   bannerContainer: {
     width: '100%',
@@ -142,3 +146,8 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
     width: runtime.screen.width - theme.container.padding.horizontal * 2,
   },
 }));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { BalanceCarouselContext, BalanceCarousel };
+export type { BalanceCarouselContextProps, BalanceCarouselItem, BalanceCarouselProps };

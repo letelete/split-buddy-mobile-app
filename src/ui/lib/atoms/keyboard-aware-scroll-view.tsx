@@ -4,7 +4,11 @@ import {
   KeyboardAwareScrollViewProps as NativeKeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-aware-scroll-view';
 
-export interface KeyboardAwareScrollViewProps extends NativeKeyboardAwareScrollViewProps {}
+/* -------------------------------------------------------------------------------------------------
+ * KeyboardAwareScrollView
+ * -----------------------------------------------------------------------------------------------*/
+
+interface KeyboardAwareScrollViewProps extends NativeKeyboardAwareScrollViewProps {}
 
 const KeyboardAwareScrollView = forwardRef<
   NativeKeyboardAwareScrollView,
@@ -45,4 +49,7 @@ const KeyboardAwareScrollView = forwardRef<
 
 KeyboardAwareScrollView.displayName = 'KeyboardAwareScrollView';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { KeyboardAwareScrollView };
+export type { KeyboardAwareScrollViewProps };

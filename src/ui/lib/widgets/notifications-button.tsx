@@ -6,7 +6,11 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface NotificationsButtonProps extends Stylable {}
+/* -------------------------------------------------------------------------------------------------
+ * NotificationsButton
+ * -----------------------------------------------------------------------------------------------*/
+
+interface NotificationsButtonProps extends Stylable {}
 
 // TODO: query notifications
 const NotificationsButton = ({ containerStyle }: NotificationsButtonProps) => {
@@ -23,4 +27,7 @@ const NotificationsButton = ({ containerStyle }: NotificationsButtonProps) => {
 
 NotificationsButton.displayName = 'NotificationsButton';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { NotificationsButton };
+export type { NotificationsButtonProps };

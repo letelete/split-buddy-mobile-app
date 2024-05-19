@@ -1,6 +1,10 @@
 type EmojiName = 'partying-face';
 
-export interface EmojiProps {
+/* -------------------------------------------------------------------------------------------------
+ * Emoji
+ * -----------------------------------------------------------------------------------------------*/
+
+interface EmojiProps {
   name: EmojiName;
 }
 
@@ -14,4 +18,7 @@ const Emoji = ({ name }: EmojiProps) => {
 
 Emoji.displayName = 'Emoji';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { Emoji };
+export type { EmojiProps };

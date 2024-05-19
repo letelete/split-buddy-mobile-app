@@ -10,7 +10,11 @@ import { BalanceCarousel } from '~/ui:lib/widgets/balance/views/balance-carousel
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface HomeBalanceCarouselProps extends Stylable, Suspensible {
+/* -------------------------------------------------------------------------------------------------
+ * HomeBalanceCarousel
+ * -----------------------------------------------------------------------------------------------*/
+
+interface HomeBalanceCarouselProps extends Stylable, Suspensible {
   userDisplayName: string;
   userBalance?: UserBalance;
 }
@@ -46,4 +50,7 @@ const HomeBalanceCarousel = ({
 
 HomeBalanceCarousel.displayName = 'HomeBalanceCarousel';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { HomeBalanceCarousel };
+export type { HomeBalanceCarouselProps };

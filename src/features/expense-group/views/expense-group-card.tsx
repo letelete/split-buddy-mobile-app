@@ -12,16 +12,20 @@ import { Icon } from '~/ui:lib/atoms/icon';
 import { BalanceSummary, BalanceSummarySettledUp } from '~/ui:lib/molecules/balance-summary';
 import { AvatarsStack } from '~/ui:lib/molecules/labeled-avatars-stack';
 import { Typography } from '~/ui:lib/molecules/typography';
-import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
+import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export interface ExpenseGroupMember {
+/* -------------------------------------------------------------------------------------------------
+ * ExpenseGroupCard
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ExpenseGroupMember {
   id: string;
   displayName: string;
   imageUri?: string;
 }
 
-export interface ExpenseGroupCardProps extends Stylable {
+interface ExpenseGroupCardProps extends Stylable {
   name: string;
   members: ExpenseGroupMember[];
   userBalance: UserBalance;
@@ -137,4 +141,7 @@ const stylesheet = createStyleSheet((theme) => ({
 
 ExpenseGroupCard.displayName = 'ExpenseGroupCard';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { ExpenseGroupCard };
+export type { ExpenseGroupMember, ExpenseGroupCardProps };

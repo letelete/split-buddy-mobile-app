@@ -8,9 +8,13 @@ import {
 } from '~/ui:lib/atoms/keyboard-aware-scroll-view';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
+/* -------------------------------------------------------------------------------------------------
+ * ScreenContainerPrimitiveProps
+ * -----------------------------------------------------------------------------------------------*/
+
 type ContainerVariant = 'default' | 'fullscreen' | 'scrollable' | 'scrollable-fullscreen';
 
-export interface ScreenContainerPrimitiveProps extends Stylable {
+interface ScreenContainerPrimitiveProps extends Stylable {
   keyboardAwareScroll?: boolean;
   scrollViewProps?: KeyboardAwareScrollViewProps;
   variant?: ContainerVariant;
@@ -149,7 +153,11 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
 
 ScreenContainerPrimitive.displayName = 'ScreenContainerPrimitive';
 
-export interface FullWidthBoxProps extends Stylable {}
+/* -------------------------------------------------------------------------------------------------
+ * FullWidthBox
+ * -----------------------------------------------------------------------------------------------*/
+
+interface FullWidthBoxProps extends Stylable {}
 
 const FullWidthBox = ({ containerStyle, children }: PropsWithChildren<FullWidthBoxProps>) => {
   const { styles } = useStyles(fullWidthStylesheet);
@@ -166,7 +174,11 @@ const fullWidthStylesheet = createStyleSheet((theme, runtime) => ({
 
 FullWidthBox.displayName = 'FullWidthBox';
 
-export interface HorizontalPaddingBoxProps extends Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * HorizontalPaddingBox
+ * -----------------------------------------------------------------------------------------------*/
+
+interface HorizontalPaddingBoxProps extends Stylable {
   disablePaddingLeft?: boolean;
   disablePaddingRight?: boolean;
 }
@@ -197,7 +209,12 @@ const horizontalPaddingBoxStylesheet = createStyleSheet((theme, runtime) => ({
 
 HorizontalPaddingBox.displayName = 'HorizontalPaddingBox';
 
-export const ScreenContainer = Object.assign(ScreenContainerPrimitive, {
+/* -----------------------------------------------------------------------------------------------*/
+
+const ScreenContainer = Object.assign(ScreenContainerPrimitive, {
   FullWidthBox,
   HorizontalPaddingBox,
 });
+
+export { ScreenContainer };
+export type { ScreenContainerPrimitiveProps, FullWidthBoxProps, HorizontalPaddingBoxProps };

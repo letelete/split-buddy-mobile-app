@@ -1,6 +1,10 @@
-export type AppTheme = typeof baseTheme;
+/* -------------------------------------------------------------------------------------------------
+ * App Theme
+ * -----------------------------------------------------------------------------------------------*/
 
-export const baseTheme = {
+type AppTheme = typeof appTheme;
+
+const appTheme = {
   colors: {
     typography: {
       primary: 'rgba(255, 255, 255, 1.0)',
@@ -111,8 +115,21 @@ export const baseTheme = {
   },
 };
 
-export const darkTheme = { ...baseTheme } satisfies AppTheme;
+/* -------------------------------------------------------------------------------------------------
+ * Dark Theme
+ * -----------------------------------------------------------------------------------------------*/
 
-export const lightTheme = {
-  ...baseTheme,
+const darkTheme = { ...appTheme } satisfies AppTheme;
+
+/* -------------------------------------------------------------------------------------------------
+ * Light Theme
+ * -----------------------------------------------------------------------------------------------*/
+
+const lightTheme = {
+  ...appTheme,
 } satisfies AppTheme;
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { appTheme, darkTheme, lightTheme };
+export type { AppTheme };

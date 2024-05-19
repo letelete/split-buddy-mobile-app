@@ -3,20 +3,26 @@ import { TextProps as NativeTextProps, TextStyle } from 'react-native';
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { BackgroundAwareContext } from '~/ui:lib/shared/background-aware/providers';
-import { backgroundAwareStylesheet } from '~/ui:lib/shared/background-aware/stylesheets';
+import {
+  BackgroundAwareContext,
+  backgroundAwareStylesheet,
+} from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
 import { AppTheme } from '~/ui:styles/themes';
 
-export type Color = keyof AppTheme['colors']['typography'];
+/* -------------------------------------------------------------------------------------------------
+ * Text
+ * -----------------------------------------------------------------------------------------------*/
 
-export type Size = keyof AppTheme['fontSizes'];
+type Color = keyof AppTheme['colors']['typography'];
 
-export type Weight = 'normal' | 'semiBold' | 'bold';
+type Size = keyof AppTheme['fontSizes'];
 
-export interface TextProps extends AnimatedProps<NativeTextProps>, Stylable<TextStyle> {
+type Weight = 'normal' | 'semiBold' | 'bold';
+
+interface TextProps extends AnimatedProps<NativeTextProps>, Stylable<TextStyle> {
   color?: Color;
   size?: Size;
   weight?: Weight;
@@ -57,8 +63,6 @@ const Text = ({
 
 Text.displayName = 'Text';
 
-export { Text };
-
 const stylesheet = createStyleSheet((theme) => ({
   container: {
     variants: {
@@ -78,3 +82,8 @@ const stylesheet = createStyleSheet((theme) => ({
     },
   },
 }));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Text };
+export type { Color, Size, Weight, TextProps };

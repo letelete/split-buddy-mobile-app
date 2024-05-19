@@ -10,7 +10,11 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface ProfileButtonProps extends Stylable {}
+/* -------------------------------------------------------------------------------------------------
+ * ProfileButton
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ProfileButtonProps extends Stylable {}
 
 const ProfileButton = ({ containerStyle }: ProfileButtonProps) => {
   const userDetailsQuery = useGetUserDetails();
@@ -35,4 +39,7 @@ const ProfileButton = ({ containerStyle }: ProfileButtonProps) => {
 
 ProfileButton.displayName = 'ProfileButton';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { ProfileButton };
+export type { ProfileButtonProps };

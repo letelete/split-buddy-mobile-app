@@ -17,7 +17,11 @@ import { ExpenseGroupItem } from '~/features/expense-group/views/expense-group-e
 import { Typography } from '~/ui:lib/molecules/typography';
 import { Stylable, Suspensible } from '~/ui:lib/shared/interfaces';
 
-export interface ExpensesGroupsListProps extends Suspensible, Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * ExpensesGroupsList
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ExpensesGroupsListProps extends Suspensible, Stylable {
   data: ExpenseGroup[];
   ListHeaderComponent: ComponentType;
   itemContainerStyle?: StyleProp<ViewStyle>;
@@ -97,4 +101,7 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
 
 ExpensesGroupsList.displayName = 'ExpensesGroupsList';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { ExpensesGroupsList };
+export type { ExpensesGroupsListProps };

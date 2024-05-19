@@ -16,7 +16,11 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export interface CarouselProps<TItem> extends Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * Carousel
+ * -----------------------------------------------------------------------------------------------*/
+
+interface CarouselProps<TItem> extends Stylable {
   data: TItem[];
   renderItem: ListRenderItem<TItem>;
   keyExtractor: (item: TItem, index: number) => string;
@@ -102,7 +106,23 @@ const Carousel = <TItem,>({
 
 Carousel.displayName = 'Carousel';
 
-export { Carousel };
+/* -----------------------------------------------------------------------------------------------*/
+
+const useCarouselDirection = (carouselIndex: SharedValue<number>) => {
+  const [lastCarouselNavigationDirection, setLastCarouselNavigationDirection] = useState<-1 | 1>(1);
+
+  useAnimatedReaction(
+    () => carouselIndex.value,
+    (currentIndex, previousIndex) => {
+      const direction = previousIndex && currentIndex <= previousIndex ? -1 : 1;
+      runOnJS(setLastCarouselNavigationDirection)(direction);
+    }
+  );
+
+  return { lastCarouselNavigationDirection };
+};
+
+/* -----------------------------------------------------------------------------------------------*/
 
 const stylesheet = createStyleSheet(() => ({
   container: {
@@ -113,6 +133,10 @@ const stylesheet = createStyleSheet(() => ({
     flexDirection: 'row',
   },
 }));
+
+/* -------------------------------------------------------------------------------------------------
+ * Item
+ * -----------------------------------------------------------------------------------------------*/
 
 interface ItemProps<TItem> {
   info: ListRenderItemInfo<TItem>;
@@ -171,16 +195,7 @@ const Item = <TItem,>({ info, panX, boxWidth, halfBoxDistance, renderItem }: Ite
   );
 };
 
-export const useCarouselDirection = (carouselIndex: SharedValue<number>) => {
-  const [lastCarouselNavigationDirection, setLastCarouselNavigationDirection] = useState<-1 | 1>(1);
+/* -----------------------------------------------------------------------------------------------*/
 
-  useAnimatedReaction(
-    () => carouselIndex.value,
-    (currentIndex, previousIndex) => {
-      const direction = previousIndex && currentIndex <= previousIndex ? -1 : 1;
-      runOnJS(setLastCarouselNavigationDirection)(direction);
-    }
-  );
-
-  return { lastCarouselNavigationDirection };
-};
+export { Carousel, useCarouselDirection };
+export type { CarouselProps };

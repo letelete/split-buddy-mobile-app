@@ -8,7 +8,11 @@ import { AppHeader, AppHeaderAvatarsStackTitle } from '~/ui:lib/widgets/app-head
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface ExpenseGroupHomeHeaderProps {
+/* -------------------------------------------------------------------------------------------------
+ * ExpenseGroupHomeHeader
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ExpenseGroupHomeHeaderProps {
   group: ExpenseGroupDetails;
 }
 
@@ -38,4 +42,7 @@ const ExpenseGroupHomeHeader = ({ group }: ExpenseGroupHomeHeaderProps) => {
 
 ExpenseGroupHomeHeader.displayName = 'ExpenseGroupHomeHeader';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { ExpenseGroupHomeHeader };
+export type { ExpenseGroupHomeHeaderProps };

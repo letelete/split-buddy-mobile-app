@@ -6,7 +6,11 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 
 import { NOT_IMPLEMENTED } from '~/utils/mock';
 
-export interface ExpenseGroupSettingsButtonProps extends Stylable {}
+/* -------------------------------------------------------------------------------------------------
+ * ExpenseGroupSettingsButton
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ExpenseGroupSettingsButtonProps extends Stylable {}
 
 const ExpenseGroupSettingsButton = ({ containerStyle }: ExpenseGroupSettingsButtonProps) => {
   const handleOpenExpenseGroupSettings = useCallback(() => {
@@ -22,4 +26,7 @@ const ExpenseGroupSettingsButton = ({ containerStyle }: ExpenseGroupSettingsButt
 
 ExpenseGroupSettingsButton.displayName = 'ExpenseGroupSettingsButton';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { ExpenseGroupSettingsButton };
+export type { ExpenseGroupSettingsButtonProps };

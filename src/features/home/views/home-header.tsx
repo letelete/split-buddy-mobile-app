@@ -2,7 +2,11 @@ import { AppHeader } from '~/ui:lib/widgets/app-header';
 import { NotificationsButton } from '~/ui:lib/widgets/notifications-button';
 import { ProfileButton } from '~/ui:lib/widgets/profile-button';
 
-export interface HomeHeaderProps {}
+/* -------------------------------------------------------------------------------------------------
+ * HomeHeader
+ * -----------------------------------------------------------------------------------------------*/
+
+interface HomeHeaderProps {}
 
 const HomeHeader = () => {
   return (
@@ -12,4 +16,7 @@ const HomeHeader = () => {
 
 HomeHeader.displayName = 'HomeHeader';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { HomeHeader };
+export type { HomeHeaderProps };

@@ -3,11 +3,16 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Icon, IconProps } from '~/ui:lib/atoms/icon';
 import { Typography } from '~/ui:lib/molecules/typography';
-import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
+import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export interface ToolbarProps extends Stylable, ViewProps {
-  items: ToolbarItem[];
+/* -------------------------------------------------------------------------------------------------
+const Toolbar = ({ items, containerStyle, ...rest }: ToolbarProps) => {
+ * 
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ToolbarProps extends Stylable, ViewProps {
+  items: ToolbarEntryItem[];
 }
 
 const Toolbar = ({ items, containerStyle, ...rest }: ToolbarProps) => {
@@ -27,8 +32,6 @@ const Toolbar = ({ items, containerStyle, ...rest }: ToolbarProps) => {
 };
 
 Toolbar.displayName = 'Toolbar';
-
-export { Toolbar };
 
 const stylesheet = createStyleSheet((theme, runtime) => ({
   container: {
@@ -51,7 +54,11 @@ const stylesheet = createStyleSheet((theme, runtime) => ({
   },
 }));
 
-interface ToolbarItem {
+/* -------------------------------------------------------------------------------------------------
+ * ToolbarEntry
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ToolbarEntryItem {
   icon?: IconProps['name'];
   title?: string;
   onPress?: () => void;
@@ -59,11 +66,11 @@ interface ToolbarItem {
 }
 
 export interface ToolbarEntryProps extends Stylable {
-  item: ToolbarItem;
+  item: ToolbarEntryItem;
 }
 
 const ToolbarEntry = ({ item, containerStyle }: ToolbarEntryProps) => {
-  const { styles } = useStyles(toolbarItemStylesheet);
+  const { styles } = useStyles(toolbarEntryStylesheet);
 
   return (
     <TouchableOpacity
@@ -88,7 +95,7 @@ const ToolbarEntry = ({ item, containerStyle }: ToolbarEntryProps) => {
   );
 };
 
-const toolbarItemStylesheet = createStyleSheet((theme) => ({
+const toolbarEntryStylesheet = createStyleSheet((theme) => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -98,4 +105,7 @@ const toolbarItemStylesheet = createStyleSheet((theme) => ({
 
 ToolbarEntry.displayName = 'ToolbarEntry';
 
-export { ToolbarEntry };
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Toolbar, ToolbarEntry };
+export type { ToolbarProps };

@@ -9,11 +9,15 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 
 import { formatCurrency } from '~/utils/string';
 
-export type Size = 'primary' | 'secondary' | 'tertiary';
+/* -------------------------------------------------------------------------------------------------
+ * BalanceSummary
+ * -----------------------------------------------------------------------------------------------*/
 
-export type Sign = 'all' | 'plus' | 'minus' | 'none';
+type Size = 'primary' | 'secondary' | 'tertiary';
 
-export interface BalanceSummaryProps extends Stylable {
+type Sign = 'all' | 'plus' | 'minus' | 'none';
+
+interface BalanceSummaryProps extends Stylable {
   balances: Balance[];
   centered?: boolean;
   baseSize?: Size;
@@ -78,8 +82,6 @@ const BalanceSummary = ({
 
 BalanceSummary.displayName = 'BalanceSummary';
 
-export { BalanceSummary };
-
 const stylesheet = createStyleSheet((theme) => ({
   container: (centered: boolean) => ({
     rowGap: theme.margins.sm,
@@ -87,7 +89,11 @@ const stylesheet = createStyleSheet((theme) => ({
   }),
 }));
 
-export interface BalanceSummarySettledUpProps extends Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * BalanceSummarySettledUp
+ * -----------------------------------------------------------------------------------------------*/
+
+interface BalanceSummarySettledUpProps extends Stylable {
   size?: Size;
   inline?: boolean;
 }
@@ -102,4 +108,7 @@ const BalanceSummarySettledUp = ({ size = 'primary', inline }: BalanceSummarySet
 
 BalanceSummarySettledUp.displayName = 'BalanceSummarySettledUp';
 
-export { BalanceSummarySettledUp };
+/* -----------------------------------------------------------------------------------------------*/
+
+export { BalanceSummary, BalanceSummarySettledUp };
+export type { Size, Sign, BalanceSummaryProps, BalanceSummarySettledUpProps };

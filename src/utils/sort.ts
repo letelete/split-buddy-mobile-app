@@ -2,6 +2,10 @@ import { Balance } from '~/api/types';
 
 import { CompareFn } from '~/utils/types';
 
+/* -------------------------------------------------------------------------------------------------
+ * Balance
+ * -----------------------------------------------------------------------------------------------*/
+
 const balancesAscendingComparator: CompareFn<Balance> = (a, b) => {
   const delta = a.value - b.value;
   if (delta === 0) {
@@ -24,9 +28,9 @@ const balancesAbsoluteDescending: CompareFn<Balance> = (a, b) => {
   return balancesAscendingComparator(a, b);
 };
 
-export type SortBalancesStrategy = 'ascending' | 'descending' | 'absolute-descending';
+type SortBalancesStrategy = 'ascending' | 'descending' | 'absolute-descending';
 
-export const createBalancesComparator = ({
+const createBalancesComparator = ({
   strategy = 'absolute-descending',
 }: {
   strategy?: SortBalancesStrategy;
@@ -39,3 +43,8 @@ export const createBalancesComparator = ({
     } satisfies Record<SortBalancesStrategy, CompareFn<Balance>>
   )[strategy];
 };
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { createBalancesComparator };
+export type { SortBalancesStrategy };

@@ -2,11 +2,17 @@ import { PropsWithChildren, createContext, useCallback, useEffect, useMemo, useS
 
 import { Session, client } from '~/api/client';
 
-export enum AuthState {
+/* -------------------------------------------------------------------------------------------------
+ * AuthProvider
+ * -----------------------------------------------------------------------------------------------*/
+
+enum AuthState {
   CHECKING,
   NOT_AUTHORIZED,
   AUTHORIZED,
 }
+
+/* -----------------------------------------------------------------------------------------------*/
 
 interface ContextProps {
   authState: AuthState;
@@ -19,6 +25,8 @@ const AuthContext = createContext<ContextProps>({
   session: null,
   userSignedOut: false,
 });
+
+/* -----------------------------------------------------------------------------------------------*/
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [authState, setAuthState] = useState(AuthState.CHECKING);
@@ -79,4 +87,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
-export { AuthContext, AuthProvider };
+/* -----------------------------------------------------------------------------------------------*/
+
+export { AuthContext, AuthProvider, AuthState };
+export type { ContextProps };

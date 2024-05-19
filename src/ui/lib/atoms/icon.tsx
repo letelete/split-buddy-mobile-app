@@ -3,18 +3,24 @@ import { ComponentPropsWithoutRef, useContext } from 'react';
 import { TextStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { BackgroundAwareContext } from '~/ui:lib/shared/background-aware/providers';
-import { backgroundAwareStylesheet } from '~/ui:lib/shared/background-aware/stylesheets';
+import {
+  BackgroundAwareContext,
+  backgroundAwareStylesheet,
+} from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariants } from '~/ui:lib/shared/stylesheet';
 
 import { AppTheme } from '~/ui:styles/themes';
 
-export type Color = keyof AppTheme['colors']['typography'];
+/* -------------------------------------------------------------------------------------------------
+ * Icon
+ * -----------------------------------------------------------------------------------------------*/
 
-export type Size = 'base' | 'sm';
+type Color = keyof AppTheme['colors']['typography'];
 
-export interface IconProps extends Stylable<TextStyle> {
+type Size = 'base' | 'sm';
+
+interface IconProps extends Stylable<TextStyle> {
   name: ComponentPropsWithoutRef<typeof Ionicons>['name'];
   size?: Size;
   color?: Color;
@@ -46,8 +52,6 @@ const Icon = ({ name, containerStyle, color, size, testID = 'Icon' }: IconProps)
 
 Icon.displayName = 'Icon';
 
-export { Icon };
-
 const stylesheet = createStyleSheet(() => ({
   container: {
     variants: {
@@ -59,3 +63,8 @@ const stylesheet = createStyleSheet(() => ({
     },
   },
 }));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Icon };
+export type { Color, Size, IconProps };

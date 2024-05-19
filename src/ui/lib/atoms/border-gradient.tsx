@@ -6,11 +6,15 @@ import { Stylable } from '~/ui:lib/shared/interfaces';
 
 import { AtLeastOne } from '~/utils/types';
 
+/* -------------------------------------------------------------------------------------------------
+ * BorderGradient
+ * -----------------------------------------------------------------------------------------------*/
+
 type EdgeSizing =
   | number
   | AtLeastOne<{ left?: number; top?: number; right?: number; bottom?: number }>;
 
-export interface BorderGradientProps extends Stylable {
+interface BorderGradientProps extends Stylable {
   renderGradient: (style: StyleProp<ViewStyle>) => ReactNode;
   borderWidth: EdgeSizing;
   borderRadius: number;
@@ -66,4 +70,7 @@ const stylesheet = createStyleSheet(() => ({
 
 BorderGradient.displayName = 'BorderGradient';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { BorderGradient };
+export type { BorderGradientProps };

@@ -3,13 +3,16 @@ import { StyleProp, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
-import { BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware/providers';
-import { Background } from '~/ui:lib/shared/background-aware/stylesheets';
+import { Background, BackgroundAwareContextProvider } from '~/ui:lib/shared/background-aware';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 
-export type BannerVariant = 'neutral' | 'positive' | 'negative';
+/* -------------------------------------------------------------------------------------------------
+ * Banner
+ * -----------------------------------------------------------------------------------------------*/
 
-export interface BannerProps extends Stylable {
+type BannerVariant = 'neutral' | 'positive' | 'negative';
+
+interface BannerProps extends Stylable {
   variant?: BannerVariant;
   contentContainerStyle?: StyleProp<ViewStyle>;
 }
@@ -73,4 +76,7 @@ const stylesheet = createStyleSheet((theme) => ({
 
 Banner.displayName = 'Banner';
 
+/* -----------------------------------------------------------------------------------------------*/
+
 export { Banner };
+export type { BannerVariant, BannerProps };
