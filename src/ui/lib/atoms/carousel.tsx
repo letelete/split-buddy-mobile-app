@@ -5,6 +5,8 @@ import Animated, {
   Extrapolation,
   SharedValue,
   interpolate,
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
@@ -167,4 +169,18 @@ const Item = <TItem,>({ info, panX, boxWidth, halfBoxDistance, renderItem }: Ite
       {renderItem(info)}
     </Animated.View>
   );
+};
+
+export const useCarouselDirection = (carouselIndex: SharedValue<number>) => {
+  const [lastCarouselNavigationDirection, setLastCarouselNavigationDirection] = useState<-1 | 1>(1);
+
+  useAnimatedReaction(
+    () => carouselIndex.value,
+    (currentIndex, previousIndex) => {
+      const direction = previousIndex && currentIndex <= previousIndex ? -1 : 1;
+      runOnJS(setLastCarouselNavigationDirection)(direction);
+    }
+  );
+
+  return { lastCarouselNavigationDirection };
 };

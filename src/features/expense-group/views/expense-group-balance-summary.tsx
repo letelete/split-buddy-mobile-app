@@ -5,8 +5,6 @@ import Animated, {
   FadeInRight,
   FadeOutLeft,
   FadeOutRight,
-  runOnJS,
-  useAnimatedReaction,
   useSharedValue,
 } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
@@ -16,6 +14,7 @@ import { Balance, ExpenseGroup, ExpenseGroupMember, UserBalance } from '~/api/ty
 import { ExpenseGroupBalanceCarousel } from '~/features/expense-group/views/expense-group-balance-carousel';
 
 import { Banner } from '~/ui:lib/atoms/banner';
+import { useCarouselDirection } from '~/ui:lib/atoms/carousel';
 import { Chip, ChipAvatar, ChipProps, ChipText, ChipTextSm } from '~/ui:lib/atoms/chip';
 import { LinearGradient } from '~/ui:lib/atoms/gradient';
 import { AvatarsStack } from '~/ui:lib/molecules/labeled-avatars-stack';
@@ -32,7 +31,11 @@ import {
 import { createBalancesComparator } from '~/utils/sort';
 import { formatCurrency } from '~/utils/string';
 
-export interface ExpenseGroupBalanceSummaryProps extends Stylable {
+/* -------------------------------------------------------------------------------------------------
+ * ExpenseGroupBalanceSummary
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ExpenseGroupBalanceSummaryProps extends Stylable {
   group: ExpenseGroup;
   userDisplayName: string;
 }
@@ -42,27 +45,18 @@ const ExpenseGroupBalanceSummary = ({
   userDisplayName,
   containerStyle,
 }: ExpenseGroupBalanceSummaryProps) => {
-  const { styles } = useStyles(stylesheet);
+  const { styles } = useStyles(expenseGroupBalanceSummaryStylesheet);
 
-  const carouselIndex = useSharedValue(0);
   const [currentCarouselItem, setCurrentCarouselItem] = useState<BalanceCarouselItem>({
     key: 'expense-group-balance-summary:initial-item',
     type: 'negative',
     balances: [],
   });
-
-  const [lastCarouselNavigationDirection, setLastCarouselNavigationDirection] = useState<-1 | 1>(1);
-
-  useAnimatedReaction(
-    () => carouselIndex.value,
-    (currentIndex, previousIndex) => {
-      const direction = previousIndex && currentIndex <= previousIndex ? -1 : 1;
-      runOnJS(setLastCarouselNavigationDirection)(direction);
-    }
-  );
-
   const { balanceMembers, actionTitleForCarouselItem, variantForCarouselItem } =
     useBalanceMembersForCarouselItem(group, currentCarouselItem);
+
+  const carouselIndex = useSharedValue(0);
+  const { lastCarouselNavigationDirection } = useCarouselDirection(carouselIndex);
 
   const balanceCarouselContextValue = useMemo<BalanceCarouselContextProps>(
     () => ({
@@ -108,15 +102,13 @@ const ExpenseGroupBalanceSummary = ({
 
 ExpenseGroupBalanceSummary.displayName = 'ExpenseGroupBalanceSummary';
 
-export { ExpenseGroupBalanceSummary };
-
-const stylesheet = createStyleSheet((theme) => ({
+const expenseGroupBalanceSummaryStylesheet = createStyleSheet((theme) => ({
   membersContainer: {
     marginTop: theme.margins.md,
   },
 }));
 
-const descendingBalanceComparator = createBalancesComparator({ strategy: 'descending' });
+/* -----------------------------------------------------------------------------------------------*/
 
 const useBalanceMembersForCarouselItem = (group: ExpenseGroup, item: BalanceCarouselItem) => {
   const variantForCarouselItem = useMemo<BannerBalanceMembersProps['variant']>(
@@ -205,6 +197,10 @@ const useBalanceMembersForCarouselItem = (group: ExpenseGroup, item: BalanceCaro
   return { variantForCarouselItem, actionTitleForCarouselItem, balanceMembers } as const;
 };
 
+/* -------------------------------------------------------------------------------------------------
+ * BannerBalanceMembers
+ * -----------------------------------------------------------------------------------------------*/
+
 interface BalanceMember {
   id: string;
   displayName: string;
@@ -221,6 +217,12 @@ interface BannerBalanceMembersProps extends Stylable {
   onActionPress?: (member: BalanceMember) => void;
   onShowAllPress?: () => void;
 }
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const descendingBalanceComparator = createBalancesComparator({ strategy: 'descending' });
+
+/* -----------------------------------------------------------------------------------------------*/
 
 const BannerBalanceMembers = ({
   members,
@@ -301,7 +303,11 @@ const bannerBalanceMembersStylesheet = createStyleSheet((theme) => ({
   },
 }));
 
-export interface BalanceMemberRowProps extends Stylable {}
+/* -------------------------------------------------------------------------------------------------
+ * BalanceMemberRow
+ * -----------------------------------------------------------------------------------------------*/
+
+interface BalanceMemberRowProps extends Stylable {}
 
 const BalanceMemberRow = ({
   containerStyle,
@@ -325,7 +331,9 @@ const balanceMemberRowStylesheet = createStyleSheet((theme) => ({
   },
 }));
 
-export { BalanceMemberRow };
+/* -------------------------------------------------------------------------------------------------
+ * BalanceMemberChip
+ * -----------------------------------------------------------------------------------------------*/
 
 interface BalanceMemberChipProps extends Stylable {
   member: BalanceMember;
@@ -411,7 +419,11 @@ const balanceMemberChipStylesheet = createStyleSheet((theme) => ({
   },
 }));
 
-export interface BalanceChipProps extends ChipProps {
+/* -------------------------------------------------------------------------------------------------
+ * BalanceChip
+ * -----------------------------------------------------------------------------------------------*/
+
+interface BalanceChipProps extends ChipProps {
   balance: Balance;
 }
 
@@ -437,10 +449,12 @@ const BalanceChip = ({ balance, background, ...rest }: BalanceChipProps) => {
 
 BalanceChip.displayName = 'BalanceChip';
 
-export { BalanceChip };
-
 const balanceChipStylesheet = createStyleSheet((theme) => ({
   gradient: {
     borderRadius: theme.rounded.full,
   },
 }));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { ExpenseGroupBalanceSummaryProps, ExpenseGroupBalanceSummary };
