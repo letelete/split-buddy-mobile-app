@@ -1,18 +1,12 @@
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Animated, {
-  FadeInDown,
   FadeInLeft,
   FadeInRight,
-  FadeInUp,
-  FadeOutDown,
   FadeOutLeft,
   FadeOutRight,
-  FadeOutUp,
-  IEntryExitAnimationBuilder,
   runOnJS,
   useAnimatedReaction,
-  useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';

@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from 'react';
-import { StyleProp, TextProps, TextStyle, View, ViewStyle } from 'react-native';
+import { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Avatar } from '~/ui:lib/atoms/avatar';
