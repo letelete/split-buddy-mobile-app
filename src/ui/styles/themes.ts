@@ -11,6 +11,7 @@ const appTheme = {
       primarySoft: 'rgba(255, 255, 255, 0.87)',
       secondary: 'rgba(255, 255, 255, 0.64)',
       disabled: 'rgba(255, 255, 255, 0.37)',
+      decorative: 'rgba(255, 255, 255, 0.16)',
       destructive: '#FF453A',
     },
     get baseGradientTypography() {
@@ -33,7 +34,7 @@ const appTheme = {
         foreground: colors.baseGradientTypography,
       },
       positive: {
-        values: ['#ADD100', '#52610A'],
+        values: ['#A2B919', '#459E37'],
         foreground: colors.baseGradientTypography,
       },
       negative: {

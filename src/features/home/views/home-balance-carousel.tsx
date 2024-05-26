@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { UserBalance } from '~/api/types';
 
 import { Banner } from '~/ui:lib/atoms/banner';
@@ -8,8 +6,6 @@ import { Typography } from '~/ui:lib/molecules/typography';
 import { Stylable, Suspensible } from '~/ui:lib/shared/interfaces';
 import { BalanceCarousel } from '~/ui:lib/widgets/balance/views/balance-carousel';
 
-import { NOT_IMPLEMENTED } from '~/utils/mock';
-
 /* -------------------------------------------------------------------------------------------------
  * HomeBalanceCarousel
  * -----------------------------------------------------------------------------------------------*/
@@ -17,6 +13,7 @@ import { NOT_IMPLEMENTED } from '~/utils/mock';
 interface HomeBalanceCarouselProps extends Stylable, Suspensible {
   userDisplayName: string;
   userBalance?: UserBalance;
+  onShowAllBalances?: () => void;
 }
 
 const HomeBalanceCarousel = ({
@@ -24,11 +21,8 @@ const HomeBalanceCarousel = ({
   userBalance,
   containerStyle,
   loading,
+  onShowAllBalances,
 }: HomeBalanceCarouselProps) => {
-  const handleShowAllBalances = useCallback(() => {
-    NOT_IMPLEMENTED();
-  }, []);
-
   return (
     <SkeletonContent loading={loading}>
       {userBalance ? (
@@ -36,8 +30,8 @@ const HomeBalanceCarousel = ({
           containerStyle={containerStyle}
           userBalance={userBalance}
           userDisplayName={userDisplayName}
-          onShowAllNegative={handleShowAllBalances}
-          onShowAllPositive={handleShowAllBalances}
+          onShowAllNegative={onShowAllBalances}
+          onShowAllPositive={onShowAllBalances}
         />
       ) : (
         <Banner variant='neutral'>

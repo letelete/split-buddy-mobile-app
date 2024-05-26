@@ -9,6 +9,9 @@ import { AuthProvider } from '~/features/auth/providers/auth-provider';
 
 import { AppNavigator } from '~/router/app-navigator';
 
+import { ModalProvider } from '~/ui:lib/organisms/modal';
+import { appModalsStack } from '~/ui:lib/widgets/app-modal/controllers/app-modal-controller';
+
 import '~/ui:styles/unistyles';
 
 const App = () => {
@@ -17,7 +20,9 @@ const App = () => {
       <QueryClientProvider>
         <AuthProvider>
           <NavigationContainer>
-            <AppNavigator />
+            <ModalProvider stack={appModalsStack}>
+              <AppNavigator />
+            </ModalProvider>
           </NavigationContainer>
         </AuthProvider>
       </QueryClientProvider>

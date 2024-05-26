@@ -1,19 +1,33 @@
 import {
   ComponentProps,
+  ComponentPropsWithoutRef,
   ComponentType,
   PropsWithChildren,
   createContext,
   useCallback,
+  useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
-import { View } from 'react-native';
+import { TouchableWithoutFeedback, ViewProps } from 'react-native';
+import Animated, {
+  AnimatedProps,
+  ComplexAnimationBuilder,
+  LinearTransition,
+  SlideInDown,
+  SlideOutDown,
+  runOnJS,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { SpringConfig } from 'react-native-reanimated/lib/typescript/reanimated2/animation/springUtils';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Stylable } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariantsBoolean } from '~/ui:lib/shared/stylesheet';
-
-import { NOT_IMPLEMENTED } from '~/utils/mock';
 
 /* -------------------------------------------------------------------------------------------------
  * Modal Provider
@@ -33,18 +47,17 @@ interface ModalConfig {
   fullscreen?: boolean;
 }
 
+interface ModalProviderConfig {
+  backdropOpacity?: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ModalStackParamsList = Record<string, ComponentType<any>>;
-
-type Props<
-  TParamsList extends ModalStackParamsList,
-  TName extends keyof TParamsList,
-> = TParamsList[TName];
 
 interface ModalContextProps<TParamsList extends ModalStackParamsList> {
   openModal<TName extends keyof TParamsList>(
     name: TName,
-    props: Props<TParamsList, TName>,
+    props?: ComponentPropsWithoutRef<TParamsList[TName]>,
     config?: ModalConfig
   ): void;
   closeModal<TName extends keyof TParamsList>(name: TName): void;
@@ -62,12 +75,19 @@ const ModalContext = createModalContext();
 
 interface ModalProviderProps<TParamsList extends ModalStackParamsList> {
   stack: TParamsList;
+  config?: ModalProviderConfig;
 }
 
 const ModalProvider = <TParamsList extends ModalStackParamsList>({
   stack,
+  config: userConfig,
   children,
 }: PropsWithChildren<ModalProviderProps<TParamsList>>) => {
+  const config = {
+    backdropOpacity: 0.666,
+    ...userConfig,
+  } satisfies ModalProviderConfig;
+
   const modalController = useModalController(stack);
 
   const modalContextValue = useMemo<ModalContextProps<TParamsList>>(
@@ -83,7 +103,7 @@ const ModalProvider = <TParamsList extends ModalStackParamsList>({
     <ModalContext.Provider value={modalContextValue}>
       {children}
 
-      <ModalStack stack={modalController.modalsStack} />
+      <ModalStack backdropOpacity={config.backdropOpacity} stack={modalController.modalsStack} />
     </ModalContext.Provider>
   );
 };
@@ -107,25 +127,28 @@ const useModalController = <TParamsList extends ModalStackParamsList>(renderers:
         dismissible: true,
         ...userConfig,
       } satisfies ModalConfig;
+
+      const modal = {
+        config: modalConfig,
+        name,
+        props,
+        renderer: renderers[name],
+      } satisfies ModalStackItem<TParamsList, keyof TParamsList>;
+
       setModalsStack((stack) => [
-        ...stack,
-        {
-          config: modalConfig,
-          name,
-          props,
-          renderer: renderers[name],
-        },
+        ...stack.filter((stackItem) => stackItem.name !== modal.name),
+        modal,
       ]);
     },
-    []
+    [renderers]
   );
 
-  const closeModal: ModalContextProps<TParamsList>['closeModal'] = useCallback(() => {
-    NOT_IMPLEMENTED();
+  const closeModal: ModalContextProps<TParamsList>['closeModal'] = useCallback((name) => {
+    setModalsStack((modals) => modals.filter((modal) => modal.name !== name));
   }, []);
 
   const closeAllModals: ModalContextProps<TParamsList>['closeAllModals'] = useCallback(() => {
-    NOT_IMPLEMENTED();
+    setModalsStack([]);
   }, []);
 
   return { openModal, closeModal, closeAllModals, modalsStack };
@@ -140,7 +163,7 @@ interface ModalStackItem<
   TName extends keyof TParamsList,
 > {
   name: TName;
-  props: TParamsList[TName];
+  props?: ComponentPropsWithoutRef<TParamsList[TName]>;
   config: ModalConfig;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   renderer: ComponentProps<any>;
@@ -151,11 +174,18 @@ interface ModalStackProps<
   TName extends keyof TParamsList,
 > {
   stack: ModalStackItem<TParamsList, TName>[];
+  backdropOpacity: number;
 }
 
 const ModalStack = <TParamsList extends ModalStackParamsList, TName extends keyof TParamsList>({
   stack,
+  backdropOpacity,
 }: ModalStackProps<TParamsList, TName>) => {
+  const context = useContext(ModalContext) as ModalContextProps<TParamsList> | null;
+  if (!context) {
+    throw new Error('ModalStack must be a descendant of the ModalContext provider');
+  }
+
   const { styles } = useStyles(modalStackStylesheet);
 
   const modals = useMemo(() => {
@@ -164,68 +194,160 @@ const ModalStack = <TParamsList extends ModalStackParamsList, TName extends keyo
     }
 
     const top = stack.at(-1);
-    const fullscreens = stack
+    const firstFullscreenBehindTop = stack
       .slice(0, stack.length - 1)
-      .map((item) => (item.config.fullscreen ? item : null));
+      .find((item) => item.config.fullscreen);
+    const isTopFullscreen = top?.config?.fullscreen;
 
-    const modals = [...fullscreens, top].filter(
+    const modals = [isTopFullscreen ? null : firstFullscreenBehindTop, top].filter(
       (item): item is ModalStackItem<TParamsList, TName> => Boolean(item)
     );
 
     return modals.length ? modals : null;
   }, [stack]);
 
-  if (!modals?.length) {
-    return null;
-  }
+  const animationController = useModalStackAnimationController({
+    modalsLength: modals?.length ?? 0,
+  });
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.backdrop} />
+  const handleBackdropPress = useCallback(() => {
+    const top = modals?.at(-1);
+    if (top) {
+      context.closeModal(top.name);
+    } else {
+      context.closeAllModals();
+    }
+  }, [context, modals]);
 
-      <View style={styles.contentContainer}>
-        {modals.map((modal, index) => (
-          <ModalStackItemRenderer
-            key={modal.name.toString()}
-            containerStyle={styles.stackItem(index)}
-            modal={modal}
-          />
-        ))}
-      </View>
-    </View>
-  );
+  return animationController.canShowStack ? (
+    <Animated.View style={styles.container}>
+      <TouchableWithoutFeedback onPress={handleBackdropPress}>
+        <Animated.View style={styles.backdropContainer(backdropOpacity)}>
+          <Animated.View style={[styles.backdrop, animationController.backdropAnimatedStyle]} />
+        </Animated.View>
+      </TouchableWithoutFeedback>
+
+      {modals?.map((modal, index) => (
+        <ModalStackItemRenderer
+          key={modal.name.toString()}
+          containerStyle={styles.stackItem(index)}
+          entering={animationController.modalEnteringAnimation}
+          exiting={animationController.modalExitingAnimation}
+          modal={modal}
+        />
+      ))}
+    </Animated.View>
+  ) : null;
 };
 
 ModalStack.displayName = 'ModalStack';
 
+/* -----------------------------------------------------------------------------------------------*/
+
+const backdropAnimationConfig = {
+  damping: 10,
+  mass: 0.1,
+  stiffness: 128,
+  velocity: 1,
+} satisfies SpringConfig;
+
+const withModalEntryExitAnimationBuilder = (builder: ComplexAnimationBuilder) => {
+  return builder.damping(10).mass(0.1).stiffness(128);
+};
+
+interface UseModalStackAnimationControllerProps {
+  modalsLength: number;
+}
+
+const useModalStackAnimationController = (props: UseModalStackAnimationControllerProps) => {
+  const [stackStatus, setStackStatus] = useState<'idle' | 'shown' | 'hiding' | 'hidden'>('idle');
+
+  const canShowStack = stackStatus === 'hiding' || stackStatus === 'shown';
+
+  const backdropOpacity = useSharedValue(0);
+  const backdropAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: backdropOpacity.value,
+  }));
+
+  const isBackdropVisible = useSharedValue(false);
+  const isSomeModalVisible = useSharedValue(false);
+
+  const modalEnteringAnimation = withModalEntryExitAnimationBuilder(SlideInDown.springify());
+  const modalExitingAnimation = withModalEntryExitAnimationBuilder(
+    SlideOutDown.springify().withCallback((finished) => {
+      if (finished && props.modalsLength <= 1) {
+        isSomeModalVisible.value = false;
+      }
+    })
+  );
+
+  useDerivedValue(() => {
+    if (!isSomeModalVisible.value && !isBackdropVisible.value && stackStatus === 'hiding') {
+      runOnJS(setStackStatus)('hidden');
+    }
+  });
+
+  const showBackdrop = useCallback(() => {
+    backdropOpacity.value = withSpring(1, backdropAnimationConfig);
+  }, [backdropOpacity]);
+
+  const hideBackdrop = useCallback(() => {
+    backdropOpacity.value = withSpring(0, backdropAnimationConfig, (finished) => {
+      if (finished) {
+        isBackdropVisible.value = false;
+      }
+    });
+  }, [backdropOpacity, isBackdropVisible]);
+
+  useEffect(() => {
+    if (props.modalsLength) {
+      runOnJS(setStackStatus)('shown');
+      isSomeModalVisible.value = true;
+      isBackdropVisible.value = true;
+      showBackdrop();
+    } else {
+      runOnJS(setStackStatus)('hiding');
+      hideBackdrop();
+    }
+  }, [hideBackdrop, isSomeModalVisible, isBackdropVisible, props.modalsLength, showBackdrop]);
+
+  return {
+    canShowStack,
+    backdropAnimatedStyle,
+    modalEnteringAnimation,
+    modalExitingAnimation,
+    showBackdrop,
+    hideBackdrop,
+    setStackStatus,
+  };
+};
+
+/* -----------------------------------------------------------------------------------------------*/
+
+const fillContainerStyles = {
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  right: 0,
+  bottom: 0,
+} as const;
 const modalStackStylesheet = createStyleSheet((theme) => ({
   container: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-  },
-  backdrop: {
-    zIndex: 0,
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: theme.colors.background,
-    opacity: 0.5,
-  },
-  contentContainer: {
     zIndex: 1,
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
+    ...fillContainerStyles,
+  },
+  backdropContainer: (opacity: number) => ({
+    zIndex: 1,
+    opacity,
+    ...fillContainerStyles,
+  }),
+  backdrop: {
+    backgroundColor: theme.colors.background,
+    width: '100%',
+    height: '100%',
   },
   stackItem: (index: number) => ({
-    zIndex: 2 + index,
+    zIndex: 1 + index,
   }),
 }));
 
@@ -234,7 +356,8 @@ const modalStackStylesheet = createStyleSheet((theme) => ({
 interface ModalStackItemProps<
   TParamsList extends ModalStackParamsList,
   TName extends keyof TParamsList,
-> extends Stylable {
+> extends Pick<AnimatedProps<ViewProps>, 'entering' | 'exiting'>,
+    Stylable {
   modal: ModalStackItem<TParamsList, TName>;
 }
 
@@ -244,16 +367,23 @@ const ModalStackItemRenderer = <
 >({
   modal,
   containerStyle,
+  entering,
+  exiting,
 }: ModalStackItemProps<TParamsList, TName>) => {
   const { styles } = useStyles(modalStackItemRendererStylesheet, {
-    fullscreen: modal.config.fullscreen,
+    fullscreen: modal.config.fullscreen ?? false,
   });
   const Component = modal.renderer;
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      <Component {...modal.props} />
-    </View>
+    <Animated.View
+      entering={entering}
+      exiting={exiting}
+      layout={LinearTransition}
+      style={[styles.container, containerStyle]}
+    >
+      <Component key={modal.name.toString()} {...modal.props} />
+    </Animated.View>
   );
 };
 
@@ -261,8 +391,16 @@ ModalStackItemRenderer.displayName = 'ModalStackItemRenderer';
 
 const modalStackItemRendererStylesheet = createStyleSheet((theme, runtime) => ({
   container: {
+    borderWidth: 1,
+    borderColor: theme.colors.typography.decorative,
     borderRadius: theme.rounded.xl,
     overflow: 'hidden',
+    backgroundColor: theme.colors.background,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    maxHeight: runtime.screen.height,
     variants: {
       fullscreen: {
         true: {
@@ -272,10 +410,10 @@ const modalStackItemRendererStylesheet = createStyleSheet((theme, runtime) => ({
           paddingTop: runtime.insets.right,
         },
         false: {
-          marginBottom: runtime.insets.bottom + theme.margins.lg,
-          marginLeft: runtime.insets.left + theme.margins.lg,
-          marginRight: runtime.insets.right + theme.margins.lg,
-          marginTop: runtime.insets.right + theme.margins.lg,
+          marginBottom: runtime.insets.bottom + theme.margins.xl,
+          marginLeft: runtime.insets.left + theme.margins.md,
+          marginRight: runtime.insets.right + theme.margins.md,
+          marginTop: runtime.insets.right + theme.margins.xl,
         },
       } satisfies StylesheetVariantsBoolean,
     },
@@ -285,4 +423,12 @@ const modalStackItemRendererStylesheet = createStyleSheet((theme, runtime) => ({
 /* -----------------------------------------------------------------------------------------------*/
 
 export { ModalContext, ModalProvider };
-export type { EnteringAnimation, ExitingAnimation, AnimateConfig, ModalConfig, ModalProviderProps };
+export type {
+  EnteringAnimation,
+  ExitingAnimation,
+  AnimateConfig,
+  ModalConfig,
+  ModalStackParamsList,
+  ModalProviderProps,
+  ModalContextProps,
+};
