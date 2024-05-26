@@ -18,6 +18,7 @@ const appTheme = {
       return this.typography;
     },
     background: '#000',
+    modalBackdropBackground: '#000',
     get chipTranslucent() {
       return {
         background: 'rgba(255, 255, 255, 0.34)',

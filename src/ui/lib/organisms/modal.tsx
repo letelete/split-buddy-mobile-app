@@ -3,6 +3,7 @@ import {
   ComponentPropsWithoutRef,
   ComponentType,
   PropsWithChildren,
+  ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -10,9 +11,10 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { TouchableWithoutFeedback, ViewProps } from 'react-native';
+import { StyleProp, TouchableWithoutFeedback, ViewProps, ViewStyle } from 'react-native';
 import Animated, {
   AnimatedProps,
+  AnimatedStyle,
   ComplexAnimationBuilder,
   LinearTransition,
   SlideInDown,
@@ -47,9 +49,19 @@ interface ModalConfig {
   fullscreen?: boolean;
 }
 
-interface ModalProviderConfig {
-  backdropOpacity?: number;
+interface ModalStackConfig {
+  backdropOpacity: number;
+  backdropBackgroundColor: string;
+  renderBackdrop: ((style: AnimatedStyle<StyleProp<ViewStyle>>) => ReactNode) | null;
 }
+
+interface ModalControllerConfig {
+  onOpen: (<TName>(name: TName, modelsCount: number) => void) | null;
+  onClose: (<TName>(name: TName, modelsRemainingCount: number) => void) | null;
+  onCloseAll: (() => void) | null;
+}
+
+interface ModalProviderConfig extends Partial<ModalStackConfig>, Partial<ModalControllerConfig> {}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ModalStackParamsList = Record<string, ComponentType<any>>;
@@ -83,12 +95,21 @@ const ModalProvider = <TParamsList extends ModalStackParamsList>({
   config: userConfig,
   children,
 }: PropsWithChildren<ModalProviderProps<TParamsList>>) => {
-  const config = {
-    backdropOpacity: 0.666,
-    ...userConfig,
-  } satisfies ModalProviderConfig;
+  const config = useMemo(
+    () =>
+      ({
+        backdropOpacity: 0.666,
+        backdropBackgroundColor: '#000',
+        renderBackdrop: null,
+        onOpen: null,
+        onClose: null,
+        onCloseAll: null,
+        ...userConfig,
+      }) satisfies ModalProviderConfig,
+    [userConfig]
+  );
 
-  const modalController = useModalController(stack);
+  const modalController = useModalController(stack, config);
 
   const modalContextValue = useMemo<ModalContextProps<TParamsList>>(
     () => ({
@@ -103,7 +124,7 @@ const ModalProvider = <TParamsList extends ModalStackParamsList>({
     <ModalContext.Provider value={modalContextValue}>
       {children}
 
-      <ModalStack backdropOpacity={config.backdropOpacity} stack={modalController.modalsStack} />
+      <ModalStack config={config} stack={modalController.modalsStack} />
     </ModalContext.Provider>
   );
 };
@@ -112,20 +133,23 @@ ModalProvider.displayName = 'ModalProvider';
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const useModalController = <TParamsList extends ModalStackParamsList>(renderers: TParamsList) => {
+const useModalController = <TParamsList extends ModalStackParamsList>(
+  renderers: TParamsList,
+  config: ModalControllerConfig
+) => {
   const [modalsStack, setModalsStack] = useState<ModalStackItem<TParamsList, keyof TParamsList>[]>(
     []
   );
 
   const openModal: ModalContextProps<TParamsList>['openModal'] = useCallback(
-    (name, props, userConfig) => {
+    (name, props, userModalConfig) => {
       const modalConfig = {
         namespace: undefined,
         animateInConfig: {
           animation: 'slide-in-down',
         },
         dismissible: true,
-        ...userConfig,
+        ...userModalConfig,
       } satisfies ModalConfig;
 
       const modal = {
@@ -135,21 +159,38 @@ const useModalController = <TParamsList extends ModalStackParamsList>(renderers:
         renderer: renderers[name],
       } satisfies ModalStackItem<TParamsList, keyof TParamsList>;
 
-      setModalsStack((stack) => [
-        ...stack.filter((stackItem) => stackItem.name !== modal.name),
-        modal,
-      ]);
+      setModalsStack((stack) => {
+        const newModalsStack = [
+          ...stack.filter((stackItem) => stackItem.name !== modal.name),
+          modal,
+        ];
+
+        config.onOpen?.(name, newModalsStack.length);
+
+        return newModalsStack;
+      });
     },
-    [renderers]
+    [config, renderers]
   );
 
-  const closeModal: ModalContextProps<TParamsList>['closeModal'] = useCallback((name) => {
-    setModalsStack((modals) => modals.filter((modal) => modal.name !== name));
-  }, []);
+  const closeModal: ModalContextProps<TParamsList>['closeModal'] = useCallback(
+    (name) => {
+      setModalsStack((modals) => {
+        const remainingStack = modals.filter((modal) => modal.name !== name);
+
+        config.onClose?.(name, remainingStack.length);
+
+        return remainingStack;
+      });
+    },
+    [config]
+  );
 
   const closeAllModals: ModalContextProps<TParamsList>['closeAllModals'] = useCallback(() => {
     setModalsStack([]);
-  }, []);
+
+    config.onCloseAll?.();
+  }, [config]);
 
   return { openModal, closeModal, closeAllModals, modalsStack };
 };
@@ -174,12 +215,12 @@ interface ModalStackProps<
   TName extends keyof TParamsList,
 > {
   stack: ModalStackItem<TParamsList, TName>[];
-  backdropOpacity: number;
+  config: ModalStackConfig;
 }
 
 const ModalStack = <TParamsList extends ModalStackParamsList, TName extends keyof TParamsList>({
   stack,
-  backdropOpacity,
+  config,
 }: ModalStackProps<TParamsList, TName>) => {
   const context = useContext(ModalContext) as ModalContextProps<TParamsList> | null;
   if (!context) {
@@ -213,7 +254,9 @@ const ModalStack = <TParamsList extends ModalStackParamsList, TName extends keyo
   const handleBackdropPress = useCallback(() => {
     const top = modals?.at(-1);
     if (top) {
-      context.closeModal(top.name);
+      if (top.config.dismissible) {
+        context.closeModal(top.name);
+      }
     } else {
       context.closeAllModals();
     }
@@ -222,8 +265,15 @@ const ModalStack = <TParamsList extends ModalStackParamsList, TName extends keyo
   return animationController.canShowStack ? (
     <Animated.View style={styles.container}>
       <TouchableWithoutFeedback onPress={handleBackdropPress}>
-        <Animated.View style={styles.backdropContainer(backdropOpacity)}>
-          <Animated.View style={[styles.backdrop, animationController.backdropAnimatedStyle]} />
+        <Animated.View style={styles.backdropContainer(config.backdropOpacity)}>
+          {config.renderBackdrop?.(animationController.backdropAnimatedStyle) ?? (
+            <Animated.View
+              style={[
+                styles.backdrop(config.backdropBackgroundColor),
+                animationController.backdropAnimatedStyle,
+              ]}
+            />
+          )}
         </Animated.View>
       </TouchableWithoutFeedback>
 
@@ -242,6 +292,33 @@ const ModalStack = <TParamsList extends ModalStackParamsList, TName extends keyo
 
 ModalStack.displayName = 'ModalStack';
 
+const fillContainerStyles = {
+  position: 'absolute',
+  left: 0,
+  top: 0,
+  right: 0,
+  bottom: 0,
+} as const;
+const modalStackStylesheet = createStyleSheet((theme) => ({
+  container: {
+    zIndex: 1,
+    ...fillContainerStyles,
+  },
+  backdropContainer: (opacity: number) => ({
+    zIndex: 1,
+    opacity,
+    ...fillContainerStyles,
+  }),
+  backdrop: (backgroundColor: string) => ({
+    backgroundColor,
+    width: '100%',
+    height: '100%',
+  }),
+  stackItem: (index: number) => ({
+    zIndex: 1 + index,
+  }),
+}));
+
 /* -----------------------------------------------------------------------------------------------*/
 
 const backdropAnimationConfig = {
@@ -251,8 +328,12 @@ const backdropAnimationConfig = {
   velocity: 1,
 } satisfies SpringConfig;
 
-const withModalEntryExitAnimationBuilder = (builder: ComplexAnimationBuilder) => {
-  return builder.damping(10).mass(0.1).stiffness(128);
+const withModalEntryAnimationBuilder = (builder: ComplexAnimationBuilder) => {
+  return builder.damping(10).mass(0.25).stiffness(100).restDisplacementThreshold(0.1);
+};
+
+const withModalExitAnimationBuilder = (builder: ComplexAnimationBuilder) => {
+  return builder.damping(10).mass(0.25).stiffness(100).restDisplacementThreshold(0.1);
 };
 
 interface UseModalStackAnimationControllerProps {
@@ -272,8 +353,8 @@ const useModalStackAnimationController = (props: UseModalStackAnimationControlle
   const isBackdropVisible = useSharedValue(false);
   const isSomeModalVisible = useSharedValue(false);
 
-  const modalEnteringAnimation = withModalEntryExitAnimationBuilder(SlideInDown.springify());
-  const modalExitingAnimation = withModalEntryExitAnimationBuilder(
+  const modalEnteringAnimation = withModalEntryAnimationBuilder(SlideInDown.springify());
+  const modalExitingAnimation = withModalExitAnimationBuilder(
     SlideOutDown.springify().withCallback((finished) => {
       if (finished && props.modalsLength <= 1) {
         isSomeModalVisible.value = false;
@@ -321,35 +402,6 @@ const useModalStackAnimationController = (props: UseModalStackAnimationControlle
     setStackStatus,
   };
 };
-
-/* -----------------------------------------------------------------------------------------------*/
-
-const fillContainerStyles = {
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  right: 0,
-  bottom: 0,
-} as const;
-const modalStackStylesheet = createStyleSheet((theme) => ({
-  container: {
-    zIndex: 1,
-    ...fillContainerStyles,
-  },
-  backdropContainer: (opacity: number) => ({
-    zIndex: 1,
-    opacity,
-    ...fillContainerStyles,
-  }),
-  backdrop: {
-    backgroundColor: theme.colors.background,
-    width: '100%',
-    height: '100%',
-  },
-  stackItem: (index: number) => ({
-    zIndex: 1 + index,
-  }),
-}));
 
 /* -----------------------------------------------------------------------------------------------*/
 
@@ -410,10 +462,10 @@ const modalStackItemRendererStylesheet = createStyleSheet((theme, runtime) => ({
           paddingTop: runtime.insets.right,
         },
         false: {
-          marginBottom: runtime.insets.bottom + theme.margins.xl,
+          marginBottom: runtime.insets.bottom + theme.margins.base,
           marginLeft: runtime.insets.left + theme.margins.md,
           marginRight: runtime.insets.right + theme.margins.md,
-          marginTop: runtime.insets.right + theme.margins.xl,
+          marginTop: runtime.insets.top + theme.margins.base,
         },
       } satisfies StylesheetVariantsBoolean,
     },
@@ -431,4 +483,5 @@ export type {
   ModalStackParamsList,
   ModalProviderProps,
   ModalContextProps,
+  ModalProviderConfig,
 };

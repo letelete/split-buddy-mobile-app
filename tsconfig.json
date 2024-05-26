@@ -15,5 +15,5 @@
       "~/utils/*": ["src/utils/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "src/ui/hooks/use"]
 }
