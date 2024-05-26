@@ -11,11 +11,20 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { StyleProp, TouchableWithoutFeedback, ViewProps, ViewStyle } from 'react-native';
+import {
+  StyleProp,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 import Animated, {
   AnimatedProps,
   AnimatedStyle,
   ComplexAnimationBuilder,
+  FadeInDown,
+  FadeOutDown,
   LinearTransition,
   SlideInDown,
   SlideOutDown,
@@ -23,11 +32,14 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withDelay,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { SpringConfig } from 'react-native-reanimated/lib/typescript/reanimated2/animation/springUtils';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
+import { Icon } from '~/ui:lib/atoms/icon';
 import { Stylable } from '~/ui:lib/shared/interfaces';
 import { StylesheetVariantsBoolean } from '~/ui:lib/shared/stylesheet';
 
@@ -44,7 +56,6 @@ interface AnimateConfig {
 
 interface ModalConfig {
   namespace?: string;
-  animateInConfig: AnimateConfig;
   dismissible?: boolean;
   fullscreen?: boolean;
 }
@@ -145,9 +156,6 @@ const useModalController = <TParamsList extends ModalStackParamsList>(
     (name, props, userModalConfig) => {
       const modalConfig = {
         namespace: undefined,
-        animateInConfig: {
-          animation: 'slide-in-down',
-        },
         dismissible: true,
         ...userModalConfig,
       } satisfies ModalConfig;
@@ -403,7 +411,11 @@ const useModalStackAnimationController = (props: UseModalStackAnimationControlle
   };
 };
 
-/* -----------------------------------------------------------------------------------------------*/
+/* -------------------------------------------------------------------------------------------------
+ * ModalStackItem
+ * -----------------------------------------------------------------------------------------------*/
+
+const TRANSITION_DURATION = 150;
 
 interface ModalStackItemProps<
   TParamsList extends ModalStackParamsList,
@@ -422,18 +434,31 @@ const ModalStackItemRenderer = <
   entering,
   exiting,
 }: ModalStackItemProps<TParamsList, TName>) => {
-  const { styles } = useStyles(modalStackItemRendererStylesheet, {
-    fullscreen: modal.config.fullscreen ?? false,
-  });
+  const fullscreen = modal.config.fullscreen ?? false;
+
+  const { styles, theme } = useStyles(modalStackItemRendererStylesheet, { fullscreen });
   const Component = modal.renderer;
+
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    borderRadius: withDelay(
+      fullscreen ? 0 : TRANSITION_DURATION * 0.8,
+      withTiming(fullscreen ? 0 : theme.rounded.xl, { duration: TRANSITION_DURATION * 0.2 })
+    ),
+  }));
 
   return (
     <Animated.View
       entering={entering}
       exiting={exiting}
-      layout={LinearTransition}
-      style={[styles.container, containerStyle]}
+      layout={LinearTransition.springify(TRANSITION_DURATION)}
+      style={[styles.container, animatedContainerStyle, containerStyle]}
     >
+      {modal.config.fullscreen && (
+        <Animated.View entering={FadeInDown} exiting={FadeOutDown} style={styles.handleContainer}>
+          <ModalHandle />
+        </Animated.View>
+      )}
+
       <Component key={modal.name.toString()} {...modal.props} />
     </Animated.View>
   );
@@ -442,39 +467,140 @@ const ModalStackItemRenderer = <
 ModalStackItemRenderer.displayName = 'ModalStackItemRenderer';
 
 const modalStackItemRendererStylesheet = createStyleSheet((theme, runtime) => ({
+  handleContainer: {
+    alignItems: 'center',
+    position: 'absolute',
+    zIndex: 1,
+    left: 0,
+    top: runtime.insets.top,
+    right: 0,
+  },
   container: {
-    borderWidth: 1,
-    borderColor: theme.colors.typography.decorative,
-    borderRadius: theme.rounded.xl,
     overflow: 'hidden',
     backgroundColor: theme.colors.background,
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    maxHeight: runtime.screen.height,
+    borderWidth: 1,
+    borderColor: theme.colors.typography.decorative,
     variants: {
       fullscreen: {
         true: {
-          paddingBottom: runtime.insets.bottom,
-          paddingLeft: runtime.insets.left,
-          paddingRight: runtime.insets.right,
-          paddingTop: runtime.insets.right,
+          top: -1,
+          left: -1,
+          bottom: -1,
+          right: -1,
+          paddingBottom: runtime.insets.bottom + 1,
+          paddingLeft: runtime.insets.left + 1,
+          paddingRight: runtime.insets.right + 1,
+          paddingTop: runtime.insets.top + 1,
+          maxHeight: runtime.screen.height + 1,
         },
         false: {
           marginBottom: runtime.insets.bottom + theme.margins.base,
           marginLeft: runtime.insets.left + theme.margins.md,
           marginRight: runtime.insets.right + theme.margins.md,
           marginTop: runtime.insets.top + theme.margins.base,
+          maxHeight:
+            runtime.screen.height -
+            (runtime.insets.top + theme.margins.base + runtime.insets.bottom + theme.margins.base),
         },
       } satisfies StylesheetVariantsBoolean,
     },
   },
 }));
 
+/* -------------------------------------------------------------------------------------------------
+ * Modal Components
+ * -----------------------------------------------------------------------------------------------*/
+
+interface ModalHandleProps extends Stylable {}
+
+const ModalHandle = ({ containerStyle }: ModalHandleProps) => {
+  const { styles } = useStyles(modalHandleStylesheet);
+
+  return <View style={[styles.container, containerStyle]} />;
+};
+
+ModalHandle.displayName = 'ModalHandle';
+
+const modalHandleStylesheet = createStyleSheet((theme) => ({
+  container: {
+    borderRadius: theme.rounded.full,
+    backgroundColor: theme.colors.typography.decorative,
+    height: 6,
+    width: 40,
+  },
+}));
+
 /* -----------------------------------------------------------------------------------------------*/
 
-export { ModalContext, ModalProvider };
+interface ModalHeaderProps extends Stylable {
+  disablePaddingBottom?: boolean;
+}
+
+const ModalHeader = ({
+  disablePaddingBottom,
+  containerStyle,
+  children,
+}: PropsWithChildren<ModalHeaderProps>) => {
+  const { styles } = useStyles(modalHeaderStylesheet);
+
+  return (
+    <View style={[styles.container, !disablePaddingBottom && styles.paddingBottom, containerStyle]}>
+      {children}
+    </View>
+  );
+};
+
+ModalHeader.displayName = 'ModalHeader';
+
+const modalHeaderStylesheet = createStyleSheet((theme) => ({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  paddingBottom: {
+    paddingBottom: theme.margins.xl,
+  },
+}));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+interface ModalCloseButtonProps extends Stylable {
+  disabled?: boolean;
+  onPress?: () => void;
+}
+
+const ModalCloseButton = ({ disabled, containerStyle, onPress }: ModalCloseButtonProps) => {
+  const { styles } = useStyles(modalCloseButtonStylesheet);
+
+  return (
+    <TouchableOpacity
+      disabled={disabled}
+      style={[styles.container, containerStyle]}
+      onPress={onPress}
+    >
+      <Icon color={disabled ? 'disabled' : 'primary'} name='close' size='xs' />
+    </TouchableOpacity>
+  );
+};
+
+ModalCloseButton.displayName = 'ModalCloseButton';
+
+const modalCloseButtonStylesheet = createStyleSheet((theme) => ({
+  container: {
+    backgroundColor: theme.colors.typography.decorative,
+    borderRadius: theme.rounded.full,
+    padding: theme.margins.base,
+    alignSelf: 'flex-start',
+  },
+}));
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { ModalContext, ModalProvider, ModalHandle, ModalHeader, ModalCloseButton };
 export type {
   EnteringAnimation,
   ExitingAnimation,
@@ -484,4 +610,7 @@ export type {
   ModalProviderProps,
   ModalContextProps,
   ModalProviderConfig,
+  ModalHandleProps,
+  ModalHeaderProps,
+  ModalCloseButtonProps,
 };

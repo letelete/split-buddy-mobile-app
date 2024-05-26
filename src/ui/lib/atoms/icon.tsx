@@ -18,7 +18,7 @@ import { AppTheme } from '~/ui:styles/themes';
 
 type Color = keyof AppTheme['colors']['typography'];
 
-type Size = 'base' | 'sm';
+type Size = 'base' | 'sm' | 'xs';
 
 interface IconProps extends Stylable<TextStyle> {
   name: ComponentPropsWithoutRef<typeof Ionicons>['name'];
@@ -56,6 +56,7 @@ const stylesheet = createStyleSheet(() => ({
   container: {
     variants: {
       size: {
+        xs: { fontSize: 17 },
         sm: { fontSize: 24 },
         base: { fontSize: 28 },
         default: { fontSize: 28 },

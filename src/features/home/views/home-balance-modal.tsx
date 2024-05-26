@@ -1,8 +1,12 @@
-import { View } from 'react-native';
+import { useCallback } from 'react';
+import { ScrollView, TouchableOpacity } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import { UserBalance } from '~/api/types';
 
 import { Typography } from '~/ui:lib/molecules/typography';
+import { ModalCloseButton, ModalHeader } from '~/ui:lib/organisms/modal';
+import { useAppModalContext } from '~/ui:lib/widgets/app-modal/hooks/use-app-modal-context';
 
 import { formatCurrency } from '~/utils/string';
 
@@ -12,9 +16,16 @@ export interface HomeBalanceModalProps {
 }
 
 const HomeBalanceModal = ({ userBalance, balanceSourcesCount }: HomeBalanceModalProps) => {
+  const appModalContext = useAppModalContext();
+
   return (
-    <View style={{ padding: 24 }}>
-      <Typography.LargeTitle paddingBottom={16}>Your total balance</Typography.LargeTitle>
+    <Animated.View sharedTransitionTag='home-balance-modal' style={{ padding: 24 }}>
+      <ModalHeader>
+        <Typography.LargeTitle disablePadding>Your total balance</Typography.LargeTitle>
+
+        <ModalCloseButton onPress={() => appModalContext.closeModal('home:balance')} />
+      </ModalHeader>
+
       <Typography.Body color='secondary' paddingBottom={48}>
         {balanceSourcesCount > 1
           ? `In all ${balanceSourcesCount} groups combined`
@@ -26,7 +37,19 @@ const HomeBalanceModal = ({ userBalance, balanceSourcesCount }: HomeBalanceModal
           {formatCurrency(e.value, e.currency.code)}
         </Typography.Body>
       ))}
-    </View>
+
+      <TouchableOpacity
+        onPress={() =>
+          appModalContext.openModal(
+            'home:balance',
+            { balanceSourcesCount, userBalance },
+            { fullscreen: true }
+          )
+        }
+      >
+        <Typography.Body>Fullscreen</Typography.Body>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
